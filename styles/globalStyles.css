@@ -1,24 +1,46 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: "Jost", sans-serif;
+}
 #navbar {
   width: 100%;
-  height: 75px;
+  height: 65px;
   background-color: yellow;
-  bottom: 75px;
+  bottom: 65px;
   bottom: 0;
   position: absolute;
+  font-weight: bold;
+}
+.navbar-create {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 2;
+  border-radius: 80px;
+  height: 75px;
+  width: 75px;
+  background-color: black;
+  color: white;
+  font-size: 2.3em;
+  border: 5px solid white;
+  text-align: center;
+  line-height: 60px;
+  transition: 0.3s ease-in-out;
+  box-sizing: border-box;
+}
+.nav-button-container {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
 }
-.navbar-create {
-  position: absolute;
-  z-index: 2;
-  border-radius: 40px;
-  height: 60px;
-  width: 60px;
-  background-color: gray;
-}
 .nav-button {
-  line-height: 75px;
+  line-height: 65px;
   height: 100%;
   text-align: center;
   width: 20%;
