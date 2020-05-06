@@ -2,7 +2,10 @@
     <head>
         <script src="scripts/modules/OptionSelector.js"></script>
     </head>
-    <body onload="test()">
+    <body onload="startTester()">
         <p id="option"></p>
+        <form onsubmit="return false">
+            <input type="submit" onclick="tester.mySubmit()">
+        </form>
     </body>
 </html>

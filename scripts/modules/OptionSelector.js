@@ -1,25 +1,68 @@
-function test() {
-    mySelector = new SelectorOptionLinkedList("o");
-    mySelector.add(new SelectorOption(mySelector.current, "3", null));
-    mySelector.add(new SelectorOption(mySelector.current, "yt", null));
-    curr = mySelector.root;
-    document.getElementById("option").innerHTML += curr.data;
-    curr = curr.next;
-    document.getElementById("option").innerHTML += curr.data;
-    curr = curr.next;
-    document.getElementById("option").innerHTML += curr.data;
+let tester;
+function startTester() {
+    tester = new Tester();
+    tester.start();
+}
+class Tester {
+    mySelectorList = new SelectorOptionLinkedList("o");
+    mySelector;
+    start() {
+        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "3", null));
+        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "yt", null));
+        this.mySelector = new Selector("option", this.mySelectorList);
+    }
+    mySubmit(){
+        this.mySelector.displayOptions();
+    }
 }
 
 class Selector {
+    
+    selectorOptionList;
+    currentOption;
+    selectionSectionId;
+    divBoxes = [];
+    constructor(selectionSectionId, selectorOptionList){
+        this.selectionSectionId = selectionSectionId;
+        this.selectorOptionList = selectorOptionList;
+        this.currentOption = selectorOptionList.root;
+        this.selectionSection = document.getElementById(this.selectionSectionId);
+        this.createDivBoxes();
+    }
+
+    createDivBoxes() {
+        for(let i = 0; i < 5; i++) {
+            this.divBoxes[i] = document.createElement("div");
+            this.divBoxes[i].id = "optionBox" + i;
+            this.selectionSection.appendChild(this.divBoxes[i]);
+        }
+    }
+
+    selectPrevious(){
+        currentOption = currentOption.previous;
+    }
+
+    selectNext() {
+        currentOption = currentOption.next;
+    }
+
+    displayOptions(){
+        document.getElementById("optionBox2").innerHTML = this.currentOption.data;
+        this.divBoxes[0].innerHTML = this.currentOption.previous.previous.data;
+        this.divBoxes[1].innerHTML = this.currentOption.previous.data;
+        this.divBoxes[2].innerHTML = this.currentOption.data;
+        this.divBoxes[3].innerHTML = this.currentOption.next.data;
+        this.divBoxes[4].innerHTML = this.currentOption.next.next.data;
+    }
     
 }
 
 class SelectorOptionLinkedList {
     root;
-    current;
+    last;
     constructor(data){
         this.root = new SelectorOption(null, data, null);
-        this.current = this.root;
+        this.last = this.root;
     }
 
     add(selectorOption) {
@@ -28,8 +71,8 @@ class SelectorOptionLinkedList {
         } catch(err) {
             console.error(err);
         }
-        this.current.next = selectorOption;
-        this.current = selectorOption;
+        this.last.next = selectorOption;
+        this.last = selectorOption;
     }
 
 }
