@@ -1,9 +1,15 @@
 <html>
     <head>
         <script src="scripts/modules/OptionSelector.js"></script>
+        <style>
+            .SelectorOptionBox{
+                box-shadow: 0px 5px 5px rgba(86, 86, 86, 0.25);
+            }
+            
+        </style>
     </head>
     <body onload="startTester()">
-        <p id="option"></p>
+        <div id="option"></div>
         <form onsubmit="return false">
             <input type="submit" onclick="tester.mySubmit()">
         </form>

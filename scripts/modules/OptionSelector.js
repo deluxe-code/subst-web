@@ -12,7 +12,7 @@ class Tester {
         this.mySelector = new Selector("option", this.mySelectorList);
     }
     mySubmit(){
-        this.mySelector.displayOptions();
+        this.mySelector.refreshOptions();
     }
 }
 
@@ -22,6 +22,7 @@ class Selector {
     currentOption;
     selectionSectionId;
     divBoxes = [];
+    selectorTextParagraph = [];
     constructor(selectionSectionId, selectorOptionList){
         this.selectionSectionId = selectionSectionId;
         this.selectorOptionList = selectorOptionList;
@@ -33,8 +34,10 @@ class Selector {
     createDivBoxes() {
         for(let i = 0; i < 5; i++) {
             this.divBoxes[i] = document.createElement("div");
-            this.divBoxes[i].id = "optionBox" + i;
+            this.divBoxes[i].id = "SelectorOptionBox" + i;
+            this.divBoxes[i].className = "SelectorOptionBox";
             this.selectionSection.appendChild(this.divBoxes[i]);
+            this.selectorTextParagraph[i] = this.divBoxes[i].appendChild(document.createElement("p"));
         }
     }
 
@@ -46,13 +49,18 @@ class Selector {
         currentOption = currentOption.next;
     }
 
-    displayOptions(){
-        document.getElementById("optionBox2").innerHTML = this.currentOption.data;
-        this.divBoxes[0].innerHTML = this.currentOption.previous.previous.data;
-        this.divBoxes[1].innerHTML = this.currentOption.previous.data;
-        this.divBoxes[2].innerHTML = this.currentOption.data;
-        this.divBoxes[3].innerHTML = this.currentOption.next.data;
-        this.divBoxes[4].innerHTML = this.currentOption.next.next.data;
+    refreshOptions(){
+        if(this.currentOption.previous != null && this.currentOption.previous.previous != null)
+            this.selectorTextParagraph[0].innerHTML = this.currentOption.previous.previous.data;
+        if(this.currentOption.previous != null)
+            this.selectorTextParagraph[1].innerHTML = this.currentOption.previous.data;
+
+        this.selectorTextParagraph[2].innerHTML = this.currentOption.data;
+
+        if(this.currentOption.next != null)
+            this.selectorTextParagraph[3].innerHTML = this.currentOption.next.data;
+        if(this.currentOption.next != null && this.currentOption.next.next != null)
+            this.selectorTextParagraph[4].innerHTML = this.currentOption.next.next.data;
     }
     
 }
