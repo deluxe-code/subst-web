@@ -20,14 +20,15 @@ class Selector {
     
     selectorOptionList;
     currentOption;
-    selectionSectionId;
+    selectorSectionId;
+    selectorSection;
     divBoxes = [];
     selectorTextParagraph = [];
-    constructor(selectionSectionId, selectorOptionList){
-        this.selectionSectionId = selectionSectionId;
+    constructor(selectorSectionId, selectorOptionList){
+        this.selectorSectionId = selectorSectionId;
         this.selectorOptionList = selectorOptionList;
         this.currentOption = selectorOptionList.root;
-        this.selectionSection = document.getElementById(this.selectionSectionId);
+        this.selectorSection = document.getElementById(this.selectorSectionId);
         this.createDivBoxes();
     }
 
@@ -36,11 +37,22 @@ class Selector {
             this.divBoxes[i] = document.createElement("div");
             this.divBoxes[i].id = "SelectorOptionBox" + i;
             this.divBoxes[i].className = "SelectorOptionBox";
-            this.selectionSection.appendChild(this.divBoxes[i]);
+            this.selectorSection.appendChild(this.divBoxes[i]);
             this.selectorTextParagraph[i] = this.divBoxes[i].appendChild(document.createElement("p"));
         }
     }
 
+    scroll() {
+        touchOrigin = [];
+        selectorSection.addEventListener("touchstart", function(ev) {
+            //touchOrigin[0] = ev.originalEvent.touches[0].pageX;
+            //touchOrigin[1] = ev.originalEvent.touches[0].pageY;
+            console.log("egh");
+        });
+        selectorSection.addEventListener("touchmove", function(ev) {
+            
+        });
+    }
     selectPrevious(){
         currentOption = currentOption.previous;
     }
