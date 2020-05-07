@@ -7,8 +7,13 @@ class Tester {
     mySelectorList = new SelectorOptionLinkedList("o");
     mySelector;
     start() {
-        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "3", null));
+        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "333", null));
         this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "yt", null));
+        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "4", null));
+        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "324", null));
+        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "fsdf", null));
+        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "124", null));
+        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "fxd43f", null));
         this.mySelector = new Selector("option", this.mySelectorList);
     }
     mySubmit(){
@@ -18,6 +23,7 @@ class Tester {
 
 class Selector {
     
+    scrollSensitivity = 10;
     selectorOptionList;
     currentOption;
     selectorSectionId;
@@ -30,6 +36,7 @@ class Selector {
         this.currentOption = selectorOptionList.root;
         this.selectorSection = document.getElementById(this.selectorSectionId);
         this.createDivBoxes();
+        this.scrollEvents();
     }
 
     createDivBoxes() {
@@ -42,37 +49,48 @@ class Selector {
         }
     }
 
-    scroll() {
-        touchOrigin = [];
-        selectorSection.addEventListener("touchstart", function(ev) {
-            //touchOrigin[0] = ev.originalEvent.touches[0].pageX;
-            //touchOrigin[1] = ev.originalEvent.touches[0].pageY;
-            console.log("egh");
-        });
-        selectorSection.addEventListener("touchmove", function(ev) {
-            
-        });
+    scrollEvents() {
+        let touchOrigin;
+        this.selectorSection.addEventListener("touchstart", function(ev) {
+            touchOrigin = ev.touches[0].clientY;
+        }, {passive: true});
+        this.selectorSection.addEventListener("touchmove", ev => {
+            let fingerPos = ev.targetTouches[0];
+            console.log(((touchOrigin-fingerPos.clientY) % this.scrollSensitivity) + ", " + (touchOrigin-fingerPos.clientY));
+            if((touchOrigin-fingerPos.clientY) > this.scrollSensitivity && 
+                (Math.round(touchOrigin-fingerPos.clientY) % this.scrollSensitivity == 0)){
+                
+                this.selectNext();
+                this.refreshOptions();
+                
+            }
+            if((touchOrigin-fingerPos.clientY) < -this.scrollSensitivity && 
+                (Math.round(touchOrigin-fingerPos.clientY) % this.scrollSensitivity == 0)){
+                
+                this.selectPrevious();
+                this.refreshOptions();
+                
+            }
+        }, {passive: true});
     }
     selectPrevious(){
-        currentOption = currentOption.previous;
+        if(this.currentOption.previous != null && this.currentOption.previous.previous!=null)this.currentOption = this.currentOption.previous;
     }
 
     selectNext() {
-        currentOption = currentOption.next;
+        if(this.currentOption.next != null && this.currentOption.next.next!=null)this.currentOption = this.currentOption.next;
     }
 
     refreshOptions(){
-        if(this.currentOption.previous != null && this.currentOption.previous.previous != null)
-            this.selectorTextParagraph[0].innerHTML = this.currentOption.previous.previous.data;
-        if(this.currentOption.previous != null)
+        if(this.currentOption.previous != null) {
             this.selectorTextParagraph[1].innerHTML = this.currentOption.previous.data;
+        }
 
         this.selectorTextParagraph[2].innerHTML = this.currentOption.data;
 
-        if(this.currentOption.next != null)
+        if(this.currentOption.next != null){
             this.selectorTextParagraph[3].innerHTML = this.currentOption.next.data;
-        if(this.currentOption.next != null && this.currentOption.next.next != null)
-            this.selectorTextParagraph[4].innerHTML = this.currentOption.next.next.data;
+        }
     }
     
 }
