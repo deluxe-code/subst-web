@@ -1,17 +1,18 @@
 <html>
-    <head>
-        <script src="scripts/modules/OptionSelector.js"></script>
-        <style>
-            .SelectorOptionBox{
-                box-shadow: 0px 5px 5px rgba(86, 86, 86, 0.25);
-            }
-            
-        </style>
-    </head>
-    <body onload="startTester()">
-        <div id="option"></div>
-        <form onsubmit="return false">
-            <input type="submit" onclick="tester.mySubmit()">
-        </form>
-    </body>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="scripts/modules/OptionSelector.js"></script>
+    <link rel="stylesheet" href="styles/globalStyles.css" />
+    <style>
+      .SelectorOptionBox {
+        box-shadow: 0px 5px 5px rgba(86, 86, 86, 0.25);
+      }
+    </style>
+  </head>
+  <body onload="startTester()">
+    <div id="option"></div>
+    <form onsubmit="return false">
+      <input type="submit" onclick="tester.mySubmit()" />
+    </form>
+  </body>
 </html>
