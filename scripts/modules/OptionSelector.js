@@ -30,6 +30,7 @@ class Selector {
     selectorSection;
     divBoxes = [];
     selectorTextParagraph = [];
+    divBoxHeight = 10;
     constructor(selectorSectionId, selectorOptionList){
         this.selectorSectionId = selectorSectionId;
         this.selectorOptionList = selectorOptionList;
@@ -71,7 +72,7 @@ class Selector {
                 
             } else {
                 this.divBoxes.forEach(element => {
-                    element.style.top = relativeFingerPos + 'px';
+                    //element.style.height = (divBoxHeight/this.scrollSensitivity)*relativeFingerPos + "%"
                     console.log(element.style.top + ", rel: " + relativeFingerPos);
                 });
             }
@@ -87,13 +88,19 @@ class Selector {
 
     refreshOptions(){
         if(this.currentOption.previous != null) {
-            this.selectorTextParagraph[0].innerHTML = this.currentOption.previous.data;
+            if(this.currentOption.previous.previous != null){
+                this.selectorTextParagraph[0].innerHTML = this.currentOption.previous.previous.data;
+            }
+            this.selectorTextParagraph[1].innerHTML = this.currentOption.previous.data;
         }
 
-        this.selectorTextParagraph[1].innerHTML = this.currentOption.data;
+        this.selectorTextParagraph[2].innerHTML = this.currentOption.data;
 
         if(this.currentOption.next != null){
-            this.selectorTextParagraph[2].innerHTML = this.currentOption.next.data;
+            this.selectorTextParagraph[3].innerHTML = this.currentOption.next.data;
+            if(this.currentOption.next.next != null){
+                this.selectorTextParagraph[4].innerHTML = this.currentOption.next.next.data;
+            }
         }
     }
     
