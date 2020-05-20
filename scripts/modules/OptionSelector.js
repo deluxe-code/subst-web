@@ -56,20 +56,24 @@ class Selector {
         }, {passive: true});
         this.selectorSection.addEventListener("touchmove", ev => {
             let fingerPos = ev.targetTouches[0];
-            console.log(((touchOrigin-fingerPos.clientY) % this.scrollSensitivity) + ", " + (touchOrigin-fingerPos.clientY));
-            if((touchOrigin-fingerPos.clientY) > this.scrollSensitivity && 
-                (Math.round(touchOrigin-fingerPos.clientY) % this.scrollSensitivity == 0)){
+            let relativeFingerPos = touchOrigin-fingerPos.clientY;
+            if((relativeFingerPos) > this.scrollSensitivity && 
+                (Math.round(relativeFingerPos) % this.scrollSensitivity == 0)){
                 
                 this.selectNext();
                 this.refreshOptions();
                 
-            }
-            if((touchOrigin-fingerPos.clientY) < -this.scrollSensitivity && 
-                (Math.round(touchOrigin-fingerPos.clientY) % this.scrollSensitivity == 0)){
+            } else if(relativeFingerPos < -this.scrollSensitivity && 
+                (Math.round(relativeFingerPos) % this.scrollSensitivity == 0)){
                 
                 this.selectPrevious();
                 this.refreshOptions();
                 
+            } else {
+                this.divBoxes.forEach(element => {
+                    element.style.top = relativeFingerPos + 'px';
+                    console.log(element.style.top + ", rel: " + relativeFingerPos);
+                });
             }
         }, {passive: true});
     }
@@ -83,13 +87,13 @@ class Selector {
 
     refreshOptions(){
         if(this.currentOption.previous != null) {
-            this.selectorTextParagraph[1].innerHTML = this.currentOption.previous.data;
+            this.selectorTextParagraph[0].innerHTML = this.currentOption.previous.data;
         }
 
-        this.selectorTextParagraph[2].innerHTML = this.currentOption.data;
+        this.selectorTextParagraph[1].innerHTML = this.currentOption.data;
 
         if(this.currentOption.next != null){
-            this.selectorTextParagraph[3].innerHTML = this.currentOption.next.data;
+            this.selectorTextParagraph[2].innerHTML = this.currentOption.next.data;
         }
     }
     
