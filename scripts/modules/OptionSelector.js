@@ -30,7 +30,7 @@ class Selector {
     selectorSection;
     divBoxes = [];
     selectorTextParagraph = [];
-    divBoxHeight = 10;
+    optionBoxDefaultHeight = 5;
     constructor(selectorSectionId, selectorOptionList){
         this.selectorSectionId = selectorSectionId;
         this.selectorOptionList = selectorOptionList;
@@ -71,13 +71,13 @@ class Selector {
                 this.refreshOptions();
                 
             } else {
-                this.divBoxes.forEach(element => {
-                    //element.style.height = (divBoxHeight/this.scrollSensitivity)*relativeFingerPos + "%"
-                    console.log(element.style.top + ", rel: " + relativeFingerPos);
-                });
+                this.divBoxes[0].style.height = this.optionBoxDefaultHeight*(-relativeFingerPos - (Math.floor(-relativeFingerPos/this.scrollSensitivity)*this.scrollSensitivity)) + "px";
+                this.divBoxes[4].style.height = this.optionBoxDefaultHeight*(relativeFingerPos - (Math.floor(relativeFingerPos/this.scrollSensitivity)*this.scrollSensitivity)) + "px";
+                console.log(relativeFingerPos-(Math.floor(relativeFingerPos/this.scrollSensitivity)*this.scrollSensitivity));
             }
         }, {passive: true});
     }
+
     selectPrevious(){
         if(this.currentOption.previous != null && this.currentOption.previous.previous!=null)this.currentOption = this.currentOption.previous;
     }
