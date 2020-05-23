@@ -1,0 +1,22 @@
+.card_container {
+  margin: auto;
+  padding: 10px;
+  width: 80%;
+  text-align: center;
+  background: darkslategray;
+  border-radius: 10px;
+  display: grid;
+  height: max-content;
+}
+.card_label {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.input_card {
+  grid-template-rows: 1fr 2fr;
+}
+.input_card textarea {
+  width: 100%;
+  border-radius: 10px;
+}

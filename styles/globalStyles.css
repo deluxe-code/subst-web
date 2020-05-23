@@ -4,6 +4,8 @@ body {
   height: 100%;
   padding: 0;
   margin: 0;
+}
+* {
   font-family: "Jost", sans-serif;
 }
 a {
