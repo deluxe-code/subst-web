@@ -30,7 +30,7 @@ class Selector {
     selectorSection;
     divBoxes = [];
     selectorTextParagraph = [];
-    optionBoxDefaultHeight = 5;
+    optionBoxDefaultHeight = 50;
     constructor(selectorSectionId, selectorOptionList){
         this.selectorSectionId = selectorSectionId;
         this.selectorOptionList = selectorOptionList;
@@ -71,9 +71,14 @@ class Selector {
                 this.refreshOptions();
                 
             } else {
-                this.divBoxes[0].style.height = this.optionBoxDefaultHeight*(-relativeFingerPos - (Math.floor(-relativeFingerPos/this.scrollSensitivity)*this.scrollSensitivity)) + "px";
-                this.divBoxes[4].style.height = this.optionBoxDefaultHeight*(relativeFingerPos - (Math.floor(relativeFingerPos/this.scrollSensitivity)*this.scrollSensitivity)) + "px";
-                console.log(relativeFingerPos-(Math.floor(relativeFingerPos/this.scrollSensitivity)*this.scrollSensitivity));
+                //this.divBoxes[0].style.height = this.optionBoxDefaultHeight*(-relativeFingerPos - (Math.floor(-relativeFingerPos/this.scrollSensitivity)*this.scrollSensitivity)) + "px";
+                //this.divBoxes[4].style.height = this.optionBoxDefaultHeight*(relativeFingerPos - (Math.floor(relativeFingerPos/this.scrollSensitivity)*this.scrollSensitivity)) + "px";
+                if(parseFloat(this.divBoxes[0].style.height) < this.optionBoxDefaultHeight){
+                    this.divBoxes[0].style.height = -relativeFingerPos + "px";
+                }
+                if(parseFloat(this.divBoxes[4].style.height) < this.optionBoxDefaultHeight){
+                    this.divBoxes[4].style.height = relativeFingerPos + "px";
+                }
             }
         }, {passive: true});
     }
@@ -90,16 +95,21 @@ class Selector {
         if(this.currentOption.previous != null) {
             if(this.currentOption.previous.previous != null){
                 this.selectorTextParagraph[0].innerHTML = this.currentOption.previous.previous.data;
+                this.divBoxes[0].style.height = "0px";
             }
             this.selectorTextParagraph[1].innerHTML = this.currentOption.previous.data;
+            this.divBoxes[1].style.height = this.optionBoxDefaultHeight+"px";
         }
 
         this.selectorTextParagraph[2].innerHTML = this.currentOption.data;
+        this.divBoxes[2].style.height = this.optionBoxDefaultHeight+"px";
 
         if(this.currentOption.next != null){
             this.selectorTextParagraph[3].innerHTML = this.currentOption.next.data;
+            this.divBoxes[3].style.height = this.optionBoxDefaultHeight+"px";
             if(this.currentOption.next.next != null){
                 this.selectorTextParagraph[4].innerHTML = this.currentOption.next.next.data;
+                this.divBoxes[4].style.height = "0px";
             }
         }
     }
