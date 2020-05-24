@@ -1,5 +1,6 @@
 <html>
   <head>
+    <title>Record a new dose</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="scripts/modules/OptionSelector.js"></script>
     <script type="module" src="scripts/debug.js"></script>
@@ -9,16 +10,21 @@
       href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;1,500&display=swap"
       rel="stylesheet"
     />
-    <style>
-      .SelectorOptionBox {
-        box-shadow: 0px 5px 5px rgba(86, 86, 86, 0.25);
-      }
-    </style>
   </head>
-  <body onload="startTester()">
-    <div id="option" style="height: 25%;"></div>
-    <form onsubmit="return false">
-      <input type="submit" onclick="tester.mySubmit()" />
-    </form>
+  <body>
+    <div id="substances_container">
+      <span class="card_label">Substances</span>
+      <div id="substance_list">
+        <div class="substance_item">
+          <div class="substance_label">Marijuana</div>
+          <div class="add_button">+</div>
+        </div>
+    
+        <div class="substance_item">
+            <div class="substance_label">Kratom</div>
+            <div class="add_button">+</div>
+          </div>
+
+    </div>
   </body>
 </html>
