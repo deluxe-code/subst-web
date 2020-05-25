@@ -9,6 +9,12 @@ let extraInfo_card = new Card({
     }
 });
 
+// This was breaking because I was asking for the output as soon as 
+// the page loaded, which is unrealistic for a text input anyways
+setTimeout(() => {
+    console.log(extraInfo_card.getOutput());
+}, 1000);
+
 let pickerCard = new Card({
     id: "substances_container",
     label: "Substances",
