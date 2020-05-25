@@ -68,6 +68,8 @@ class Selector {
             let relativeFingerPos = fingerPos.clientY % this.optionBoxDefaultHeight;
             console.log(Math.floor(relativeFingerPos) + ", prev: " + Math.floor(previousFingerPos % this.optionBoxDefaultHeight));
             if(Math.floor(fingerPos.clientY % this.optionBoxDefaultHeight)==0){
+                this.divBoxes[4].childNodes[0].style.fontSize = "0px";
+                this.divBoxes[0].childNodes[0].style.fontSize = "0px";
                 if(previousFingerPos < fingerPos.clientY){
                     this.selectPrevious();
                     this.refreshOptions();
@@ -78,7 +80,9 @@ class Selector {
             } else {
                 this.divBoxes[0].style.height = relativeFingerPos + "px";
                 this.divBoxes[4].style.height = this.optionBoxDefaultHeight-relativeFingerPos + "px";
+                this.divBoxes[0].childNodes[0].style.fontSize = this.fontSize*(relativeFingerPos/this.optionBoxDefaultHeight) + "px";
                 this.divBoxes[4].childNodes[0].style.fontSize = this.fontSize*((this.optionBoxDefaultHeight-relativeFingerPos)/this.optionBoxDefaultHeight) + "px";
+                
 
             }
             
@@ -88,17 +92,20 @@ class Selector {
 
     selectPrevious(){
         if(this.currentOption.previous != null && this.currentOption.previous.previous!=null)this.currentOption = this.currentOption.previous;
+        this.divBoxes[0].style.height = "0px";
+        this.divBoxes[4].style.height = this.optionBoxDefaultHeight + "px";
     }
 
     selectNext() {
         if(this.currentOption.next != null && this.currentOption.next.next!=null)this.currentOption = this.currentOption.next;
+        this.divBoxes[0].style.height = this.optionBoxDefaultHeight + "px";
+        this.divBoxes[4].style.height = "0px";
     }
 
     refreshOptions(){
         if(this.currentOption.previous != null) {
             if(this.currentOption.previous.previous != null){
                 this.selectorTextParagraph[0].innerHTML = this.currentOption.previous.previous.data;
-                this.divBoxes[0].style.height = "0px";
             }
             this.selectorTextParagraph[1].innerHTML = this.currentOption.previous.data;
             this.divBoxes[1].style.height = this.optionBoxDefaultHeight+"px";
@@ -112,7 +119,7 @@ class Selector {
             this.divBoxes[3].style.height = this.optionBoxDefaultHeight+"px";
             if(this.currentOption.next.next != null){
                 this.selectorTextParagraph[4].innerHTML = this.currentOption.next.next.data;
-                this.divBoxes[4].style.height = "0px";
+
             }
         }
     }
