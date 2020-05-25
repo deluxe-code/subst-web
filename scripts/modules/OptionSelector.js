@@ -14,6 +14,9 @@ class Tester {
         this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "fsdf", null));
         this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "124", null));
         this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "fxd43f", null));
+        for(var i = 0; i < 30; i++){
+            this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "forloop, " + i, null));
+        }
         this.mySelector = new Selector("option", this.mySelectorList);
     }
     mySubmit(){
@@ -23,7 +26,8 @@ class Tester {
 
 class Selector {
     
-    scrollSensitivity = 10;
+    scrollSensitivity = 1;
+    fontSize = 16;
     selectorOptionList;
     currentOption;
     selectorSectionId;
@@ -47,39 +51,38 @@ class Selector {
             this.divBoxes[i].className = "SelectorOptionBox";
             this.selectorSection.appendChild(this.divBoxes[i]);
             this.selectorTextParagraph[i] = this.divBoxes[i].appendChild(document.createElement("p"));
+            this.selectorTextParagraph[i].style.margin = "0px";
         }
     }
 
     scrollEvents() {
         let touchOrigin;
+        let currentScrolls = 0;
+        let previousFingerPos = 0;
         this.selectorSection.addEventListener("touchstart", function(ev) {
             touchOrigin = ev.touches[0].clientY;
+            currentScrolls = 0;
         }, {passive: true});
         this.selectorSection.addEventListener("touchmove", ev => {
             let fingerPos = ev.targetTouches[0];
-            let relativeFingerPos = touchOrigin-fingerPos.clientY;
-            if((relativeFingerPos) > this.scrollSensitivity && 
-                (Math.round(relativeFingerPos) % this.scrollSensitivity == 0)){
-                
-                this.selectNext();
-                this.refreshOptions();
-                
-            } else if(relativeFingerPos < -this.scrollSensitivity && 
-                (Math.round(relativeFingerPos) % this.scrollSensitivity == 0)){
-                
-                this.selectPrevious();
-                this.refreshOptions();
-                
+            let relativeFingerPos = fingerPos.clientY % this.optionBoxDefaultHeight;
+            console.log(Math.floor(relativeFingerPos) + ", prev: " + Math.floor(previousFingerPos % this.optionBoxDefaultHeight));
+            if(Math.floor(fingerPos.clientY % this.optionBoxDefaultHeight)==0){
+                if(previousFingerPos < fingerPos.clientY){
+                    this.selectPrevious();
+                    this.refreshOptions();
+                } else if(previousFingerPos > fingerPos.clientY){
+                    this.selectNext();
+                    this.refreshOptions();
+                }
             } else {
-                //this.divBoxes[0].style.height = this.optionBoxDefaultHeight*(-relativeFingerPos - (Math.floor(-relativeFingerPos/this.scrollSensitivity)*this.scrollSensitivity)) + "px";
-                //this.divBoxes[4].style.height = this.optionBoxDefaultHeight*(relativeFingerPos - (Math.floor(relativeFingerPos/this.scrollSensitivity)*this.scrollSensitivity)) + "px";
-                if(parseFloat(this.divBoxes[0].style.height) < this.optionBoxDefaultHeight){
-                    this.divBoxes[0].style.height = -relativeFingerPos + "px";
-                }
-                if(parseFloat(this.divBoxes[4].style.height) < this.optionBoxDefaultHeight){
-                    this.divBoxes[4].style.height = relativeFingerPos + "px";
-                }
+                this.divBoxes[0].style.height = relativeFingerPos + "px";
+                this.divBoxes[4].style.height = this.optionBoxDefaultHeight-relativeFingerPos + "px";
+                this.divBoxes[4].childNodes[0].style.fontSize = this.fontSize*((this.optionBoxDefaultHeight-relativeFingerPos)/this.optionBoxDefaultHeight) + "px";
+
             }
+            
+            previousFingerPos = fingerPos.clientY;
         }, {passive: true});
     }
 
