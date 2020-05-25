@@ -66,9 +66,8 @@ class Selector {
         this.selectorSection.addEventListener("touchmove", ev => {
             let fingerPos = ev.targetTouches[0];
             let relativeFingerPos = fingerPos.clientY % this.optionBoxDefaultHeight;
-            console.log(Math.floor(relativeFingerPos) + ", prev: " + Math.floor(previousFingerPos % this.optionBoxDefaultHeight));
+            //problem with going fast is due to "Math.floor(fingerPos.clientY % this.optionBoxDefaultHeight)==0" being false when going fast.
             if(Math.floor(fingerPos.clientY % this.optionBoxDefaultHeight)==0){
-
                 if(previousFingerPos < fingerPos.clientY){
                     this.selectPrevious();
                     this.refreshOptions();
