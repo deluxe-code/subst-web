@@ -68,8 +68,7 @@ class Selector {
             let relativeFingerPos = fingerPos.clientY % this.optionBoxDefaultHeight;
             console.log(Math.floor(relativeFingerPos) + ", prev: " + Math.floor(previousFingerPos % this.optionBoxDefaultHeight));
             if(Math.floor(fingerPos.clientY % this.optionBoxDefaultHeight)==0){
-                this.divBoxes[4].childNodes[0].style.fontSize = "0px";
-                this.divBoxes[0].childNodes[0].style.fontSize = "0px";
+
                 if(previousFingerPos < fingerPos.clientY){
                     this.selectPrevious();
                     this.refreshOptions();
@@ -93,13 +92,17 @@ class Selector {
     selectPrevious(){
         if(this.currentOption.previous != null && this.currentOption.previous.previous!=null)this.currentOption = this.currentOption.previous;
         this.divBoxes[0].style.height = "0px";
-        this.divBoxes[4].style.height = this.optionBoxDefaultHeight + "px";
+        this.divBoxes[4].style.height = this.optionBoxDefaultHeight + "px"; 
+        this.divBoxes[0].childNodes[0].style.fontSize = "0px";
+        this.divBoxes[4].childNodes[0].style.fontSize = this.fontSize + "px";
     }
 
     selectNext() {
         if(this.currentOption.next != null && this.currentOption.next.next!=null)this.currentOption = this.currentOption.next;
-        this.divBoxes[0].style.height = this.optionBoxDefaultHeight + "px";
         this.divBoxes[4].style.height = "0px";
+        this.divBoxes[0].style.height = this.optionBoxDefaultHeight + "px";
+        this.divBoxes[4].childNodes[0].style.fontSize = "0px";
+        this.divBoxes[0].childNodes[0].style.fontSize = this.fontSize + "px";
     }
 
     refreshOptions(){
