@@ -59,6 +59,7 @@ class Selector {
         let touchOrigin;
         let currentScrolls = 0;
         let previousFingerPos = 0;
+        let numberOfPreviousOptionBoxesWithinFingerDistance = 0;
         this.selectorSection.addEventListener("touchstart", function(ev) {
             touchOrigin = ev.touches[0].clientY;
             currentScrolls = 0;
@@ -66,25 +67,29 @@ class Selector {
         this.selectorSection.addEventListener("touchmove", ev => {
             let fingerPos = ev.targetTouches[0];
             let relativeFingerPos = fingerPos.clientY % this.optionBoxDefaultHeight;
+            let numberOfCurrentOptionBoxesWithinFingerDistance = Math.floor(fingerPos.clientY/this.optionBoxDefaultHeight);
             //problem with going fast is due to "Math.floor(fingerPos.clientY % this.optionBoxDefaultHeight)==0" being false when going fast.
-            if(Math.floor(fingerPos.clientY % this.optionBoxDefaultHeight)==0){
-                if(previousFingerPos < fingerPos.clientY){
-                    this.selectPrevious();
-                    this.refreshOptions();
-                } else if(previousFingerPos > fingerPos.clientY){
-                    this.selectNext();
-                    this.refreshOptions();
-                }
-            } else {
+            if(numberOfPreviousOptionBoxesWithinFingerDistance < numberOfCurrentOptionBoxesWithinFingerDistance){
+                this.selectPrevious();
+                this.refreshOptions();
+            } else if(numberOfPreviousOptionBoxesWithinFingerDistance > numberOfCurrentOptionBoxesWithinFingerDistance){
+                this.selectNext();
+                this.refreshOptions();
+            }else {
                 this.divBoxes[0].style.height = relativeFingerPos + "px";
                 this.divBoxes[4].style.height = this.optionBoxDefaultHeight-relativeFingerPos + "px";
+                //this.divBoxes[0].style.width = relativeFingerPos*8 + "px";
+                //this.divBoxes[4].style.width = (this.optionBoxDefaultHeight-relativeFingerPos)*8 + "px";
                 this.divBoxes[0].childNodes[0].style.fontSize = this.fontSize*(relativeFingerPos/this.optionBoxDefaultHeight) + "px";
                 this.divBoxes[4].childNodes[0].style.fontSize = this.fontSize*((this.optionBoxDefaultHeight-relativeFingerPos)/this.optionBoxDefaultHeight) + "px";
                 
 
             }
-            
             previousFingerPos = fingerPos.clientY;
+            numberOfPreviousOptionBoxesWithinFingerDistance = Math.floor(fingerPos.clientY/this.optionBoxDefaultHeight);
+        }, {passive: true});
+        this.selectorSection.addEventListener("touchmove", ev => {
+            this.refreshOptions();
         }, {passive: true});
     }
 
@@ -102,6 +107,14 @@ class Selector {
         this.divBoxes[0].style.height = this.optionBoxDefaultHeight + "px";
         this.divBoxes[4].childNodes[0].style.fontSize = "0px";
         this.divBoxes[0].childNodes[0].style.fontSize = this.fontSize + "px";
+    }
+
+    hasNext() {
+        return this.currentOption.next != null && this.currentOption.next.next != null;
+    }
+
+    hasPrevious(){
+        return this.currentOption.previous != null && this.currentOption.previous.previous != null;
     }
 
     refreshOptions(){
