@@ -63,6 +63,7 @@ class Selector {
         this.selectorSection.addEventListener("touchstart", function(ev) {
             touchOrigin = ev.touches[0].clientY;
             currentScrolls = 0;
+            
         }, {passive: true});
         this.selectorSection.addEventListener("touchmove", ev => {
             let fingerPos = ev.targetTouches[0];
