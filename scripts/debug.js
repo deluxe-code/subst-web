@@ -10,7 +10,7 @@ let extraInfo_card = new Card({
     }
 }).listenFor("change", function(event) {
     console.log("ACTION MADE: User has made a " + event.getType() + " event, value of " + event.getValue());
-});
+})/* TODO: .getActivityOutputExtractor() */;
 
 // This was breaking because I was asking for the output as soon as 
 // the page loaded, which is unrealistic for a text input anyways
