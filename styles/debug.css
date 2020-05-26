@@ -1,41 +1,54 @@
+body {
+  background-color: darkslategray;
+}
 .card_container {
-  margin: auto;
-  padding: 10px;
-  width: calc(100% - 50px);
+  padding: 0px 10px 30px 10px;
+  margin: 50px auto 0px auto;
+  box-sizing: border-box;
+  width: 90%;
   text-align: center;
-  background: darkslategray;
+  background: white;
   border-radius: 10px;
   display: grid;
   height: max-content;
 }
 .card_label {
-  font-size: 1.5rem;
-  color: white;
+  margin-top: 15px;
+  font-size: 1.8rem;
+  height: max-content;
+  color: black;
+  font-weight: bold;
 }
 
 .input_card {
   grid-template-rows: 1fr 2fr;
 }
 .input_card textarea {
-  width: 100%;
+  margin: auto;
+  width: 90%;
+  height: 120px;
   border-radius: 10px;
+  background-color: darkgray;
+  border: none;
+  outline: 0;
 }
 
 #substances_container {
   background-color: #efefef;
   width: 100%;
   position: absolute;
-  bottom: 100px;
+  bottom: -65px;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-weight: bold;
-  border-radius: 30px 30px 0px 0px;
-  box-shadow: 0px -3px 6px rgba(0, 0, 0, 0.25);
-  padding: 15px;
+  border-radius: 20px 20px 20px 20px;
+  box-shadow: 0px -3px 25px rgba(0, 0, 0, 0.5);
+  padding: 10px 30px 30px 30px;
   box-sizing: border-box;
 }
 #substances_container .card_label {
+  margin-top: 0px;
   font-size: 2.2rem;
   color: black;
 }
@@ -47,10 +60,10 @@
   display: grid;
   grid-template-columns: auto 70px;
   align-items: center;
-  height: 50px;
+  height: max-content;
 }
 .substance_item:not(:first-child) {
-  margin-top: 30px;
+  margin-top: 10px;
 }
 .substance_label {
   border-radius: 30px 100px 100px 30px;
