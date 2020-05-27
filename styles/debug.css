@@ -2,7 +2,7 @@ body {
   background-color: darkslategray;
 }
 .card_container {
-  padding: 0px 10px 30px 10px;
+  padding: 0px 10px 20px 10px;
   margin: 50px auto 0px auto;
   box-sizing: border-box;
   width: 90%;
@@ -10,14 +10,16 @@ body {
   background: white;
   border-radius: 10px;
   display: grid;
-  height: max-content;
+  height: min-content;
 }
 .card_label {
   margin-top: 15px;
-  font-size: 1.8rem;
+  margin-left: 10px;
+  font-size: 1.4rem;
   height: max-content;
   color: black;
   font-weight: bold;
+  text-align: left;
 }
 
 .input_card {
@@ -25,12 +27,16 @@ body {
 }
 .input_card textarea {
   margin: auto;
-  width: 90%;
+  width: calc(100% - 10px);
   height: 120px;
   border-radius: 10px;
-  background-color: darkgray;
+  background-color: black;
+  color: white;
+  font-weight: bold;
   border: none;
   outline: 0;
+  font-size: 1rem;
+  padding: 15px;
 }
 
 #substances_container {

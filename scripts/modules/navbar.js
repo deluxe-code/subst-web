@@ -1,3 +1,115 @@
+import { EventHandler } from "./event_handler.js";
+
+const iconsFolder = "/resources/icons/";
+const info_navButtons = [
+    {
+        name: "Timeline",
+        href: "timeline.html",
+        icon: {
+            src: "black_timeline.png",
+            alt: "Timeline"
+        }
+    },
+    {
+        name: "Schedule",
+        href: "schedule.html",
+        icon: {
+            src: "black_schedule.png",
+            alt: "Schedule"
+        }
+    },
+    {
+        name: "Search",
+        href: "#",
+        icon: {
+            src: "black_search.png",
+            alt: "Search"
+        }
+    },
+    {
+        name: "Settings",
+        href: "settings.html",
+        icon: {
+            src: "black_settings.png",
+            alt: "Settings"
+        }
+    }
+];
+const info_addButtons = [
+    {
+        label: "New Entry",
+        href: "#create_entry",
+        color: "black"
+    },
+    {
+        label: "New Schedule",
+        href: "#new_schedule",
+        color: "black"
+    },
+    {
+        label: "New Dose",
+        href: "#new_dose",
+        color: "black"
+    }
+]
+export class Navbar {
+    constructor() {
+        this._eventHandler = new EventHandler();
+        this.generate();
+        this.place();
+    }
+    toggleMenu() {
+        console.log("TOGGLE THE MENU!!");
+    }
+    generate() {
+        let nav = new NavElement({
+            elementType: "div",
+            id: "nav"
+        });
+
+        let add_button = new AddButton(this);
+        let add_menu = new NavElement({
+            id: "add-menu",
+            elementType: "div"
+        });
+        info_addButtons.forEach(addItem => {
+            add_menu.insert(new AddMenuItem(addItem));
+        });
+
+        // Tie the add menu to the Navigation Bar so it can be accessed by the AddButton
+        this._add_menu = add_menu;
+
+        let nav_bar = new NavElement({
+            elementType: "nav",
+            className: "navbar"
+        });
+
+        info_navButtons.forEach(navItem => {
+            nav_bar.insert(new NavButton(navItem));            
+        })
+
+
+        nav.insert(add_button);
+        nav.insert(nav_bar);
+
+        this._NavElement = nav;
+    }
+    place() {
+        document.body.appendChild(this.getNode());
+    }
+    getNavElement() {
+        return this._NavElement;
+    }
+    getNode() {
+        return this._NavElement.getNode();
+    }
+    hide() {
+        this._NavElement.getNode().style.display = "none";
+    }
+    show() {
+        this._NavElement.getNode().style.display = "block";
+    }
+}
 class NavElement {
     constructor(info) {
         this._children = [];
@@ -45,7 +157,7 @@ class NavElement {
     }
 }
 class AddButton extends NavElement {
-    constructor() {
+    constructor(NavbarInstance) {
         super({
             className: "nav-add",
             elementType: "a",
@@ -54,11 +166,32 @@ class AddButton extends NavElement {
 
         let button_label = document.createElement("span");
         button_label.innerHTML = "+";
+
+        this.getNode().addEventListener("click", event => {
+            NavbarInstance.toggleMenu();
+        });
+
         this.insert(button_label);
     }
 }
+class AddMenuItem extends NavElement {
+    constructor(info) {
+        super({
+            className: "add-item",
+            elementType: "div"
+        })
+
+        this._label = info.label;
+        this._href = info.href;
+        this._color = info.color;
+
+        this._node.innerHTML = this._label;
+        this._node.addEventListener("click", function() {
+            console.log(this._node + " was clicked!");
+        });
+    }
+}
 class NavButton extends NavElement {
-    iconsFolder = "/resources/icons/";
     constructor(info) {
         super({
             className: "nav-button",
@@ -71,140 +204,8 @@ class NavButton extends NavElement {
 
         let icon_image = document.createElement("img");
         icon_image.alt = this._imgAlt;
-        icon_image.src = this.iconsFolder + this._src;
+        icon_image.src = iconsFolder + this._src;
         this.insert(icon_image);
     }
 }
-const info_navButtons = [
-    {
-        name: "Timeline",
-        href: "timeline.html",
-        icon: {
-            src: "black_timeline.png",
-            alt: "Timeline"
-        }
-    },
-    {
-        name: "Schedule",
-        href: "schedule.html",
-        icon: {
-            src: "black_schedule.png",
-            alt: "Schedule"
-        }
-    },
-    {
-        name: "Search",
-        href: "#",
-        icon: {
-            src: "black_search.png",
-            alt: "Search"
-        }
-    },
-    {
-        name: "Settings",
-        href: "settings.html",
-        icon: {
-            src: "black_settings.png",
-            alt: "Settings"
-        }
-    }
-];
-export class Navbar {
-    constructor() {
-        this.generate();
-        this.place();
-    }
-    generate() {
-        let nav = new NavElement({
-            elementType: "nav",
-            id: "nav"
-        });
 
-        let nav_bar = new NavElement({
-            elementType: "div",
-            className: "navbar"
-        });
-
-        info_navButtons.forEach(item => {
-            nav_bar.insert(new NavButton(item));            
-        })
-
-        nav.insert(new AddButton());
-        nav.insert(nav_bar);
-
-        this._container = nav;
-    }
-    place() {
-        document.body.appendChild(this.getNode());
-    }
-    getNavElement() {
-        return this._container;
-    }
-    getNode() {
-        return this._container.getNode();
-    }
-    hide() {
-        this._container.getNode().style.display = "none";
-    }
-    show() {
-        this._container.getNode().style.display = "block";
-    }
-    layout_legend = {
-        container: {
-            name: "Navbar Container",
-            id: "navbar",
-            elementType: "nav",
-            children: [
-                {
-                    name: "Universal 'Add New' Button",
-                    className: "nav-add",
-                    elementType: "a",
-                    children: [
-                        {
-                            name: "Add Icon",
-                            id: "add-button-label",
-                            elementType: "span",
-                            value: "+"
-                        }
-                    ]
-                },
-                {
-                    name: "Navigation Options Container",
-                    className: "nav-button-container",
-                    elementType: "div",
-                    children: [
-                        {
-                            name: "Habits",
-                            icon: "/resources/icons/black_timeline.png",
-                            href: "habits.html",
-                            className: "nav-button",
-                            elementType: "a"
-                        },
-                        {
-                            name: "Schedule",
-                            icon: "/resources/icons/black_schedule.png",
-                            href: "schedule.html",
-                            className: "nav-button",
-                            elementType: "a"
-                        },
-                        {
-                            name: "Search",
-                            icon: "/resources/icons/black_search.png",
-                            href: "#",
-                            className: "nav-button",
-                            elementType: "a"
-                        },
-                        {
-                            name: "Settings",
-                            icon: "/resources/icons/black_settings.png",
-                            href: "settings.html",
-                            className: "nav-button",
-                            elementType: "a"
-                        }
-            ]
-                }
-            ]
-        }
-
-};
-}

@@ -1,127 +1,81 @@
 // import * as OptionSelector from "./OptionSelector.js";
 import { EventHandler } from "./event_handler.js";
 
-class CardEventHandler extends EventHandler {
-    constructor(parentCard) {
-        super("Send through everything that would be common between the different types of EventHandlers");
-        this._parentCard = parentCard;
-        this._currentListeners = [];
-        this._events = [];
-    }
-    newEvent(event_info) {
-        // NOTE: Remember that not all events will have a listener, since not all events
-        // require any sort of immediate action
-        let newEvent = new CardEvent(event_info);
-        
-        // Check if there are any listeners that want to run an action
-        this._currentListeners.forEach(listener => {
-            if (listener.event_type == newEvent.getType()) {
-                listener.action(newEvent);
-            }
-        })
-        this._events.push(newEvent);
-    }
-    listenFor(event_type, action) {
-        // NOTE: BEWARE!!! With the current code, if there are two listeners for the same
-        // event_type, it looks like the code would run all the listeners' code which 
-        // could cause a very difficult time debugging if not careful.
-        this._currentListeners.push({
-            event_type: event_type,
-            action: action
-        });
+export const cards_config = {
+    autoPlace: "false",
+    defaultContainer: document.body,
+    setDefaultContainer: function(query) {
+        this.defaultContainer = document.querySelector(query);
     }
 }
-
-class CardEvent {
-    constructor(event_info) {
-        this.type = event_info.type;
-        this.body = event_info.body;
-    }
-    getAuthor() {
-        return this.body.author;
-    }
-    getType() {
-        return this.type;
-    }
-    getBody() {
-        return this.body;
-    }
-    getValue() {
-        if (this.body.value != null) {
-            return this.body.value;
-        } else {
-            return "NO_TARGET_FOUND";
-        }
-    }
-}
-
-
-export class Card {
-    constructor(card_config) {
-        // this.type = card_info.type;
-        this._info = card_config;
+class Card {
+    constructor(card_config, className) {
+        this.className = "card_container ";
+        className ? this.className += className : console.log("no class given");
+        this._config = card_config;
         this._layout = new CardLayout(this);
-        this._eventHandler = new CardEventHandler(this);
-
-        // This is so that the developer can chain a event listenFor(), etc to the card's event handler
-        return this.getEventHandler();
-    }
-    getLayout() {
-        return this._layout;
+        this._eventHandler = new EventHandler(this);
     }
     getEventHandler() {
         return this._eventHandler;
     }
     getLabel() {
-        return this._info.label;
-    }
-    getPreset() {
-        return this._info.preset;
+        return this._config.label;
     }
     getID() {
-        return this._info.id;
+        return this._config.id;
     }
     getContent() {
-        return this._info.content;
-    }
-    getOutput() {
-        return this.getPreset().output(this._layout.layout_container);
-        // NOTE Find a way to get outputs in a dynamic way.
-        // While a textarea input card will just have one output, the text typed inside
-        // Other cards will likely need a special interface for outputting more than just thing
+        return this._config.content;
     }
 }
-let globalCard_className = "card_container ";
-export let card_presets = {
-    textInput: {
-        className: globalCard_className + "input_card",
-        build: async function(parentCard) {
-            let content = parentCard.getContent();
-            let inputBox = document.createElement("textarea");
-            inputBox.id = "input_textarea";
-            inputBox.placeholder = content.placeholder;
-            inputBox.addEventListener("keydown", function() {
-                parentCard.getEventHandler().newEvent({
-                    type: "change",
-                    body: {
-                        value: inputBox.value,
-                        author: parentCard
-                    }
-                });
+export class TextAreaCard extends Card {
+    constructor(card_config) {
+        super(card_config, "input_card");
+        this._outputReference;
+        // NOTE: THE LAYOUT IS CREATED BEFORE THE className ADJUSTMENT CAN BE MADE
+    }
+    build() {
+        let content = this.getContent();
+        let inputBox = document.createElement("textarea");
+        inputBox.placeholder = content.placeholder;
+        inputBox.addEventListener("keydown", () => {
+            this.getEventHandler().newEvent({
+                type: "change",
+                body: {
+                    value: inputBox.value,
+                    location: inputBox,
+                    author: this
+                }
             });
-            return inputBox;
-        },
-        getOutput: function() {
-            return document.querySelector(this.inputReference).value;
-        },
-        inputReference: "#input_textarea"
-        // TODO template: makeATemplateSystemHere
-    },
-    substance_picker: {
-        className: globalCard_className + "picker_card",
-        build: async function(parentCard) {
-            let content = parentCard.getContent();
-            let substanceArray = content.substances;
+        });
+
+        this._outputReference = inputBox;
+        return inputBox;
+    }
+    getOutput() {
+        console.log("Output requested for TextArea Card");
+        return this._outputReference.value;
+    }
+}
+export class OptionSelectorCard extends Card {
+    constructor(card_config) {
+        super(card_config, "option_selector_card");
+    }
+    build() {
+
+    }
+    getOutput() {
+        
+    }
+}
+export class SubstancePickerCard extends Card {
+    constructor(card_config) {
+        super(card_config, "picker_card");
+    }
+    build() {
+        let content = this.getContent();
+        let substanceArray = content.substances;
             let list_container = document.createElement("div");
             list_container.id = "substance_list";
             let list_items = [];
@@ -137,12 +91,13 @@ export let card_presets = {
                 add_container.className = "add_button";
                 add_container.innerHTML = "+";
 
-                add_container.addEventListener("click", function() {
-                    parentCard.getEventHandler().newEvent({
+                add_container.addEventListener("click", () => {
+                    this.getEventHandler().newEvent({
                         type: "select",
                         body: {
                             value: substance.id,
-                            author: parentCard
+                            location: add_container,
+                            author: this
                         }
                     });
                 });
@@ -156,55 +111,43 @@ export let card_presets = {
             })
             // Make this do more later
             return list_container;
-        }
     }
 }
 class CardLayout {
-    constructor(parentCard) {
-        this._parentCard = parentCard;
-
-        // this.card_properties = card_properties;
-        this.initialize();
-
-    }
-    async initialize() {
-        let parentCard = this._parentCard;
-
-        // CREATE CARD CONTAINER ELEMENT
-        this.layout_container = document.createElement("div");
-        this.layout_container.id = parentCard.getID();
-        this.layout_container.className = parentCard.getPreset().className;
-
-        // CREATE LABEL
-        this.card_label = document.createElement("span");
-        this.card_label.className = "card_label";
-        this.card_label.innerHTML = parentCard.getLabel();
-        // INSERT THE CARD'S LABEL
-        this.layout_container.appendChild(this.card_label);
+    constructor(parent) {
+        this._parent = parent;
+        let card_container = document.createElement("div");
+        card_container.id = this._parent.getID();
+        card_container.className = this._parent.className;
 
 
+        if (this._parent.getLabel()) {
+            let card_label = new Label({
+                className: "card_label",
+                label: this._parent.getLabel()
+            });
+            card_container.appendChild(card_label);
+        }
+        let generatedLayout = this._parent.build();
+        card_container.appendChild(generatedLayout);
 
-        
-        // INSERT THE GENERATED ELEMENT
-        // this.card_container.appendChild(type.build(content));
-
-        await this.generate().then(element => {
-            this.layout_container.appendChild(element);
-            this.place();
-        });
-    }
-    async generate() {
-        let parentCard = this._parentCard;
-        let content = parentCard.getContent();
-        let presetConfig = parentCard.getPreset();
-        return await presetConfig.build(parentCard).then(generatedNode => {
-            return generatedNode;
-        })
-
-    }
-    place() {
-        document.body.appendChild(this.layout_container);
-        console.log(this + " has been placed in the DOM");
+        if (cards_config.autoPlace) {
+            cards_config.defaultContainer.appendChild(card_container);
+        }
     }
 }
+class Label {
+    constructor(label_config) {
+        this._config = label_config;
+        let label_element = document.createElement("span");
+        label_element.className = this._config.className;
+        if (this._config.id) {
+            label_element.id = this._config.id;
+        }
+        label_element.innerHTML = this._config.label;
+        this._node = label_element;
+        return this._node;
+    }
+}
+
 
