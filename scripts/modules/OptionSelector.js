@@ -91,7 +91,10 @@ class Selector {
         let relativeFingerPosY = fingerPosY % this.optionBoxHeight;
         let numberOfCurrentOptionBoxesWithinFingerDistance = Math.floor(fingerPosY/this.optionBoxHeight);
         let numberOfPreviousOptionBoxesWithinFingerDistance = Math.floor(previousFingerPosY/this.optionBoxHeight);
-            if(numberOfPreviousOptionBoxesWithinFingerDistance < numberOfCurrentOptionBoxesWithinFingerDistance){
+        while(relativeFingerPosY<0){
+            relativeFingerPosY+= this.optionBoxHeight;
+        }
+        if(numberOfPreviousOptionBoxesWithinFingerDistance < numberOfCurrentOptionBoxesWithinFingerDistance){
                 this.selectPrevious();
                 this.refreshOptions();
             } else if(numberOfPreviousOptionBoxesWithinFingerDistance > numberOfCurrentOptionBoxesWithinFingerDistance){

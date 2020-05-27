@@ -14,7 +14,10 @@
         box-shadow: 0px 5px 5px rgba(86, 86, 86, 0.25);
         margin-left: auto;
         margin-right: auto;
+        margin-top: 5px; 
+        margin-bottom: 5px;
         background-color: white;
+        border-radius: 10px;
       }
       .SelectorOptionBox > p {
         text-align: center;
@@ -22,7 +25,7 @@
     </style>
   </head>
   <body onload="startTester()">
-    <div id="option" style="height: 40%;"></div>
+    <div id="option" style="height: 40%; width: 75%; margin-left: auto; margin-right: auto;"></div>
     <form onsubmit="return false">
       <input type="submit" onclick="tester.mySubmit()" />
     </form>
