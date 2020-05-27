@@ -173,6 +173,8 @@ class Selector {
 
         this.selectorTextParagraph[2].innerHTML = this.currentOption.data;
         this.optionBoxes[2].style.height = this.optionBoxHeight+"px";
+        this.optionBoxes[2].style.borderStyle = "solid";
+        this.optionBoxes[2].style.borderColor = "red";
 
         if(this.currentOption.next != null){
             this.selectorTextParagraph[3].innerHTML = this.currentOption.next.data;
