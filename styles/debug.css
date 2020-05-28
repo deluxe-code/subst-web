@@ -13,16 +13,17 @@ body {
   --main-container-color: #d9d9d9;
 }
 #s10e {
+  background-color: var(--main-bg-color);
   width: 412px;
   height: 869px;
-  background-color: var(--main-bg-color);
   margin-left: auto;
   margin-right: auto;
-  margin-top: 50px;
-  padding-top: 100px;
-  box-sizing: border-box;
+  margin-top: 30px;
+  /* box-sizing: border-box; */
   border-radius: 30px;
-  padding-top: 100px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 header {
   width: 100%;
@@ -30,6 +31,7 @@ header {
   padding-right: 20px;
   margin-bottom: 25px;
   box-sizing: border-box;
+  padding-top: 100px;
 }
 h1 {
   margin-bottom: 0px;
@@ -161,4 +163,41 @@ textarea {
   grid-row: 1;
   z-index: 2;
   color: black;
+}
+.add_button:hover {
+  cursor: pointer;
+}
+
+.selectedItemBar {
+  transform: translateY(70px);
+  width: 100%;
+  height: 70px;
+  background-color: black;
+  display: grid;
+  grid-template-columns: 70px auto 70px;
+}
+.selectedItem_button {
+  display: flex;
+  justify-self: center;
+  align-self: center;
+  width: 48px;
+  height: 48px;
+  /* background-color: white; */
+  color: black;
+}
+.cancel {
+  background-image: url("../resources/icons/white_cancel.png");
+  grid-column: 1 / 2;
+}
+.accept {
+  background-image: url("../resources/icons/white_accept.png");
+  grid-column: 3 / 4;
+}
+.selectedItem_label {
+  grid-column: 2 / 3;
+  text-align: center;
+  color: white;
+  line-height: 70px;
+  font-size: 2rem;
+  text-transform: capitalize;
 }

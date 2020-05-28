@@ -92,6 +92,31 @@ export class SubstancePickerCard extends Card {
         super(card_config);
         this.injectLayout(this.generateLayout());
     }
+    show = () => {
+        this.card.style.display = "block";
+        this.card.animate([
+            { transform: 'translateY(500px)' },
+            { transform: 'translateY(0px)' }
+    
+        ], {
+            duration: 300,
+            fill: "forwards"
+        });
+    }
+    hide = () => {
+        this.card.animate([
+            { transform: 'translateY(0px)' },
+            { transform: 'translateY(500px)' }
+    
+        ], {
+            duration: 500,
+            fill: "forwards",
+            easing: "ease-in-out"
+        });
+        setTimeout(() => {
+            this.card.style.display = "none";
+        }, 500);
+    }
     generateLayout = () => {
         let content = super.getContent();
         let substanceArray = content.substances;
@@ -146,7 +171,7 @@ class Label {
     }
 }
 class Button extends HTMLElement {
-    
+
 }
 function generateCard(prerequisites) {
     let { id, label, className } = prerequisites;
