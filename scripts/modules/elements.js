@@ -1,7 +1,8 @@
 import { EventHandler } from "./event_handler.js";
 
 export class CustomElement {
-    constructor(element_type, className, id) {
+    constructor(config) {
+        let { element_type, className, id } = config;
         this.node = document.createElement(element_type);
         className ? this.node.className = className : false;
         id ? this.node.id = id : false;
@@ -9,7 +10,8 @@ export class CustomElement {
     }
     insert(element_type, className, id) {
         let newElement = document.createElement(element_type);
-        newElement.className = className;
+        className ? newElement.className = className : false;
+        id ? newElement.id = id : false;
         this.node.appendChild(newElement);
         return newElement;
     }
@@ -25,11 +27,14 @@ export class CustomElement {
 export class SelectedItemBar extends CustomElement {
     animationDuration = 200;
     constructor(label, pickerCard) {
-        super("div", "selectedItemBar");
-        this.setClassName("selectedItemBar");
+        super({
+            element: "div",
+            className: "selectedItemBar"
+        });
+        // this.setClassName("selectedItemBar");
         // NOTE: TRANSITION JITTER IS LIKELY DUE TO THE SETTING OF DISPLAY: NONE
         // ON THE SelectedItemBar, which removes it from the DOM Tree and messes up
-        // the page layout sizing due to the fact that body's display: flex;
+        // the page layout sizing due to the fact that #body's display: flex;
         this.cancelElement = this.insert("a", "selectedItem_button cancel");
         this.cancelElement.addEventListener("click", () => {
             this.hide();

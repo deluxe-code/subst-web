@@ -15,3 +15,11 @@ export const drugs_directory = [
         id: "drug_adderall"
     }
 ];
+export const animations = {
+    slideDown: {
+
+    },
+    slideUp: {
+        
+    }
+};

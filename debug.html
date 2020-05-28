@@ -2,19 +2,43 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0 user-scalable=no"
+    />
     <title>Document</title>
     <link rel="stylesheet" href="styles/debug.css" />
     <script type="module" src="scripts/debug.js"></script>
+    <style>
+      .SelectorOptionBox {
+        box-shadow: 0px 5px 5px rgba(86, 86, 86, 0.25);
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        background-color: white;
+        border-radius: 10px;
+      }
+      .SelectorOptionBox > p {
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
     <!-- <section></section> -->
-    <div id="s10e">
-      <header>
-        <h1>Add Dose.</h1>
-        <h2 id="liveStatus">Give us more information about your dose</h2>
-      </header>
-      <main id="body"></main>
+    <div id="debug">
+      <section id="debug-info">
+        <span>Debug</span>
+        <div id="debug-updates"></div>
+      </section>
+
+      <div id="s10e">
+        <header>
+          <h1>Add Dose.</h1>
+          <h2 id="liveStatus">Give us more information about your dose</h2>
+        </header>
+        <main id="body"></main>
+      </div>
     </div>
   </body>
 </html>
