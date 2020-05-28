@@ -7,16 +7,11 @@ class Tester {
     mySelectorList = new SelectorOptionLinkedList("o");
     mySelector;
     start() {
-        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "333", null));
-        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "yt", null));
-        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "4", null));
-        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "324", null));
-        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "fsdf", null));
-        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "124", null));
-        this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "fxd43f", null));
+        let arr = [];
         for(var i = 0; i < 30; i++){
-            this.mySelectorList.add(new SelectorOption(this.mySelectorList.last, "forloop, " + i, null));
+            arr[i] = "forloop, " + i;
         }
+        this.mySelectorList.insertArray(arr);
         this.mySelector = new Selector("option", this.mySelectorList);
     }
     mySubmit(){
@@ -173,8 +168,8 @@ class Selector {
 
         this.selectorTextParagraph[2].innerHTML = this.currentOption.data;
         this.optionBoxes[2].style.height = this.optionBoxHeight+"px";
-        this.optionBoxes[2].style.borderStyle = "solid";
-        this.optionBoxes[2].style.borderColor = "red";
+        //this.optionBoxes[2].style.borderStyle = "solid";
+        //this.optionBoxes[2].style.borderColor = "red";
 
         if(this.currentOption.next != null){
             this.selectorTextParagraph[3].innerHTML = this.currentOption.next.data;
@@ -185,7 +180,6 @@ class Selector {
             }
         }
     }
-
 
     smoothHeightReset = () => {
         let heightDeceleration = 5;
@@ -210,7 +204,7 @@ class Selector {
             clearInterval(this.smoothHeightInterval);
         }
     }
-    
+
 }
 
 class SelectorOptionLinkedList {
@@ -219,6 +213,16 @@ class SelectorOptionLinkedList {
     constructor(data){
         this.root = new SelectorOption(null, data, null);
         this.last = this.root;
+    }
+
+    insertArray(arr){
+        arr.forEach(option => {
+            this.add(new SelectorOption(this.last, option, null));
+        });
+    }
+
+    insertListFromDatabase(){
+
     }
 
     add(selectorOption) {
