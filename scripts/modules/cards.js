@@ -1,6 +1,7 @@
 // import * as OptionSelector from "./OptionSelector.js";
 import { EventHandler } from "./event_handler.js";
-
+import * as OptionSelector from "./OptionSelector.js";
+import * as inputModules from "./input_modules.js";
 export const cards_config = {
     autoPlace: "false",
     defaultContainer: document.querySelector("#body"),
@@ -75,12 +76,45 @@ export class LineGraphCard extends Card {
 
     }
 }
+export class InputModulesCard extends Card {
+    constructor(card_config) {
+        super(card_config, "bazigga");
+        this.injectLayout(this.generateLayout());
+    }
+    generateLayout = () => {
+        let settingToggle = new inputModules.ToggleInput("Sound", false);
+        settingToggle.eventHandler.listenFor("toggle", (event) => {
+            console.log(event);
+        })
+        return settingToggle;
+    }
+    inputHooks = () => {
+        
+    }
+}
 export class OptionSelectorCard extends Card {
     constructor(card_config) {
         super(card_config, "option_selector_card");
+        this.injectLayout(this.generateLayout());
+        this.testOptionSelector();
     }
     generateLayout = () => {
-        
+        let containerTest = document.createElement("div");
+        containerTest.id = "zibba";
+        containerTest.style.height = "200px";
+        return containerTest;
+    }
+    testOptionSelector() {
+        let mySelectorList = new OptionSelector.SelectorOptionLinkedList("o");
+        let mySelector;
+        mySelectorList.insertArray(this.getContent().options);
+        mySelector = new OptionSelector.Selector("zibba", mySelectorList);
+        mySelector.refreshOptions();
+    }
+    refactoredCode() {
+        let optionsArray = this.getContent().options;
+
+        let optionSelector = new OptionSelector(optionsArray)
     }
     getOutput = () => {
 
@@ -170,9 +204,6 @@ class Label {
         return this._node;
     }
 }
-class Button extends HTMLElement {
-
-}
 function generateCard(prerequisites) {
     let { id, label, className } = prerequisites;
     // this._parent = parent;
@@ -180,7 +211,6 @@ function generateCard(prerequisites) {
     card_container.id = id;
     // The classname below won't work or will not include the proper secondary class name
     card_container.className = (className ? `card_container ${className}` : `card_container`);
-    console.log(card_container.className);
 
     if (label) {
         let card_label = new Label({

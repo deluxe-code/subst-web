@@ -1,8 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap");
 html {
   font-size: 1rem;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
 }
 body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
   background-color: darkslategray;
 }
 * {
@@ -12,13 +20,52 @@ body {
   --main-bg-color: white;
   --main-container-color: #d9d9d9;
 }
+#debug {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 3fr 3.5fr;
+  align-items: center;
+  justify-items: center;
+}
+#debug-info {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  width: 90%;
+  height: min-content;
+  border-radius: 10px;
+  background-color: black;
+}
+#debug-info span {
+  margin-top: 0px;
+  text-align: left;
+  color: white;
+  font-size: 2.3rem;
+}
+#debug-updates {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 5px 10px 5px;
+  height: 100%;
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+#debug-updates span {
+  font-size: 1.5rem;
+  padding: 5px 10px 5px 10px;
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+  text-align: center;
+}
+#debug-updates span:not(:nth-child(1)) {
+  margin-top: 10px;
+}
 #s10e {
   background-color: var(--main-bg-color);
   width: 412px;
   height: 869px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 30px;
   /* box-sizing: border-box; */
   border-radius: 30px;
   overflow: hidden;
@@ -185,6 +232,9 @@ textarea {
   /* background-color: white; */
   color: black;
 }
+.selectedItem_button:hover {
+  cursor: pointer;
+}
 .cancel {
   background-image: url("../resources/icons/white_cancel.png");
   grid-column: 1 / 2;
@@ -200,4 +250,50 @@ textarea {
   line-height: 70px;
   font-size: 2rem;
   text-transform: capitalize;
+}
+
+:root {
+  --toggleInput-fontSize: 1rem;
+  --toggleInput-height: 50px;
+  --toggleButton-height: calc(var(--toggleInput-height) - 10px);
+  --toggleLabel-color: black;
+  --toggleButton-bg-disabled: #303030;
+  --toggleButton-bg-enabled: green;
+  --toggleButton-textColor-disabled: white;
+  --toggleButton-textColor-enabled: black;
+}
+.toggle-input {
+  width: min-content;
+  height: var(--toggleInput-height);
+  display: grid;
+  align-items: center;
+  grid-template-columns: 2fr 1fr;
+  grid-gap: 20px;
+  font-size: var(--toggleInput-fontSize);
+}
+.toggle-label {
+  line-height: var(--toggleInput-height);
+  text-transform: uppercase;
+  font-size: 1.5em;
+  color: var(--toggleLabel-color);
+}
+.toggle-button {
+  /* line-height: var(--toggleButton-height); */
+  height: var(--toggleButton-height);
+  padding: 5px 10px 5px 10px;
+  box-sizing: border-box;
+  font-size: 1.2em;
+  text-align: center;
+  color: var(--toggleButton-color);
+}
+.toggle-button:hover {
+  cursor: pointer;
+}
+.toggle-input > .toggle-enabled {
+  background-color: var(--toggleButton-bg-enabled);
+  color: var(--toggleButton-textColor-enabled);
+}
+.toggle-input > .toggle-disabled {
+  background-color: var(--toggleButton-bg-disabled);
+  color: var(--toggleButton-textColor-disabled);
 }
