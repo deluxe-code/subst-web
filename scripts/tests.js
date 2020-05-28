@@ -1,9 +1,10 @@
-import * as OptionSelector from "modules/OptionSelector.js";
-
+import * as OptionSelector from "./modules/OptionSelector.js";
+console.log("4");
 let mySelectorList = new SelectorOptionLinkedList("o");
 let mySelector;
+
 function start() {
-    console.log("ah");
+    
     let arr = [];
     for(var i = 0; i < 30; i++){
         arr[i] = "forloop, " + i;
