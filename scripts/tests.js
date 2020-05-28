@@ -6,6 +6,8 @@ function start() {
     for(var i = 0; i < 30; i++){
         arr[i] = "forloop, " + i;
     }
-    mySelector = new OptionSelector.Selector("option", new OptionSelector.SelectorOptionLinkedList(arr));
+    mySelector = new OptionSelector.Selector(arr);
+    document.getElementById("option").appendChild(mySelector.getElement());
+    mySelector.setHeight();
 }
 start();
