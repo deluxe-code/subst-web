@@ -1,11 +1,12 @@
 export class Selector {
     
+    selectorBox;
     scrollSensitivity = 1;
     fontSize = 16;
     selectorOptionList;
     currentOption;
-    selectorSectionId;
-    selectorSection;
+    selectorContainerId;
+    selectorContainer;
     optionBoxes = [];
     selectorTextParagraph = [];
     optionBoxHeight = 50;
@@ -13,26 +14,31 @@ export class Selector {
     previousScrollPosition;
     decelerationInterval;
     smoothHeightInterval;
-    constructor(selectorSectionId, selectorOptionList){
-        this.selectorSectionId = selectorSectionId;
+    constructor(selectorContainerId, selectorOptionList){
+        this.selectorContainerId = selectorContainerId;
         this.selectorOptionList = selectorOptionList;
         this.currentOption = selectorOptionList.root;
-        this.selectorSection = document.getElementById(this.selectorSectionId);
+        this.selectorContainer = document.getElementById(this.selectorContainerId);
         this.createOptionBoxes();
         this.scrollEvents();
-        this.optionBoxHeight=this.selectorSection.offsetHeight/4;
+        this.selectorBox.style.height = "100%";
+        this.optionBoxHeight=this.selectorBox.offsetHeight/4;
         this.refreshOptions();
+        return this.selectorBox;
     }
 
     addOption(data) {
         this.selectorOptionList.add(data);
     }
     createOptionBoxes() {
+        this.selectorBox =  document.createElement("div");
+        this.selectorBox.className = "SelectorBox";
+        this.selectorContainer.appendChild(this.selectorBox);
         for(let i = 0; i < 5; i++) {
             this.optionBoxes[i] = document.createElement("div");
             this.optionBoxes[i].id = "SelectorOptionBox" + i;
             this.optionBoxes[i].className = "SelectorOptionBox";
-            this.selectorSection.appendChild(this.optionBoxes[i]);
+            this.selectorBox.appendChild(this.optionBoxes[i]);
             this.selectorTextParagraph[i] = this.optionBoxes[i].appendChild(document.createElement("p"));
             this.selectorTextParagraph[i].style.margin = "0px";
         }
@@ -45,12 +51,12 @@ export class Selector {
         let previousTimeStamp = Date.now();
         let initialOffset;
         let numberOfPreviousOptionBoxesWithinFingerDistance = 0;
-        this.selectorSection.addEventListener("touchstart", ev => {
+        this.selectorContainer.addEventListener("touchstart", ev => {
             clearInterval(this.decelerationInterval);
             touchOrigin = ev.touches[0].clientY;
             currentScrolls = 0;
         }, {passive: true});
-        this.selectorSection.addEventListener("touchmove", ev => {
+        this.selectorContainer.addEventListener("touchmove", ev => {
             
             let fingerPos = ev.targetTouches[0];
             let fingerPosY = fingerPos.clientY-(touchOrigin%this.optionBoxHeight);
@@ -59,9 +65,12 @@ export class Selector {
             this.previousScrollPosition = previousFingerPosY;
             previousTimeStamp = Date.now();
         }, {passive: true});
-        this.selectorSection.addEventListener("touchend", ev => {
+        this.selectorContainer.addEventListener("touchend", ev => {
             this.decelerationInterval = setInterval(this.smoothDeceleration, 1000/60);
         }, {passive: true});
+        this.selectorContainer.addEventListener("scroll", ev => {
+
+        });
     }
 
     //scroll preforms scroll actions and returns previousFingerPos
