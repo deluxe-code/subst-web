@@ -1,25 +1,4 @@
-let tester;
-function startTester() {
-    tester = new Tester();
-    tester.start();
-}
-class Tester {
-    mySelectorList = new SelectorOptionLinkedList("o");
-    mySelector;
-    start() {
-        let arr = [];
-        for(var i = 0; i < 30; i++){
-            arr[i] = "forloop, " + i;
-        }
-        this.mySelectorList.insertArray(arr);
-        this.mySelector = new Selector("option", this.mySelectorList);
-    }
-    mySubmit(){
-        this.mySelector.refreshOptions();
-    }
-}
-
-class Selector {
+export class Selector {
     
     scrollSensitivity = 1;
     fontSize = 16;
@@ -44,6 +23,9 @@ class Selector {
         this.optionBoxHeight=this.selectorSection.offsetHeight/4;
     }
 
+    addOption(data) {
+        this.selectorOptionList.add(data);
+    }
     createoptionBoxes() {
         for(let i = 0; i < 5; i++) {
             this.optionBoxes[i] = document.createElement("div");
@@ -207,7 +189,7 @@ class Selector {
 
 }
 
-class SelectorOptionLinkedList {
+export class SelectorOptionLinkedList {
     root;
     last;
     constructor(data){
@@ -237,7 +219,7 @@ class SelectorOptionLinkedList {
 
 }
 
-class SelectorOption{
+export class SelectorOption{
     data;
     previous;
     next;
