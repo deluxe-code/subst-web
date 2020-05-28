@@ -18,15 +18,16 @@ export class Selector {
         this.selectorOptionList = selectorOptionList;
         this.currentOption = selectorOptionList.root;
         this.selectorSection = document.getElementById(this.selectorSectionId);
-        this.createoptionBoxes();
+        this.createOptionBoxes();
         this.scrollEvents();
         this.optionBoxHeight=this.selectorSection.offsetHeight/4;
+        this.refreshOptions();
     }
 
     addOption(data) {
         this.selectorOptionList.add(data);
     }
-    createoptionBoxes() {
+    createOptionBoxes() {
         for(let i = 0; i < 5; i++) {
             this.optionBoxes[i] = document.createElement("div");
             this.optionBoxes[i].id = "SelectorOptionBox" + i;
@@ -50,6 +51,7 @@ export class Selector {
             currentScrolls = 0;
         }, {passive: true});
         this.selectorSection.addEventListener("touchmove", ev => {
+            
             let fingerPos = ev.targetTouches[0];
             let fingerPosY = fingerPos.clientY-(touchOrigin%this.optionBoxHeight);
             this.setFingerVelocity(fingerPosY, previousFingerPosY, previousTimeStamp);
@@ -102,13 +104,11 @@ export class Selector {
             this.scroll(nextScrollPosition, this.previousScrollPosition);
             this.fingerVelocity-=decelerationRate;
             this.previousScrollPosition = nextScrollPosition;
-            console.log(nextScrollPosition + "above range");
         } else if(this.fingerVelocity<-snapRange){
             let nextScrollPosition = this.previousScrollPosition + this.fingerVelocity*speed;
             this.scroll(nextScrollPosition, this.previousScrollPosition);
             this.fingerVelocity+=decelerationRate;
             this.previousScrollPosition = nextScrollPosition;
-            console.log(nextScrollPosition);
         } else{
             this.smoothHeightReset();
         }
@@ -150,15 +150,12 @@ export class Selector {
 
         this.selectorTextParagraph[2].innerHTML = this.currentOption.data;
         this.optionBoxes[2].style.height = this.optionBoxHeight+"px";
-        //this.optionBoxes[2].style.borderStyle = "solid";
-        //this.optionBoxes[2].style.borderColor = "red";
 
         if(this.currentOption.next != null){
             this.selectorTextParagraph[3].innerHTML = this.currentOption.next.data;
             this.optionBoxes[3].style.height = this.optionBoxHeight+"px";
             if(this.currentOption.next.next != null){
                 this.selectorTextParagraph[4].innerHTML = this.currentOption.next.next.data;
-
             }
         }
     }
@@ -192,9 +189,13 @@ export class Selector {
 export class SelectorOptionLinkedList {
     root;
     last;
-    constructor(data){
-        this.root = new SelectorOption(null, data, null);
-        this.last = this.root;
+
+    constructor(arr){
+        if(arr==null){
+
+        } else{
+            this.insertArray(arr);
+        }
     }
 
     insertArray(arr){
@@ -213,7 +214,12 @@ export class SelectorOptionLinkedList {
         } catch(err) {
             console.error(err);
         }
-        this.last.next = selectorOption;
+
+        if(this.root==null){
+            this.root = selectorOption;
+        }else{
+            this.last.next = selectorOption;
+        }
         this.last = selectorOption;
     }
 
