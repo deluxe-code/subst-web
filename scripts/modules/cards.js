@@ -3,21 +3,31 @@ import { EventHandler } from "./event_handler.js";
 
 export const cards_config = {
     autoPlace: "false",
-    defaultContainer: document.body,
+    defaultContainer: document.querySelector("#body"),
     setDefaultContainer: function(query) {
         this.defaultContainer = document.querySelector(query);
     }
 }
 class Card {
-    constructor(card_config, className) {
-        this.className = "card_container ";
-        className ? this.className += className : console.log("no class given");
+    constructor(card_config) {
         this._config = card_config;
-        this._layout = new CardLayout(this);
         this._eventHandler = new EventHandler(this);
+        this.events = {
+            listenFor: this._eventHandler.listenFor
+        }
+        this.card = generateCard(card_config);
+        cards_config.autoPlace ? this.place() : console.log("Will not place for now");
     }
-    getEventHandler() {
-        return this._eventHandler;
+    injectLayout = (generatedLayout) => {
+        this.card_layout = generatedLayout;
+        this.card.appendChild(this.card_layout);
+    }
+    place() {
+            if (this._config.location == "default" || !this._config.location) {
+                cards_config.defaultContainer.appendChild(this.card);
+            } else {
+                document.querySelector(this._config.location).appendChild(this.card);
+            }
     }
     getLabel() {
         return this._config.label;
@@ -31,16 +41,16 @@ class Card {
 }
 export class TextAreaCard extends Card {
     constructor(card_config) {
-        super(card_config, "input_card");
-        this._outputReference;
-        // NOTE: THE LAYOUT IS CREATED BEFORE THE className ADJUSTMENT CAN BE MADE
+        card_config.className = "input_card";
+        super(card_config);
+        this.injectLayout(this.generateLayout());
     }
-    build() {
-        let content = this.getContent();
+    generateLayout = () => {
+        let content = super.getContent();
         let inputBox = document.createElement("textarea");
         inputBox.placeholder = content.placeholder;
         inputBox.addEventListener("keydown", () => {
-            this.getEventHandler().newEvent({
+            this._eventHandler.newEvent({
                 type: "change",
                 body: {
                     value: inputBox.value,
@@ -50,31 +60,40 @@ export class TextAreaCard extends Card {
             });
         });
 
-        this._outputReference = inputBox;
         return inputBox;
     }
-    getOutput() {
+    getOutput = () => {
         console.log("Output requested for TextArea Card");
-        return this._outputReference.value;
+        return this.card.getElementsByTagName("textarea")[0].value;
+    }
+}
+export class LineGraphCard extends Card {
+    constructor(card_config) {
+        super(card_config, "line_graph_card");
+    }
+    generateLayout = () => {
+
     }
 }
 export class OptionSelectorCard extends Card {
     constructor(card_config) {
         super(card_config, "option_selector_card");
     }
-    build() {
-
-    }
-    getOutput() {
+    generateLayout = () => {
         
+    }
+    getOutput = () => {
+
     }
 }
 export class SubstancePickerCard extends Card {
     constructor(card_config) {
-        super(card_config, "picker_card");
+        card_config.className = "picker_card";
+        super(card_config);
+        this.injectLayout(this.generateLayout());
     }
-    build() {
-        let content = this.getContent();
+    generateLayout = () => {
+        let content = super.getContent();
         let substanceArray = content.substances;
             let list_container = document.createElement("div");
             list_container.id = "substance_list";
@@ -92,7 +111,7 @@ export class SubstancePickerCard extends Card {
                 add_container.innerHTML = "+";
 
                 add_container.addEventListener("click", () => {
-                    this.getEventHandler().newEvent({
+                    this._eventHandler.newEvent({
                         type: "select",
                         body: {
                             value: substance.id,
@@ -113,29 +132,6 @@ export class SubstancePickerCard extends Card {
             return list_container;
     }
 }
-class CardLayout {
-    constructor(parent) {
-        this._parent = parent;
-        let card_container = document.createElement("div");
-        card_container.id = this._parent.getID();
-        card_container.className = this._parent.className;
-
-
-        if (this._parent.getLabel()) {
-            let card_label = new Label({
-                className: "card_label",
-                label: this._parent.getLabel()
-            });
-            card_container.appendChild(card_label);
-        }
-        let generatedLayout = this._parent.build();
-        card_container.appendChild(generatedLayout);
-
-        if (cards_config.autoPlace) {
-            cards_config.defaultContainer.appendChild(card_container);
-        }
-    }
-}
 class Label {
     constructor(label_config) {
         this._config = label_config;
@@ -149,5 +145,103 @@ class Label {
         return this._node;
     }
 }
+class Button extends HTMLElement {
+    
+}
+function generateCard(prerequisites) {
+    let { id, label, className } = prerequisites;
+    // this._parent = parent;
+    let card_container = document.createElement("div");
+    card_container.id = id;
+    // The classname below won't work or will not include the proper secondary class name
+    card_container.className = (className ? `card_container ${className}` : `card_container`);
+    console.log(card_container.className);
+
+    if (label) {
+        let card_label = new Label({
+            className: "card_label",
+            label: label
+        });
+        card_container.appendChild(card_label);
+    }
+    return card_container;
+    // let generatedLayout = this._parent.build();
+    // card_container.appendChild(generatedLayout);
+
+    // if (cards_config.autoPlace) {
+    //     cards_config.defaultContainer.appendChild(card_container);
+    // }
+}
+function generateLayout() {
+
+}
+class TestCardLayout {
+    constructor(prerequisites) {
+        let { id, label } = prerequisites;
+        this._parent = parent;
+        let card_container = document.createElement("div");
+        card_container.id = id;
+        // The classname below won't work or will not include the proper secondary class name
+        card_container.className = this.className;
+
+
+        if (label) {
+            let card_label = new Label({
+                className: "card_label",
+                label: label
+            });
+            card_container.appendChild(card_label);
+        }
+        let generatedLayout = this._parent.build();
+        card_container.appendChild(generatedLayout);
+
+        if (cards_config.autoPlace) {
+            cards_config.defaultContainer.appendChild(card_container);
+        }
+    }
+    buildEmptyCard() {
+
+    }
+}
+class TextAreaLayout extends TestCardLayout {
+    constructor(parent) {
+        super(parent);
+        this.className = "card_container input_card";
+    }
+    buildTextArea() {
+        let content = super.getContent();
+        let inputBox = document.createElement("textarea");
+        inputBox.placeholder = content.placeholder;
+        inputBox.addEventListener("keydown", () => {
+            super._eventHandler.newEvent({
+                type: "change",
+                body: {
+                    value: inputBox.value,
+                    location: inputBox,
+                    author: this
+                }
+            });
+        });
+
+        this._outputReference = inputBox;
+        return inputBox;
+    }
+    getOutput() {
+        console.log("Output requested for TextArea Card");
+        return this._outputReference.value;
+    }
+}
+export class TestCard {
+    constructor(card_config) {
+        this._outputReference;
+    }
+    build() {
+
+    }
+    getOutput() {
+
+    }
+}
+
 
 

@@ -2,7 +2,9 @@ import { cards_config, TextAreaCard, SubstancePickerCard } from "./modules/cards
 import { drugs_directory } from "./modules/local_database.js";
 
 cards_config.setDefaultContainer("#body");
-cards_config.autoPlace = true;
+// cards_config.autoPlace = true;
+
+
 
 let newTextCard = new TextAreaCard({
     id: "doseInfo_input",
@@ -12,6 +14,7 @@ let newTextCard = new TextAreaCard({
         placeholder: "Yo yo this is a placeholder"
     }
 });
+setTimeout(newTextCard.getOutput, 1000);
 
 // NOTE: To get output from newTextCard, simply call
 //       newTextCard.getOutput();
@@ -27,8 +30,9 @@ let pickerCard = new SubstancePickerCard({
         substances: drugs_directory
     }
 })
-pickerCard.getEventHandler().listenFor("select", function(event) {
-    console.log("ACTION MADE: User has made a " + event.getType() + " event, they selected " + event.getValue())
+let pickerEvents = pickerCard.events;
+pickerEvents.listenFor("select", function(event) {
+    console.log("ACTION MADE: User has made a " + event.type + " event, they selected " + event.body.value)
 });
 
 

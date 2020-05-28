@@ -95,7 +95,7 @@ export class Navbar {
         this._NavElement = nav;
     }
     place() {
-        document.body.appendChild(this.getNode());
+        document.body.appendChild(super._node);
     }
     getNavElement() {
         return this._NavElement;
@@ -167,11 +167,11 @@ class AddButton extends NavElement {
         let button_label = document.createElement("span");
         button_label.innerHTML = "+";
 
-        this.getNode().addEventListener("click", event => {
+        super.getNode().addEventListener("click", event => {
             NavbarInstance.toggleMenu();
         });
 
-        this.insert(button_label);
+        super.insert(button_label);
     }
 }
 class AddMenuItem extends NavElement {
@@ -185,8 +185,8 @@ class AddMenuItem extends NavElement {
         this._href = info.href;
         this._color = info.color;
 
-        this._node.innerHTML = this._label;
-        this._node.addEventListener("click", function() {
+        super._node.innerHTML = this._label;
+        super._node.addEventListener("click", function() {
             console.log(this._node + " was clicked!");
         });
     }
@@ -205,7 +205,7 @@ class NavButton extends NavElement {
         let icon_image = document.createElement("img");
         icon_image.alt = this._imgAlt;
         icon_image.src = iconsFolder + this._src;
-        this.insert(icon_image);
+        super.insert(icon_image);
     }
 }
 
