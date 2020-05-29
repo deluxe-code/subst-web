@@ -15,11 +15,42 @@ export const drugs_directory = [
         id: "drug_adderall"
     }
 ];
-export const animations = {
-    slideDown: {
 
+
+export const animator = {
+    animate: (config) => {
+        this.duration;
+        element.animate(animations[animation], configs[config]);
     },
-    slideUp: {
-        
+    animations: {
+        slideDown: [
+                { transform: 'translateY(70px)'},
+                { transform: 'translateY(0px)'}
+            ],
+        slideUp: [
+            { transform: 'translateY(0px)'},
+            { transform: 'translateY(70px)'}
+        ],
+        slideLeft: [
+            { transform: 'translateX(0px)' },
+            { transform: 'translateX(-50px)'}
+        ],
+        slideRight: [
+            { transform: 'translateX(0px)'},
+            { transform: 'translateX(50px'}
+        ]
+    },
+    configs: {
+        basic: {
+            fill: "forwards",
+            easing: "ease-in-out"
+        }
+    },
+    variables: {
+        duration: {
+            short: 200,
+            medium: 500,
+            long: 800,
+        }
     }
-};
+}
