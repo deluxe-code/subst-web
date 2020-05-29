@@ -7,7 +7,6 @@ export class Selector {
     currentOption;
     optionBoxes = [];
     selectorTextParagraph = [];
-    optionBoxHeight = 50;
     fingerVelocity;
     previousScrollPosition;
     decelerationInterval;
@@ -18,11 +17,17 @@ export class Selector {
         this.currentOption = this.selectorOptionList.root;
         this.createOptionBoxes();
         this.scrollEvents();
+        this.loadEvents();
         this.selectorBox.style.height = "100%";
         this.refreshOptions();
     }
 
-    
+    loadEvents(){
+        let resizeObserver = new ResizeObserver(() => {
+            this.refreshOptions();
+        });
+        resizeObserver.observe(this.selectorBox);
+    }
 
     getElement() {
         return this.selectorBox;
@@ -59,7 +64,7 @@ export class Selector {
         this.selectorBox.addEventListener("touchmove", ev => {
             
             let fingerPos = ev.targetTouches[0];
-            let fingerPosY = fingerPos.clientY-(touchOrigin%this.optionBoxHeight);
+            let fingerPosY = fingerPos.clientY-(touchOrigin%(this.selectorBox.offsetHeight/4));
             this.setFingerVelocity(fingerPosY, previousFingerPosY, previousTimeStamp);
             previousFingerPosY = this.scroll(fingerPosY, previousFingerPosY);
             this.previousScrollPosition = previousFingerPosY;
@@ -76,11 +81,11 @@ export class Selector {
     //scroll preforms scroll actions and returns previousFingerPos
     scroll(fingerPosY, previousFingerPosY) {
         
-        let relativeFingerPosY = fingerPosY % this.optionBoxHeight;
-        let numberOfCurrentOptionBoxesWithinFingerDistance = Math.floor(fingerPosY/this.optionBoxHeight);
-        let numberOfPreviousOptionBoxesWithinFingerDistance = Math.floor(previousFingerPosY/this.optionBoxHeight);
+        let relativeFingerPosY = fingerPosY % (this.selectorBox.offsetHeight/4);
+        let numberOfCurrentOptionBoxesWithinFingerDistance = Math.floor(fingerPosY/(this.selectorBox.offsetHeight/4));
+        let numberOfPreviousOptionBoxesWithinFingerDistance = Math.floor(previousFingerPosY/(this.selectorBox.offsetHeight/4));
         while(relativeFingerPosY<0){
-            relativeFingerPosY+= this.optionBoxHeight;
+            relativeFingerPosY+= (this.selectorBox.offsetHeight/4);
         }
         if(numberOfPreviousOptionBoxesWithinFingerDistance < numberOfCurrentOptionBoxesWithinFingerDistance){
                 this.selectPrevious();
@@ -89,10 +94,10 @@ export class Selector {
                 this.selectNext();
                 this.refreshOptions();
             }else {
-                this.optionBoxes[0].style.height = relativeFingerPosY + "px";
-                this.optionBoxes[4].style.height = this.optionBoxHeight-relativeFingerPosY + "px";
-                this.optionBoxes[0].childNodes[0].style.fontSize = this.fontSize*(relativeFingerPosY/this.optionBoxHeight) + "px";
-                this.optionBoxes[4].childNodes[0].style.fontSize = this.fontSize*((this.optionBoxHeight-relativeFingerPosY)/this.optionBoxHeight) + "px";
+                this.optionBoxes[0].style.height = ((relativeFingerPosY)/this.selectorBox.offsetHeight)*100 + "%";
+                this.optionBoxes[4].style.height = (((this.selectorBox.offsetHeight/4)-relativeFingerPosY)/this.selectorBox.offsetHeight)*100 + "%";
+                this.optionBoxes[0].childNodes[0].style.fontSize = this.fontSize*(relativeFingerPosY/(this.selectorBox.offsetHeight/4)) + "px";
+                this.optionBoxes[4].childNodes[0].style.fontSize = this.fontSize*(((this.selectorBox.offsetHeight/4)-relativeFingerPosY)/(this.selectorBox.offsetHeight/4)) + "px";
             }       
         previousFingerPosY = fingerPosY;
         return previousFingerPosY;
@@ -127,7 +132,7 @@ export class Selector {
     selectPrevious(){
         if(this.currentOption.previous != null && this.currentOption.previous.previous!=null)this.currentOption = this.currentOption.previous;
         this.optionBoxes[0].style.height = "0px";
-        this.optionBoxes[4].style.height = this.optionBoxHeight + "px"; 
+        this.optionBoxes[4].style.height = (this.selectorBox.offsetHeight/4) + "px"; 
         this.optionBoxes[0].childNodes[0].style.fontSize = "0px";
         this.optionBoxes[4].childNodes[0].style.fontSize = this.fontSize + "px";
     }
@@ -135,7 +140,7 @@ export class Selector {
     selectNext() {
         if(this.currentOption.next != null && this.currentOption.next.next!=null)this.currentOption = this.currentOption.next;
         this.optionBoxes[4].style.height = "0px";
-        this.optionBoxes[0].style.height = this.optionBoxHeight + "px";
+        this.optionBoxes[0].style.height = (this.selectorBox.offsetHeight/4) + "px";
         this.optionBoxes[4].childNodes[0].style.fontSize = "0px";
         this.optionBoxes[0].childNodes[0].style.fontSize = this.fontSize + "px";
     }
@@ -148,26 +153,21 @@ export class Selector {
         return this.currentOption.previous != null && this.currentOption.previous.previous != null;
     }
 
-    setHeight() {
-        this.optionBoxHeight=this.selectorBox.offsetHeight/4;
-    }
-
     refreshOptions(){
-        console.log(this.selectorBox.offsetHeight);
         if(this.currentOption.previous != null) {
             if(this.currentOption.previous.previous != null){
                 this.selectorTextParagraph[0].innerHTML = this.currentOption.previous.previous.data;
             }
             this.selectorTextParagraph[1].innerHTML = this.currentOption.previous.data;
-            this.optionBoxes[1].style.height = this.optionBoxHeight+"px";
+            this.optionBoxes[1].style.height = (this.selectorBox.offsetHeight/4)+"px";
         }
 
         this.selectorTextParagraph[2].innerHTML = this.currentOption.data;
-        this.optionBoxes[2].style.height = this.optionBoxHeight+"px";
+        this.optionBoxes[2].style.height = (this.selectorBox.offsetHeight/4)+"px";
 
         if(this.currentOption.next != null){
             this.selectorTextParagraph[3].innerHTML = this.currentOption.next.data;
-            this.optionBoxes[3].style.height = this.optionBoxHeight+"px";
+            this.optionBoxes[3].style.height = (this.selectorBox.offsetHeight/4)+"px";
             if(this.currentOption.next.next != null){
                 this.selectorTextParagraph[4].innerHTML = this.currentOption.next.next.data;
             }
@@ -177,20 +177,20 @@ export class Selector {
     smoothHeightReset = () => {
         let heightDeceleration = 5;
         let stoppingRange = 1;
-        if(this.optionBoxes[0].offsetHeight < (this.optionBoxHeight/2)-(stoppingRange*heightDeceleration)){
+        if(this.optionBoxes[0].offsetHeight < ((this.selectorBox.offsetHeight/4)/2)-(stoppingRange*heightDeceleration)){
             
             this.optionBoxes[0].style.height = (this.optionBoxes[0].offsetHeight+heightDeceleration) + "px";
             this.optionBoxes[4].style.height = (this.optionBoxes[4].offsetHeight-heightDeceleration) + "px";
             this.optionBoxes[4].childNodes[0].style.fontSize = this.fontSize/2 + "px";
             this.optionBoxes[0].childNodes[0].style.fontSize = this.fontSize/2 + "px";
-        } else if(this.optionBoxes[0].offsetHeight > (this.optionBoxHeight/2)+(stoppingRange*heightDeceleration)){
+        } else if(this.optionBoxes[0].offsetHeight > ((this.selectorBox.offsetHeight/4)/2)+(stoppingRange*heightDeceleration)){
             this.optionBoxes[0].style.height = (this.optionBoxes[0].offsetHeight-heightDeceleration) + "px";
             this.optionBoxes[4].style.height = (this.optionBoxes[4].offsetHeight+heightDeceleration) + "px";
             this.optionBoxes[4].childNodes[0].style.fontSize = this.fontSize/2 + "px";
             this.optionBoxes[0].childNodes[0].style.fontSize = this.fontSize/2 + "px";
         } else {
-            this.optionBoxes[0].style.height = this.optionBoxHeight/2 + "px";
-            this.optionBoxes[4].style.height = this.optionBoxHeight/2 + "px";
+            this.optionBoxes[0].style.height = (this.selectorBox.offsetHeight/4)/2 + "px";
+            this.optionBoxes[4].style.height = (this.selectorBox.offsetHeight/4)/2 + "px";
             this.optionBoxes[4].childNodes[0].style.fontSize = this.fontSize/2 + "px";
             this.optionBoxes[0].childNodes[0].style.fontSize = this.fontSize/2 + "px";
             clearInterval(this.decelerationInterval);

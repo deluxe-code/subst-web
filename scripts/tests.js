@@ -8,6 +8,5 @@ function start() {
     }
     mySelector = new OptionSelector.Selector(arr);
     document.getElementById("option").appendChild(mySelector.getElement());
-    mySelector.setHeight();
 }
 start();
