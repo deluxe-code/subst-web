@@ -258,7 +258,7 @@ textarea {
   --toggleButton-height: calc(var(--toggleInput-height) - 10px);
   --toggleLabel-color: black;
   --toggleButton-bg-disabled: #303030;
-  --toggleButton-bg-enabled: green;
+  --toggleButton-bg-enabled: #3cb460;
   --toggleButton-textColor-disabled: white;
   --toggleButton-textColor-enabled: black;
 }
@@ -278,11 +278,13 @@ textarea {
   color: var(--toggleLabel-color);
 }
 .toggle-button {
+  border-radius: 5px;
+  text-transform: uppercase;
   /* line-height: var(--toggleButton-height); */
   height: var(--toggleButton-height);
   padding: 5px 10px 5px 10px;
   box-sizing: border-box;
-  font-size: 1.2em;
+  font-size: 1.1em;
   text-align: center;
   color: var(--toggleButton-color);
 }
