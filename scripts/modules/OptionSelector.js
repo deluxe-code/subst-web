@@ -81,8 +81,7 @@ export class Selector {
     //scroll preforms scroll actions and returns previousFingerPos
     scroll(fingerPosY, previousFingerPosY) {
         
-        let relativeFingerPosY = (fingerPosY % (this.selectorBox.offsetHeight/4)) ;
-        console.log(relativeFingerPosY);
+        let relativeFingerPosY = (fingerPosY % (this.selectorBox.offsetHeight/4));
         let numberOfCurrentOptionBoxesWithinFingerDistance = Math.floor(fingerPosY/(this.selectorBox.offsetHeight/4));
         let numberOfPreviousOptionBoxesWithinFingerDistance = Math.floor(previousFingerPosY/(this.selectorBox.offsetHeight/4));
         while(relativeFingerPosY<0){
