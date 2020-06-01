@@ -19,14 +19,24 @@ export class Selector {
         this.scrollEvents();
         this.createSelectorResizeObserver();
         this.selectorBox.style.height = "100%";
+        this.selectNext();this.selectNext();this.selectNext();this.selectNext();this.selectNext();
         this.refreshOptions();
+        //this.setStyles();
     }
 
     createSelectorResizeObserver(){
         let resizeObserver = new ResizeObserver(() => {
+            this.revertToDefaultPosition();
             this.refreshOptions();
         });
         resizeObserver.observe(this.selectorBox);
+    }
+
+    setStyles() {
+        
+        this.optionBoxes.forEach(e => {
+            e.style.top = -this.getOptionBoxHeight();
+        }, {passive: true});
     }
 
     getElement() {
@@ -49,8 +59,9 @@ export class Selector {
         }
     }
 
+    numberOfPositionResets = 1;
     scrollEvents() {
-        let touchOrigin;
+        let touchOriginY;
         let currentScrolls = 0;
         let previousFingerPosY = 0;
         let previousTimeStamp = Date.now();
@@ -58,20 +69,22 @@ export class Selector {
         let numberOfPreviousOptionBoxesWithinFingerDistance = 0;
         this.selectorBox.addEventListener("touchstart", ev => {
             clearInterval(this.decelerationInterval);
-            touchOrigin = ev.touches[0].clientY;
+            touchOriginY = ev.touches[0].clientY;
             currentScrolls = 0;
+            this.numberOfPositionResets = 1;
         }, {passive: true});
         this.selectorBox.addEventListener("touchmove", ev => {
             
             let fingerPos = ev.targetTouches[0];
-            let fingerPosY = fingerPos.clientY-(touchOrigin%(this.selectorBox.offsetHeight/4));
+            let fingerPosY = fingerPos.clientY;
             this.setFingerVelocity(fingerPosY, previousFingerPosY, previousTimeStamp);
-            previousFingerPosY = this.scroll(fingerPosY, previousFingerPosY);
+            previousFingerPosY = this.scroll(fingerPosY, previousFingerPosY, touchOriginY);
             this.previousScrollPosition = previousFingerPosY;
             previousTimeStamp = Date.now();
         }, {passive: true});
         this.selectorBox.addEventListener("touchend", ev => {
             this.decelerationInterval = setInterval(this.smoothDeceleration, 1000/60);
+            this.revertToDefaultPosition();
         }, {passive: true});
         this.selectorBox.addEventListener("scroll", ev => {
 
@@ -79,30 +92,33 @@ export class Selector {
     }
 
     //scroll preforms scroll actions and returns previousFingerPos
-    scroll(fingerPosY, previousFingerPosY) {
-        
-        let relativeFingerPosY = (fingerPosY % (this.selectorBox.offsetHeight/4));
-        let numberOfCurrentOptionBoxesWithinFingerDistance = Math.floor(fingerPosY/(this.selectorBox.offsetHeight/4));
-        let numberOfPreviousOptionBoxesWithinFingerDistance = Math.floor(previousFingerPosY/(this.selectorBox.offsetHeight/4));
-        while(relativeFingerPosY<0){
-            relativeFingerPosY+= (this.selectorBox.offsetHeight/4);
+    scroll(currentTouchPosY, previousTouchPosY, touchOriginY) {
+        let position = (currentTouchPosY-touchOriginY-(this.getOptionBoxHeight()*this.numberOfPositionResets));
+        this.optionBoxes.forEach(e => {
+            e.style.top = position + "px";
+        });
+        if(position < - this.getOptionBoxHeight()*2){
+            this.numberOfPositionResets--;
+            this.selectNext();
+            this.refreshOptions();
+        } else if(position > 0) {
+            this.numberOfPositionResets++;
+            this.selectPrevious();
+            this.refreshOptions();
         }
-        if(numberOfPreviousOptionBoxesWithinFingerDistance < numberOfCurrentOptionBoxesWithinFingerDistance){
-                this.selectPrevious();
-                this.refreshOptions();
-        }else if(numberOfPreviousOptionBoxesWithinFingerDistance > numberOfCurrentOptionBoxesWithinFingerDistance){
-                this.selectNext();
-                this.refreshOptions();
-        }else {
-                this.optionBoxes[0].style.height = ((relativeFingerPosY)/this.selectorBox.offsetHeight)*100 + "%";
-                this.optionBoxes[4].style.height = (((this.selectorBox.offsetHeight/4)-relativeFingerPosY)/this.selectorBox.offsetHeight)*100 + "%";
-                this.optionBoxes[0].childNodes[0].style.fontSize = this.fontSize*(relativeFingerPosY/(this.selectorBox.offsetHeight/4)) + "px";
-                this.optionBoxes[4].childNodes[0].style.fontSize = this.fontSize*(((this.selectorBox.offsetHeight/4)-relativeFingerPosY)/(this.selectorBox.offsetHeight/4)) + "px";
-        }       
-        previousFingerPosY = fingerPosY;
-        return previousFingerPosY;
+        return currentTouchPosY;
+
     }
 
+    revertToDefaultPosition(){
+        this.optionBoxes.forEach(e => {
+            e.style.top = -this.getOptionBoxHeight() + "px";
+        });
+    }
+
+    getOptionBoxHeight(){
+        return (this.selectorBox.offsetHeight/3);
+    }
     setFingerVelocity(fingerPosY, previousFingerPosY, previousTimeStamp) {
         let timeBetweenFingers = Date.now() - previousTimeStamp;
         let distance = fingerPosY - previousFingerPosY;
@@ -111,38 +127,34 @@ export class Selector {
 
     smoothDeceleration = () => {
         let decelerationRate = 0.05;
-        let speed = 4;
+        let speed = 8;
         let snapRange = 0.1;
+        console.log(this.fingerVelocity);
         if(this.fingerVelocity > snapRange){
+            
             let nextScrollPosition = this.previousScrollPosition + this.fingerVelocity*speed;
-            this.scroll(nextScrollPosition, this.previousScrollPosition);
+            this.scroll(nextScrollPosition, this.previousScrollPosition, 0);
             this.fingerVelocity-=decelerationRate;
             this.previousScrollPosition = nextScrollPosition;
         } else if(this.fingerVelocity<-snapRange){
+
             let nextScrollPosition = this.previousScrollPosition + this.fingerVelocity*speed;
-            this.scroll(nextScrollPosition, this.previousScrollPosition);
+            this.scroll(nextScrollPosition, this.previousScrollPosition, 0);
             this.fingerVelocity+=decelerationRate;
             this.previousScrollPosition = nextScrollPosition;
         } else{
-            this.smoothHeightReset();
+            this.revertToDefaultPosition();
+            clearInterval(this.decelerationInterval);
         }
 
     }
 
     selectPrevious(){
         if(this.currentOption.previous != null)this.currentOption = this.currentOption.previous;
-        this.optionBoxes[0].style.height = "0px";
-        this.optionBoxes[4].style.height = (this.selectorBox.offsetHeight/4) + "px"; 
-        this.optionBoxes[0].childNodes[0].style.fontSize = "0px";
-        this.optionBoxes[4].childNodes[0].style.fontSize = this.fontSize + "px";
     }
 
     selectNext() {
         if(this.currentOption.next != null)this.currentOption = this.currentOption.next;
-        this.optionBoxes[4].style.height = "0px";
-        this.optionBoxes[0].style.height = (this.selectorBox.offsetHeight/4) + "px";
-        this.optionBoxes[4].childNodes[0].style.fontSize = "0px";
-        this.optionBoxes[0].childNodes[0].style.fontSize = this.fontSize + "px";
     }
 
     hasNext() {
@@ -157,54 +169,32 @@ export class Selector {
         if(this.currentOption.previous != null) {
             if(this.currentOption.previous.previous != null){
                 this.selectorTextParagraph[0].innerHTML = this.currentOption.previous.previous.data;
+                this.optionBoxes[0].style.height = this.getOptionBoxHeight()+"px";
             } else {
                 this.selectorTextParagraph[0].innerHTML = "";
             }
             this.selectorTextParagraph[1].innerHTML = this.currentOption.previous.data;
-            this.optionBoxes[1].style.height = (this.selectorBox.offsetHeight/4)+"px";
+            this.optionBoxes[1].style.height = this.getOptionBoxHeight()+"px";
         } else{
             this.selectorTextParagraph[0].innerHTML = "";
             this.selectorTextParagraph[1].innerHTML = "";
         }
 
         this.selectorTextParagraph[2].innerHTML = this.currentOption.data;
-        this.optionBoxes[2].style.height = (this.selectorBox.offsetHeight/4)+"px";
+        this.optionBoxes[2].style.height = this.getOptionBoxHeight()+"px";
 
         if(this.currentOption.next != null){
             this.selectorTextParagraph[3].innerHTML = this.currentOption.next.data;
-            this.optionBoxes[3].style.height = (this.selectorBox.offsetHeight/4)+"px";
+            this.optionBoxes[3].style.height = this.getOptionBoxHeight()+"px";
             if(this.currentOption.next.next != null){
                 this.selectorTextParagraph[4].innerHTML = this.currentOption.next.next.data;
+                this.optionBoxes[4].style.height = this.getOptionBoxHeight()+"px";
             } else {
                 this.selectorTextParagraph[4].innerHTML = "";
             }
         } else{
             this.selectorTextParagraph[3].innerHTML = "";
             this.selectorTextParagraph[4].innerHTML = "";
-        }
-    }
-
-    smoothHeightReset = () => {
-        let heightDeceleration = 5;
-        let stoppingRange = 1;
-        if(this.optionBoxes[0].offsetHeight < ((this.selectorBox.offsetHeight/4)/2)-(stoppingRange*heightDeceleration)){
-            
-            this.optionBoxes[0].style.height = (this.optionBoxes[0].offsetHeight+heightDeceleration) + "px";
-            this.optionBoxes[4].style.height = (this.optionBoxes[4].offsetHeight-heightDeceleration) + "px";
-            this.optionBoxes[4].childNodes[0].style.fontSize = this.fontSize/2 + "px";
-            this.optionBoxes[0].childNodes[0].style.fontSize = this.fontSize/2 + "px";
-        } else if(this.optionBoxes[0].offsetHeight > ((this.selectorBox.offsetHeight/4)/2)+(stoppingRange*heightDeceleration)){
-            this.optionBoxes[0].style.height = (this.optionBoxes[0].offsetHeight-heightDeceleration) + "px";
-            this.optionBoxes[4].style.height = (this.optionBoxes[4].offsetHeight+heightDeceleration) + "px";
-            this.optionBoxes[4].childNodes[0].style.fontSize = this.fontSize/2 + "px";
-            this.optionBoxes[0].childNodes[0].style.fontSize = this.fontSize/2 + "px";
-        } else {
-            this.optionBoxes[0].style.height = (this.selectorBox.offsetHeight/4)/2 + "px";
-            this.optionBoxes[4].style.height = (this.selectorBox.offsetHeight/4)/2 + "px";
-            this.optionBoxes[4].childNodes[0].style.fontSize = this.fontSize/2 + "px";
-            this.optionBoxes[0].childNodes[0].style.fontSize = this.fontSize/2 + "px";
-            clearInterval(this.decelerationInterval);
-            clearInterval(this.smoothHeightInterval);
         }
     }
 
