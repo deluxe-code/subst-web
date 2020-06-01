@@ -12,6 +12,18 @@ let optionSelectorCard = new OptionSelectorCard({
     }
 });
 
+// Wow, check this out! this is how you create the new TobuscusViewer card.
+// @JACOB
+//   Did you do your research 'homework' and freshen up on the most recent Tobuscus gaming content?
+
+let tobuscusVideosCard = new TobuscusViewer({
+    id: "tobuscus-container",
+    label: `Tobuscus Viewer ${this.versionNumber}`,
+    content: {
+        channel_url: "https://www.youtube.com/channel/TobyGames"
+    }
+});
+
 // let inputTestingCard = new InputModulesCard({
 //     id: "bizza",
 //     label: "Testing Card"
