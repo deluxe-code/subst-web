@@ -83,12 +83,24 @@ export class Selector {
             previousTimeStamp = Date.now();
         }, {passive: true});
         this.selectorBox.addEventListener("touchend", ev => {
-            this.decelerationInterval = setInterval(this.smoothDeceleration, 1000/60);
+            //this.decelerationInterval = setInterval(this.smoothDeceleration, 1000/60);
+            this.snapToNearestOption(previousFingerPosY);
             this.revertToDefaultPosition();
         }, {passive: true});
         this.selectorBox.addEventListener("scroll", ev => {
 
         });
+    }
+
+    snapToNearestOption(fingerPosY) {
+        console.log(fingerPosY);
+        if(fingerPosY%this.getOptionBoxHeight() < this.getOptionBoxHeight()/2) {
+            console.log("yess");
+            this.selectPrevious();
+            this.refreshOptions();
+        } else{
+            
+        }
     }
 
     //scroll preforms scroll actions and returns previousFingerPos
