@@ -38,6 +38,9 @@ a {
   transition: 0.3s ease-in-out;
   /* box-sizing: border-box; */
 }
+.nav-add:hover {
+  cursor: pointer;
+}
 .navbar {
   height: 65px;
   background-color: #f7ff1a;
@@ -51,6 +54,9 @@ a {
   height: 100%;
   text-align: center;
   width: min-content;
+}
+.nav-button:hover {
+  cursor: pointer;
 }
 .nav-button:nth-child(2) {
   margin-left: -40px;

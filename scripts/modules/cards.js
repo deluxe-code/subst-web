@@ -9,12 +9,10 @@ export const cards_config = {
         this.defaultContainer = document.querySelector(query);
     }
 }
-function generateCard(prerequisites) {
-    let { id, label, className } = prerequisites;
-    // this._parent = parent;
+function generateCard(config) {
+    let { id, label, className } = config;
     let card_container = document.createElement("div");
-    card_container.id = id;
-    // The classname below won't work or will not include the proper secondary class name
+    if (id) card_container.id = id;
     card_container.className = (className ? `card_container ${className}` : `card_container`);
 
     if (label) {
@@ -27,44 +25,42 @@ function generateCard(prerequisites) {
     return card_container;
 }
 class Card {
+    getLabel = () => this._config.label;
+    getID = () => this._config.id;
+    getContent = () => this._config.content;
+    finishLayout = () => this.card.appendChild(this.buildLayout());
     constructor(card_config) {
         this._config = card_config;
-        this._eventHandler = new EventHandler(this);
+        this._eventHandler = new EventHandler();
         this.events = {
-            listenFor: this._eventHandler.listenFor
-        }
+            addEventListener: this._eventHandler.addEventListener
+        };
         this.card = generateCard(card_config);
-        cards_config.autoPlace ? this.place() : console.log("Will not place for now");
+        if (cards_config.autoPlace) this.place();
     }
-    injectLayout = (generatedLayout) => {
-        this.card_layout = generatedLayout;
-        this.card.appendChild(this.card_layout);
-    }
+    // initializeLayout = () => {
+    //     this.card_layout = this.buildLayout();
+    //     this.card.appendChild(this.card_layout);
+    // }
     place() {
-            if (this._config.location == "default" || !this._config.location) {
-                cards_config.defaultContainer.appendChild(this.card);
-            } else {
-                document.querySelector(this._config.location).appendChild(this.card);
-            }
+        if ((this._config.location || "default") == "default") {
+            cards_config.defaultContainer.appendChild(this.card);
+        } else {
+            document.querySelector(this._config.location).appendChild(this.card);
+        }
     }
-    getLabel() {
-        return this._config.label;
-    }
-    getID() {
-        return this._config.id;
-    }
-    getContent() {
-        return this._config.content;
-    }
+
 }
+
 export class TextAreaCard extends Card {
     constructor(card_config) {
         card_config.className = "input_card";
         super(card_config);
-        this.injectLayout(this.generateLayout());
+        this.card_layout = this.finishLayout();
+
     }
-    generateLayout = () => {
-        let content = super.getContent();
+    buildLayout = () => {
+        let content = this.getContent();
         let inputBox = document.createElement("textarea");
         inputBox.placeholder = content.placeholder;
         inputBox.addEventListener("keydown", () => {
@@ -84,25 +80,17 @@ export class TextAreaCard extends Card {
         return this.card.getElementsByTagName("textarea")[0].value;
     }
 }
-export class LineGraphCard extends Card {
-    constructor(card_config) {
-        super(card_config, "line_graph_card");
-    }
-    generateLayout = () => {
-
-    }
-}
 export class InputModulesCard extends Card {
     constructor(card_config) {
-        super(card_config, "bazigga");
-        this.injectLayout(this.generateLayout());
+        super(card_config);
+        this.card_layout = this.finishLayout();
     }
-    generateLayout = () => {
+    buildLayout = () => {
         let settingToggle = new inputModules.ToggleInput({
             status: false,
             options: ["OFF", "ON"]
         });
-        settingToggle.eventHandler.listenFor("toggle", (event) => {
+        settingToggle.eventHandler.addEventListener("toggle", (event) => {
             console.log(event.getValue());
         })
         // NOTE: Or just get the output at an exact time by using settingToggle.getStatus();
@@ -111,26 +99,20 @@ export class InputModulesCard extends Card {
 }
 export class OptionSelectorCard extends Card {
     constructor(card_config) {
-        super(card_config, "option_selector_card");
-        this.injectLayout(this.generateLayout());
-        this.mySelector.setHeight();
-        // this.testOptionSelector();
+        super(card_config);
+        this.card_layout = this.finishLayout();
     }
-    generateLayout = () => {
+    buildLayout = () => {
         let containerTest = document.createElement("div");
-        containerTest.id = "zibba";
+        containerTest.id = "optionSelector-container";
+        containerTest.style.width = "200px";
         containerTest.style.height = "100px";
-        this.mySelector = new OptionSelector.Selector(this.getContent().options);
-        containerTest.appendChild(this.mySelector.getElement());
+        containerTest.style.margin = "auto";
+        let options_array = this.getContent().options;
+        let mySelector = new OptionSelector.Selector(options_array);
+        containerTest.appendChild(mySelector.getElement());
         return containerTest;
     }
-    // testOptionSelector() {
-    //     let mySelectorList = new OptionSelector.SelectorOptionLinkedList("o");
-    //     let mySelector;
-    //     mySelectorList.insertArray(this.getContent().options);
-    //     mySelector = new OptionSelector.Selector("zibba", mySelectorList);
-    //     mySelector.refreshOptions();
-    // }
     getOutput = () => {
 
     }
@@ -139,10 +121,10 @@ export class SubstancePickerCard extends Card {
     constructor(card_config) {
         card_config.className = "picker_card";
         super(card_config);
-        this.injectLayout(this.generateLayout());
+        this.card_layout = this.finishLayout();
     }
-    generateLayout = () => {
-        let content = super.getContent();
+    buildLayout = () => {
+        let content = this.getContent();
         let substanceArray = content.substances;
             let list_container = document.createElement("div");
             list_container.id = "substance_list";
@@ -169,7 +151,7 @@ export class SubstancePickerCard extends Card {
                         }
                     });
                 });
-                
+
                 item_container.appendChild(label_container);
                 item_container.appendChild(add_container);
                 list_items.push(item_container);
@@ -181,26 +163,24 @@ export class SubstancePickerCard extends Card {
             return list_container;
     }
     show = (delay) => {
-        let showFunction = () => {
+        setTimeout(() => {
             this.card.style.display = "flex";
             this.card.animate([
                 { transform: 'translateY(500px)' },
                 { transform: 'translateY(0px)' }
-        
+
             ], {
                 duration: 300,
                 fill: "forwards"
             });
-        }
-
-        delay ? setTimeout(showFunction, delay) : showFunction();
+        }, (delay || 0));
     }
     hide = (delay) => {
-        let hideFunction = () => {
+        setTimeout(() => {
             this.card.animate([
                 { transform: 'translateY(0px)' },
                 { transform: 'translateY(500px)' }
-        
+
             ], {
                 duration: 500,
                 fill: "forwards",
@@ -209,8 +189,7 @@ export class SubstancePickerCard extends Card {
             setTimeout(() => {
                 this.card.style.display = "none";
             }, 500);
-        }
-        delay ? setTimeout(hideFunction, delay) : hideFunction();
+        }, (delay || 0));
     }
 }
 // NOTE: Deprecate the label class?
@@ -219,9 +198,7 @@ class Label {
         this._config = label_config;
         let label_element = document.createElement("span");
         label_element.className = this._config.className;
-        if (this._config.id) {
-            label_element.id = this._config.id;
-        }
+        if (this._config.id) label_element.id = this._config.id;
         label_element.innerHTML = this._config.label;
         this._node = label_element;
         return this._node;
