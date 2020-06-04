@@ -1,15 +1,14 @@
 
 export class EventHandler {
-    #events;
     constructor() {
         this.eventListeners = [];
-        this.#events = [];
+        this._events = [];
     }
     submitEvent(event_info) {
         let event = new Event(event_info);
         let dev_eventListener = this.eventListeners.find(listener => listener.event_type == event.type)
         dev_eventListener.run(event);
-        this.#events.push(event);
+        this._events.push(event);
     }
     newEvent(event_info) {
         // NOTE: Remember that not all events will have a listener, since not all events
@@ -17,7 +16,7 @@ export class EventHandler {
         let event = new Event(event_info);
         let dev_eventListener = this.eventListeners.find(hook => hook.event_type == event.type);
         dev_eventListener.run(event);
-        this.#events.push(event);
+        this._events.push(event);
         console.log("EVENT HANDLER: " + event_info.type + " has occurred.");
     }
     addEventListener = (event_type, callback) => {
