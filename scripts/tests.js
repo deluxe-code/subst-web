@@ -3,7 +3,7 @@ let mySelector;
 function start() {
 
     let arr = [];
-    for(var i = 0; i < 90; i++){
+    for(var i = 0; i < 10; i++){
         arr[i] = "forloop, " + i;
     }
     mySelector = new OptionSelector.Selector(arr);
