@@ -20,10 +20,12 @@ export class ToggleInput extends CustomElement {
         if (config.label) {
             this.label = super.insert("span", "toggle-label").innerHTML = label;
         }
+
         if (config.options) {
             this._optionsArray = config.options;
         }
         this.button = super.insert("a", "toggle-button");
+        this.button.className = `toggle-button ${(this._status || "disabled")}`;
         if (this._status) {
             this.button.className += " toggle-enabled";
             this.button.innerHTML = this._optionsArray[1];
@@ -54,13 +56,15 @@ export class ToggleInput extends CustomElement {
     setStatus(newStatus) {
         if (newStatus == true) {
             this._status ? console.log("Toggle Status is already true!") : this._status = true;
-        }  
+        }
         if (newStatus == false) {
             this._status ? this._status = false : console.log("Toggle Status is already false!");
         }
     }
 
 }
+
+
 
 export class SelectedItemBar extends CustomElement {
     animationDuration = 200;
@@ -70,7 +74,7 @@ export class SelectedItemBar extends CustomElement {
             className: "selectedItemBar"
         });
         this.events = {
-            listenFor: this.eventHandler.listenFor
+            listenFor: this.eventHandler.addEventListener
         }
         // this.setClassName("selectedItemBar");
         // NOTE: TRANSITION JITTER IS LIKELY DUE TO THE SETTING OF DISPLAY: NONE
@@ -135,7 +139,7 @@ export class SelectedItemBar extends CustomElement {
             }, this.animationDuration);
         }
         delay ? setTimeout(hideFunction, delay) : hideFunction();
-        
+
     }
 }
 

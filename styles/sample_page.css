@@ -1,0 +1,98 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap");
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Jost;
+}
+html {
+  font-size: var(--fontSize-root);
+}
+:root {
+  --primaryTextColor: black;
+  --complimentaryTextColor: darkgray;
+  --secondaryTextColor: white;
+  --fontSize-absolute-biggest: 3rem;
+  --fontSize-absolute-bigger: 2rem;
+  --fontSize-absolute-big: 1.8rem;
+  --fontSize-absolute-normal: 1.2rem;
+  --fontSize-absolute-small: 0.9rem;
+}
+@media only screen and (max-width: 600px) {
+  :root {
+    --root-page-Padding: 25px;
+    --header-Margin: 5px;
+    --fontSize-root: 1rem;
+    --primary-button-padding: 10px 15px 10px 15px;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  section#page-header {
+    box-sizing: border-box;
+    width: 100%;
+    padding-top: 50px;
+  }
+  main#page-content {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+@media only screen and (min-width: 600px) {
+  :root {
+    --root-page-Padding: 0px;
+    --fontSize-root: 1rem;
+    --header-Margin: 10px;
+    --primary-button-padding: 10px 20px 10px 20px;
+  }
+  body {
+    display: block;
+  }
+  section#page-header {
+  }
+}
+section#page-header {
+  padding-left: var(--root-page-Padding);
+  padding-right: var(--root-page-Padding);
+}
+section#page-header > * {
+  color: var(--primaryTextColor);
+  margin-top: var(--header-Margin);
+  margin-bottom: var(--header-Margin);
+}
+section#page-header h1 {
+  font-size: var(--fontSize-absolute-biggest);
+  font-weight: 500;
+}
+section#page-header p {
+  font-size: var(--fontSize-absolute-normal);
+}
+main#page-content {
+  padding-left: var(--root-page-Padding);
+  padding-right: var(--root-page-Padding);
+}
+#profile-card {
+  background-color: #dedede;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  height: min-content;
+  color: var(--primaryTextColor);
+}
+#profile-card > #profile-label {
+  font-size: var(--fontSize-absolute-biggest);
+}
+#profile-card #user-name {
+  font-size: var(--fontSize-absolute-big);
+}
+#profile-card #user-bio {
+  font-size: var(--fontSize-absolute-normal);
+}
+#profile-card #user-id {
+  font-size: var(--fontSize-absolute-small);
+}

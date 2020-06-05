@@ -52,9 +52,11 @@ const info_addButtons = [
         color: "black"
     }
 ]
+
 export class Navbar {
+    #eventHandler;
     constructor() {
-        this._eventHandler = new EventHandler();
+        this.#eventHandler = new EventHandler();
         this.generate();
         this.place();
     }
@@ -85,7 +87,7 @@ export class Navbar {
         });
 
         info_navButtons.forEach(navItem => {
-            nav_bar.insert(new NavButton(navItem));            
+            nav_bar.insert(new NavButton(navItem));
         })
 
 
@@ -95,7 +97,7 @@ export class Navbar {
         this._NavElement = nav;
     }
     place() {
-        document.body.appendChild(super._node);
+        document.body.appendChild(this._NavElement.getNode());
     }
     getNavElement() {
         return this._NavElement;
@@ -111,12 +113,16 @@ export class Navbar {
     }
 }
 class NavElement {
+    #children;
+    #className;
+    #id;
+    #name;
     constructor(info) {
-        this._children = [];
+        this.#children = [];
         this._node = document.createElement(info.elementType);
-        this._className = info.className;
-        this._id = info.id;
-        this._name = info.name;
+        this.#className = info.className;
+        this.#id = info.id;
+        this.#name = info.name;
 
         if (info.className) {
             this._node.className = info.className;
@@ -127,16 +133,16 @@ class NavElement {
         return this;
     }
     getChildren() {
-        return this._children;
+        return this.#children;
     }
     getName() {
-        return this._name;
+        return this.#name;
     }
     getID() {
-        return this._id;
+        return this.#id;
     }
     getClassName() {
-        return this._className;
+        return this.#className;
     }
     getNode() {
         return this._node;
@@ -153,7 +159,7 @@ class NavElement {
         } else {
             this._node.appendChild(element);
         }
-        this._children.push(element);
+        this.#children.push(element);
     }
 }
 class AddButton extends NavElement {
@@ -175,36 +181,45 @@ class AddButton extends NavElement {
     }
 }
 class AddMenuItem extends NavElement {
+    #label;
+    #href;
+    #color;
+
+
     constructor(info) {
         super({
             className: "add-item",
             elementType: "div"
         })
 
-        this._label = info.label;
-        this._href = info.href;
-        this._color = info.color;
-
-        super._node.innerHTML = this._label;
-        super._node.addEventListener("click", function() {
+        this.#label = info.label;
+        this.#href = info.href;
+        this.#color = info.color;
+        console.log(this);
+        this._node.innerHTML = this.#label;
+        this._node.addEventListener("click", function() {
             console.log(this._node + " was clicked!");
         });
     }
 }
 class NavButton extends NavElement {
+    #href;
+    #src;
+    #imgAlt;
+
     constructor(info) {
         super({
             className: "nav-button",
             elementType: "a",
             name: info.name
         });
-        this._href = info.href;
-        this._src = info.icon.src;
-        this._imgAlt = info.icon.alt;
-
+        this.#href = info.href;
+        this.#src = info.icon.src;
+        this.#imgAlt = info.icon.alt;
+        this._node.href = info.href;
         let icon_image = document.createElement("img");
-        icon_image.alt = this._imgAlt;
-        icon_image.src = iconsFolder + this._src;
+        icon_image.alt = this.#imgAlt;
+        icon_image.src = iconsFolder + this.#src;
         super.insert(icon_image);
     }
 }

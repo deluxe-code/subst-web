@@ -63,22 +63,29 @@ body {
   margin-top: 10px;
 }
 #s10e {
+  border: 10px solid black;
   background-color: var(--main-bg-color);
   width: 412px;
   height: 869px;
   /* box-sizing: border-box; */
   border-radius: 30px;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 1fr 3fr;
+  position: relative;
+  /* display: flex; */
+  /* flex-direction: column; */
 }
 header {
   width: 100%;
+  height: min-content;
   padding-left: 20px;
   padding-right: 20px;
-  margin-bottom: 25px;
   box-sizing: border-box;
-  padding-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-self: flex-end;
+  /* padding-top: 100px; */
 }
 h1 {
   margin-bottom: 0px;
@@ -97,23 +104,23 @@ textarea {
   padding: 5px 10px 5px 10px;
 }
 #body {
-  position: relative;
   width: 100%;
   padding-left: 20px;
   padding-right: 20px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   /* WHY DO I HAVE TO DO THIS?? */
-  height: calc(100% - 94px);
+  /* height: 100%; */
 }
 .card_container {
+  width: 95%;
+  height: min-content;
   display: grid;
   background: var(--main-container-color);
   box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.4);
-  width: 100%;
-  height: min-content;
   padding: 10px 20px 20px 20px;
-  margin-left: auto;
-  margin-right: auto;
   box-sizing: border-box;
   border-radius: 10px;
 }
@@ -122,37 +129,35 @@ textarea {
   height: max-content;
   color: black;
   font-weight: 500;
-  margin-bottom: 5px;
-  /* text-align: left; */
 }
 
 .input_card {
   grid-template-rows: 1fr 3fr;
 }
 .input_card textarea {
-  margin: auto;
   width: 100%;
   height: 120px;
+  justify-self: center;
   border-radius: 10px;
   background-color: var(--main-bg-color);
   color: black;
   border: none;
   outline: 0;
-
   box-sizing: border-box;
 }
 
 #substances_container {
-  background-color: black;
   width: 100%;
   position: absolute;
   bottom: 0px;
   left: 0px;
+  background-color: black;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-weight: bold;
-  border-radius: 20px 20px 20px 20px;
+  /* border-radius: 20px 20px 20px 20px; */
+  border-radius: 0px;
   box-shadow: 0px -3px 6px rgba(0, 0, 0, 0.25);
   padding: 10px 30px 30px 30px;
   box-sizing: border-box;
@@ -163,7 +168,7 @@ textarea {
   color: black;
 }
 #substance_list {
-  width: 100%;
+  width: 90%;
 }
 #substances_container .card_label {
   color: white;
@@ -171,7 +176,7 @@ textarea {
 }
 .substance_item {
   margin: auto;
-  width: 90%;
+  width: 100%;
   display: grid;
   grid-template-columns: auto 70px;
   align-items: center;
