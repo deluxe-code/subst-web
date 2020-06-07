@@ -1,9 +1,7 @@
 export class Selector {
-    
+
     selectorBox;
-    scrollSensitivity = 1;
     fontSize = 16;
-    selectorOptionList;
     optionsList = [];
     currentOption = 0;
     newScrollPosition = 0;
@@ -13,16 +11,18 @@ export class Selector {
     previousScrollPosition;
     decelerationInterval;
     smoothHeightInterval;
-    
-    constructor(arr){
+    animator;
+
+    constructor(arr) {
         this.optionsList = arr;
         this.createOptionBoxes();
         this.scrollEvents();
         this.createSelectorResizeObserver();
+        this.animator = new OptionSelectorAnimator();
         this.selectorBox.style.height = "100%";
     }
 
-    createSelectorResizeObserver(){
+    createSelectorResizeObserver() {
         let resizeObserver = new ResizeObserver(() => {
             //this.refreshOptions();
         });
@@ -30,28 +30,25 @@ export class Selector {
     }
 
     setStyles() {
-        
+
         this.optionBoxes.forEach(e => {
             e.style.top = -this.getOptionBoxHeight();
-        }, {passive: true});
+        }, { passive: true });
     }
 
     getElement() {
         return this.selectorBox;
     }
 
-    addOption(data) {
-        this.selectorOptionList.add(data);
-    }
     createOptionBoxes() {
-        this.selectorBox =  document.createElement("div");
+        this.selectorBox = document.createElement("div");
         this.selectorBox.className = "SelectorBox";
         console.log(this.optionsList.length);
-        for(let i = 0; i < this.optionsList.length; i++) {
+        for (let i = 0; i < this.optionsList.length; i++) {
             this.optionBoxes[i] = document.createElement("div");
             this.optionBoxes[i].id = "SelectorOptionBox" + i;
             this.optionBoxes[i].className = "SelectorOptionBox";
-            this.optionBoxes[i].style.height = (100/3) + "%";
+            this.optionBoxes[i].style.height = (100 / 3) + "%";
             this.selectorBox.appendChild(this.optionBoxes[i]);
             let child = this.optionBoxes[i].appendChild(document.createElement("p"));
             child.innerHTML = this.optionsList[i];
@@ -80,62 +77,62 @@ export class Selector {
             touchOriginY = ev.touches[0].clientY;
             currentScrolls = 0;
             this.numberOfPositionResets = 1;
-        }, {passive: true});
+        }, { passive: true });
         this.selectorBox.addEventListener("touchmove", ev => {
-            
+
             let fingerPos = ev.targetTouches[0];
             let fingerPosY = fingerPos.clientY;
             this.setFingerVelocity(fingerPosY, previousFingerPosY, previousTimeStamp);
             previousFingerPosY = this.scroll(fingerPosY, touchOriginY);
             this.previousScrollPosition = previousFingerPosY;
             previousTimeStamp = Date.now();
-        }, {passive: true});
+        }, { passive: true });
         this.selectorBox.addEventListener("touchend", ev => {
             this.globalTouchOrigin = touchOriginY;
-            this.decelerationInterval = setInterval(this.smoothDeceleration, 1000/60);
-            
-        }, {passive: true});
+            this.decelerationInterval = setInterval(this.smoothDeceleration, 1000 / 60);
+
+        }, { passive: true });
         this.selectorBox.addEventListener("scroll", ev => {
 
         });
     }
-    
+
     //scroll preforms scroll actions and returns previousFingerPos
     scroll(currentTouchPosY, touchOriginY) {
-        let position = this.newScrollPosition+(currentTouchPosY-touchOriginY);
+        let position = this.newScrollPosition + (currentTouchPosY - touchOriginY);
         this.optionBoxes.forEach(e => {
             e.style.top = position + "px";
         });
         return currentTouchPosY;
     }
 
-    getOptionBoxHeight(){
-        return (this.selectorBox.offsetHeight/3);
+    getOptionBoxHeight() {
+        return (this.selectorBox.offsetHeight / 3);
     }
 
     setFingerVelocity(fingerPosY, previousFingerPosY, previousTimeStamp) {
         let timeBetweenFingers = Date.now() - previousTimeStamp;
         let distance = fingerPosY - previousFingerPosY;
-        this.fingerVelocity = distance/timeBetweenFingers;
+        this.fingerVelocity = distance / timeBetweenFingers;
     }
 
     smoothDeceleration = () => {
         let decelerationRate = 0.05;
         let speed = 5;
         let snapRange = 0.1;
-        if(this.fingerVelocity > snapRange){
-            
-            let nextScrollPosition =  this.previousScrollPosition+(this.fingerVelocity*speed);
-            this.scroll(nextScrollPosition, this.globalTouchOrigin);
-            this.fingerVelocity-=decelerationRate;
-            this.previousScrollPosition = nextScrollPosition;
-        } else if(this.fingerVelocity<-snapRange){
+        if (this.fingerVelocity > snapRange) {
 
-            let nextScrollPosition = this.previousScrollPosition + (this.fingerVelocity*speed);
+            let nextScrollPosition = this.previousScrollPosition + (this.fingerVelocity * speed);
             this.scroll(nextScrollPosition, this.globalTouchOrigin);
-            this.fingerVelocity+=decelerationRate;
+            this.fingerVelocity -= decelerationRate;
             this.previousScrollPosition = nextScrollPosition;
-        } else{
+        } else if (this.fingerVelocity < -snapRange) {
+
+            let nextScrollPosition = this.previousScrollPosition + (this.fingerVelocity * speed);
+            this.scroll(nextScrollPosition, this.globalTouchOrigin);
+            this.fingerVelocity += decelerationRate;
+            this.previousScrollPosition = nextScrollPosition;
+        } else {
             clearInterval(this.decelerationInterval);
         }
 
@@ -147,32 +144,32 @@ export class SelectorOptionLinkedList {
     root;
     last;
 
-    constructor(arr){
-        if(arr!=null){
+    constructor(arr) {
+        if (arr != null) {
             this.insertArray(arr);
         }
     }
 
-    insertArray(arr){
+    insertArray(arr) {
         arr.forEach(option => {
             this.add(new SelectorOption(this.last, option, null));
         });
     }
 
-    insertListFromDatabase(){
+    insertListFromDatabase() {
 
     }
 
     add(selectorOption) {
         try {
-            if(!(selectorOption instanceof SelectorOption)) throw "Must be of type 'SelectorOption'";
-        } catch(err) {
+            if (!(selectorOption instanceof SelectorOption)) throw "Must be of type 'SelectorOption'";
+        } catch (err) {
             console.error(err);
         }
 
-        if(this.root==null){
+        if (this.root == null) {
             this.root = selectorOption;
-        }else{
+        } else {
             this.last.next = selectorOption;
         }
         this.last = selectorOption;
@@ -180,7 +177,7 @@ export class SelectorOptionLinkedList {
 
 }
 
-export class SelectorOption{
+export class SelectorOption {
     data;
     previous;
     next;
@@ -188,5 +185,48 @@ export class SelectorOption{
         this.previous = previous;
         this.data = data;
         this.next = next;
+    }
+}
+
+class OptionSelectorAnimator {
+    //scroll preforms scroll actions and returns previousFingerPos
+    scroll(currentTouchPosY, touchOriginY) {
+        let position = this.newScrollPosition + (currentTouchPosY - touchOriginY);
+        this.optionBoxes.forEach(e => {
+            e.style.top = position + "px";
+        });
+        return currentTouchPosY;
+    }
+
+    getOptionBoxHeight() {
+        return (this.selectorBox.offsetHeight / 3);
+    }
+
+    setFingerVelocity(fingerPosY, previousFingerPosY, previousTimeStamp) {
+        let timeBetweenFingers = Date.now() - previousTimeStamp;
+        let distance = fingerPosY - previousFingerPosY;
+        this.fingerVelocity = distance / timeBetweenFingers;
+    }
+
+    smoothDeceleration = () => {
+        let decelerationRate = 0.05;
+        let speed = 5;
+        let snapRange = 0.1;
+        if (this.fingerVelocity > snapRange) {
+
+            let nextScrollPosition = this.previousScrollPosition + (this.fingerVelocity * speed);
+            this.scroll(nextScrollPosition, this.globalTouchOrigin);
+            this.fingerVelocity -= decelerationRate;
+            this.previousScrollPosition = nextScrollPosition;
+        } else if (this.fingerVelocity < -snapRange) {
+
+            let nextScrollPosition = this.previousScrollPosition + (this.fingerVelocity * speed);
+            this.scroll(nextScrollPosition, this.globalTouchOrigin);
+            this.fingerVelocity += decelerationRate;
+            this.previousScrollPosition = nextScrollPosition;
+        } else {
+            clearInterval(this.decelerationInterval);
+        }
+
     }
 }
