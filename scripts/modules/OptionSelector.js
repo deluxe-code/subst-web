@@ -18,7 +18,7 @@ export class Selector {
         this.createOptionBoxes();
         this.scrollEvents();
         this.createSelectorResizeObserver();
-        this.animator = new OptionSelectorAnimator();
+        this.animator = new OptionSelectorAnimator(this);
         this.selectorBox.style.height = "100%";
     }
 
@@ -29,6 +29,9 @@ export class Selector {
         resizeObserver.observe(this.selectorBox);
     }
 
+    getOptionBoxHeight() {
+        return (this.selectorBox.offsetHeight / 3);
+    }
     setStyles() {
 
         this.optionBoxes.forEach(e => {
@@ -63,8 +66,6 @@ export class Selector {
         }
     }
 
-    numberOfPositionResets = 1;
-    globalTouchOrigin;
     scrollEvents() {
         let touchOriginY;
         let currentScrolls = 0;
@@ -73,23 +74,21 @@ export class Selector {
         let initialOffset;
         let numberOfPreviousOptionBoxesWithinFingerDistance = 0;
         this.selectorBox.addEventListener("touchstart", ev => {
+            this.animator.startScroll();
             clearInterval(this.decelerationInterval);
             touchOriginY = ev.touches[0].clientY;
             currentScrolls = 0;
-            this.numberOfPositionResets = 1;
         }, { passive: true });
         this.selectorBox.addEventListener("touchmove", ev => {
 
             let fingerPos = ev.targetTouches[0];
             let fingerPosY = fingerPos.clientY;
-            this.setFingerVelocity(fingerPosY, previousFingerPosY, previousTimeStamp);
-            previousFingerPosY = this.scroll(fingerPosY, touchOriginY);
-            this.previousScrollPosition = previousFingerPosY;
+            this.animator.scroll(fingerPosY, touchOriginY, this.optionBoxes);
+            this.animator.lastFingerPositionY = fingerPosY;
             previousTimeStamp = Date.now();
         }, { passive: true });
         this.selectorBox.addEventListener("touchend", ev => {
-            this.globalTouchOrigin = touchOriginY;
-            this.decelerationInterval = setInterval(this.smoothDeceleration, 1000 / 60);
+            this.animator.endTouch(touchOriginY);
 
         }, { passive: true });
         this.selectorBox.addEventListener("scroll", ev => {
@@ -97,136 +96,72 @@ export class Selector {
         });
     }
 
-    //scroll preforms scroll actions and returns previousFingerPos
-    scroll(currentTouchPosY, touchOriginY) {
-        let position = this.newScrollPosition + (currentTouchPosY - touchOriginY);
-        this.optionBoxes.forEach(e => {
-            e.style.top = position + "px";
-        });
-        return currentTouchPosY;
-    }
-
-    getOptionBoxHeight() {
-        return (this.selectorBox.offsetHeight / 3);
-    }
-
-    setFingerVelocity(fingerPosY, previousFingerPosY, previousTimeStamp) {
-        let timeBetweenFingers = Date.now() - previousTimeStamp;
-        let distance = fingerPosY - previousFingerPosY;
-        this.fingerVelocity = distance / timeBetweenFingers;
-    }
-
-    smoothDeceleration = () => {
-        let decelerationRate = 0.05;
-        let speed = 5;
-        let snapRange = 0.1;
-        if (this.fingerVelocity > snapRange) {
-
-            let nextScrollPosition = this.previousScrollPosition + (this.fingerVelocity * speed);
-            this.scroll(nextScrollPosition, this.globalTouchOrigin);
-            this.fingerVelocity -= decelerationRate;
-            this.previousScrollPosition = nextScrollPosition;
-        } else if (this.fingerVelocity < -snapRange) {
-
-            let nextScrollPosition = this.previousScrollPosition + (this.fingerVelocity * speed);
-            this.scroll(nextScrollPosition, this.globalTouchOrigin);
-            this.fingerVelocity += decelerationRate;
-            this.previousScrollPosition = nextScrollPosition;
-        } else {
-            clearInterval(this.decelerationInterval);
-        }
-
-    }
-
-}
-
-export class SelectorOptionLinkedList {
-    root;
-    last;
-
-    constructor(arr) {
-        if (arr != null) {
-            this.insertArray(arr);
-        }
-    }
-
-    insertArray(arr) {
-        arr.forEach(option => {
-            this.add(new SelectorOption(this.last, option, null));
-        });
-    }
-
-    insertListFromDatabase() {
-
-    }
-
-    add(selectorOption) {
-        try {
-            if (!(selectorOption instanceof SelectorOption)) throw "Must be of type 'SelectorOption'";
-        } catch (err) {
-            console.error(err);
-        }
-
-        if (this.root == null) {
-            this.root = selectorOption;
-        } else {
-            this.last.next = selectorOption;
-        }
-        this.last = selectorOption;
-    }
-
-}
-
-export class SelectorOption {
-    data;
-    previous;
-    next;
-    constructor(previous, data, next) {
-        this.previous = previous;
-        this.data = data;
-        this.next = next;
-    }
 }
 
 class OptionSelectorAnimator {
     //scroll preforms scroll actions and returns previousFingerPos
-    scroll(currentTouchPosY, touchOriginY) {
+    mySelector;
+    optionBoxes;
+    newScrollPosition = 0;
+    fingerVelocity;
+    scrollVelocity;
+    previousScrollPositionY = 0;
+    lastFingerPositionY;
+    previousTimeStamp = Date.now();
+    decelerationInterval;
+    globalTouchOrigin;
+    constructor(mySelector) {
+        this.mySelector = mySelector;
+    }
+    scroll(currentTouchPosY, touchOriginY, optionBoxes) {
+        this.optionBoxes = optionBoxes;
         let position = this.newScrollPosition + (currentTouchPosY - touchOriginY);
-        this.optionBoxes.forEach(e => {
+        optionBoxes.forEach(e => {
             e.style.top = position + "px";
         });
-        return currentTouchPosY;
+        this.setFingerVelocity(currentTouchPosY, this.previousTimeStamp);
+        this.previousTimeStamp = Date.now();
+        this.previousScrollPositionY = position;
     }
 
-    getOptionBoxHeight() {
-        return (this.selectorBox.offsetHeight / 3);
+    endTouch(touchOriginY) {
+        this.globalTouchOrigin = touchOriginY;
+        this.mySelector.currentOption = Math.floor(-this.newScrollPosition / this.optionBoxes[0].offsetHeight);//replace with optionbox height please
+        console.log("curr: " + this.mySelector.currentOption + " newScrollPosition: " + -this.newScrollPosition + " offsetHeight:" + this.optionBoxes[0].offsetHeight);
+        this.decelerate();
     }
 
-    setFingerVelocity(fingerPosY, previousFingerPosY, previousTimeStamp) {
+    setFingerVelocity(fingerPosY, previousTimeStamp) {
         let timeBetweenFingers = Date.now() - previousTimeStamp;
-        let distance = fingerPosY - previousFingerPosY;
+        let distance = fingerPosY - this.lastFingerPositionY;
         this.fingerVelocity = distance / timeBetweenFingers;
     }
 
+    decelerate = () => {
+        this.scrollVelocity = this.fingerVelocity;
+        this.decelerationInterval = setInterval(this.smoothDeceleration, 1000 / 60);
+    }
     smoothDeceleration = () => {
         let decelerationRate = 0.05;
         let speed = 5;
         let snapRange = 0.1;
-        if (this.fingerVelocity > snapRange) {
 
-            let nextScrollPosition = this.previousScrollPosition + (this.fingerVelocity * speed);
-            this.scroll(nextScrollPosition, this.globalTouchOrigin);
-            this.fingerVelocity -= decelerationRate;
-            this.previousScrollPosition = nextScrollPosition;
-        } else if (this.fingerVelocity < -snapRange) {
-
-            let nextScrollPosition = this.previousScrollPosition + (this.fingerVelocity * speed);
-            this.scroll(nextScrollPosition, this.globalTouchOrigin);
-            this.fingerVelocity += decelerationRate;
-            this.previousScrollPosition = nextScrollPosition;
+        if (this.scrollVelocity > snapRange) {
+            let nextScrollPosition = this.lastFingerPositionY + (this.scrollVelocity * speed);
+            this.scroll(nextScrollPosition, this.globalTouchOrigin, this.optionBoxes);
+            this.scrollVelocity -= decelerationRate;
+            this.lastFingerPositionY = nextScrollPosition;
+        } else if (this.scrollVelocity < -snapRange) {
+            let nextScrollPosition = this.lastFingerPositionY + (this.scrollVelocity * speed);
+            this.scroll(nextScrollPosition, this.globalTouchOrigin, this.optionBoxes);
+            this.scrollVelocity += decelerationRate;
+            this.lastFingerPositionY = nextScrollPosition;
         } else {
             clearInterval(this.decelerationInterval);
         }
 
+    }
+    startScroll() {
+        this.newScrollPosition = this.previousScrollPositionY;
     }
 }
