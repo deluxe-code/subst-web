@@ -129,10 +129,11 @@ class OptionSelectorAnimator {
         this.previousScrollPositionY = position;
     }
     endTouch(touchOriginY) {
+        console.log(this.fingerVelocity)
         if (this.fingerVelocity < 0) {
-            this.mySelector.currentOption = Math.ceil(-this.previousScrollPositionY / this.mySelector.getOptionBoxHeight()) + 1;
+            this.mySelector.currentOption = Math.ceil((-this.previousScrollPositionY / this.mySelector.getOptionBoxHeight()) - this.fingerVelocity) + 1;
         } else if (this.fingerVelocity > 0) {
-            this.mySelector.currentOption = Math.floor(-this.previousScrollPositionY / this.mySelector.getOptionBoxHeight()) + 1;
+            this.mySelector.currentOption = Math.floor((-this.previousScrollPositionY / this.mySelector.getOptionBoxHeight()) - this.fingerVelocity) + 1;
         }
         this.globalTouchOrigin = touchOriginY;
         //replace with optionbox height please
@@ -146,16 +147,14 @@ class OptionSelectorAnimator {
     }
 
     decelerate() {
-        let sensitivity = 1;
+        let sensitivity = 8;
         let thisObject = this;
         let scrollVelocity = this.fingerVelocity;
         let targetPosition = -(this.mySelector.currentOption - 1) * this.mySelector.getOptionBoxHeight();
         let nextPosition = this.previousScrollPositionY;
         this.decelerationInterval = setInterval(smoothDeceleration, 1000 / 60);
-        let speed = 10;
+        let speed = 1;
         let decelerationRate = 50;
-        console.log(this.mySelector.currentOption);
-        console.log(targetPosition);
         function smoothDeceleration() {
 
             //clearInterval(decelerationInterval);
