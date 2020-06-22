@@ -153,7 +153,7 @@ class OptionSelectorAnimator {
         let targetPosition = -(this.mySelector.currentOption - 1) * this.mySelector.getOptionBoxHeight();
         let nextPosition = this.previousScrollPositionY;
         this.decelerationInterval = setInterval(smoothDeceleration, 1000 / 60);
-        let speed = 5;
+        let speed = 10;
         let decelerationRate = 50;
         function smoothDeceleration() {
 
