@@ -130,10 +130,17 @@ class OptionSelectorAnimator {
     }
     endTouch(touchOriginY) {
         console.log(this.fingerVelocity)
+        /*
         if (this.fingerVelocity < 0) {
             this.mySelector.currentOption = Math.ceil((-this.previousScrollPositionY / this.mySelector.getOptionBoxHeight()) - this.fingerVelocity) + 1;
         } else if (this.fingerVelocity > 0) {
             this.mySelector.currentOption = Math.floor((-this.previousScrollPositionY / this.mySelector.getOptionBoxHeight()) - this.fingerVelocity) + 1;
+        }
+        */
+        if (this.fingerVelocity < 0) {
+            this.mySelector.currentOption = Math.ceil((-this.previousScrollPositionY / this.mySelector.getOptionBoxHeight())) + 1;
+        } else if (this.fingerVelocity > 0) {
+            this.mySelector.currentOption = Math.floor((-this.previousScrollPositionY / this.mySelector.getOptionBoxHeight())) + 1;
         }
         this.globalTouchOrigin = touchOriginY;
         //replace with optionbox height please
