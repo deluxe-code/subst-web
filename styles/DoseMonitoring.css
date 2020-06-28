@@ -1,0 +1,65 @@
+body {
+    background-color: #444488;
+}
+#topSection h1 {
+    margin-top: 250px;
+    font-size: 10em;
+
+}
+
+#topSection h2 {
+    background-color: yellow;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 4em;
+    margin-bottom: 15px;
+    margin-top: 30px;
+    margin-right: 400px;
+    padding-bottom: 30px;
+    padding-left: 20px;
+    padding-top: 30px;
+
+}
+
+#bottomSection h1 {
+    margin: 0px;
+    text-align: center;
+    color: black;
+}
+
+#mainSection{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
+#topSection {
+    display: inline;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+#bottomSection {
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    flex-grow: 3;
+}
+
+.dose{
+    height: 100%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dose:before{
+    content: "";
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    box-shadow: 0px 10px 20px rgba(155, 155, 155, 0.5);
+    z-index: 1;
+
+}
