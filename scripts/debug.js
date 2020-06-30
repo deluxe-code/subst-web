@@ -29,7 +29,9 @@ let newTextCard = new TextAreaCard({
         placeholder: "Yo yo this is a placeholder"
     }
 });
-
+newTextCard.getType.then(e => {
+    console.log(e);
+});
 // setTimeout(newTextCard.getOutput, 1000);
 
 // NOTE: To get output from newTextCard, simply call
