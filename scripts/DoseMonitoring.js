@@ -33,41 +33,48 @@ for (var i = 2; i < 15; i++) {
 }
 window.addEventListener('load', (event) => { startUp() });
 function startUp() {
+    //dragList(0, 0);// * This is to set the position to the default position.
+    // * For some reason the positioning doesn't work correctly when initialized, even though it looks like it is.
+    // * Using this statement as part of initialization fixes the issue.
     let touchOrigin;
     let fingerPos;
     let fingerPosY;
     loadScheduledItems();
     document.getElementById("bottomSection").style.touchAction = "none";
-    document.getElementById("bottomSection").addEventListener("touchstart", ev => {
-        fingerPos = ev.targetTouches[0];
+    function touchStart(e) {
+        fingerPos = e.targetTouches[0];
         fingerPosY = fingerPos.clientY;
         touchOrigin = fingerPosY;
         document.getElementById("bottomSection").style.transition = "transform 0s";
-    }, { passive: true });
-    document.getElementById("bottomSection").addEventListener("touchmove", ev => {
+    }
+    function touchMove(e) {
         if (!swiped) {
-            fingerPos = ev.targetTouches[0];
+            fingerPos = e.targetTouches[0];
             fingerPosY = fingerPos.clientY;
             dragList(fingerPosY, touchOrigin);
         }
-    }, { passive: true });
-    document.getElementById("bottomSection").addEventListener("touchend", ev => {
+    }
+    function touchEnd(e) {
         if (!swiped) {
             if ((fingerPosY - touchOrigin) < -swipeTriggerDistance) {
                 document.getElementById("bottomSection").style.transition = "transform 0.6s";
                 dragList(-document.getElementById("topSection").offsetHeight, 0);
                 document.getElementById("mainSection").style.overflow = "scroll";
                 document.getElementById("bottomSection").style.overflow = "scroll";
-                document.getElementById("bottomSection").removeEventListener("touchstart", ev => { }, false);
-                document.getElementById("bottomSection").removeEventListener("touchmove", ev => { }, false);
-                document.getElementById("bottomSection").removeEventListener("touchend", ev => { }, false);
+                document.getElementById("bottomSection").removeEventListener("touchstart", touchStart);
+                document.getElementById("bottomSection").removeEventListener("touchmove", touchMove);
+                document.getElementById("bottomSection").removeEventListener("touchend", touchEnd);
+                document.getElementById("bottomSection").style.touchAction = "auto";
                 swiped = true;
             } else {
                 document.getElementById("bottomSection").style.transition = "transform 0.6s";
                 dragList(0, 0);
             }
         }
-    }, { passive: true });
+    }
+    document.getElementById("bottomSection").addEventListener("touchend", touchEnd, { passive: true });
+    document.getElementById("bottomSection").addEventListener("touchstart", touchStart, { passive: true });
+    document.getElementById("bottomSection").addEventListener("touchmove", touchMove, { passive: true });
 }
 function loadScheduledItems() {
     this.scheduledItems.forEach(element => {

@@ -30,7 +30,7 @@ body {
 #mainSection{
     display: block;
     height: 100%;
-    overflow: hidden;
+    overflow: scroll;
 }
 #topSection {
     display: block;
