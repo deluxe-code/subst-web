@@ -1,5 +1,6 @@
 body {
     background-color: #444488;
+
 }
 #topSection h1 {
     margin-top: 250px;
@@ -27,26 +28,24 @@ body {
 }
 
 #mainSection{
-    display: flex;
+    display: block;
     height: 100%;
-    flex-direction: column;
+    overflow: hidden;
 }
 #topSection {
-    display: inline;
-    flex-direction: column;
-    flex-grow: 1;
+    display: block;
+    height: 50%;
     padding-left: 50px;
+    overflow: hidden;
 }
 
 #bottomSection {
-    display: flex;
-    flex-direction: column;
+    display: block;
     background-color: black;
-    flex-grow: 3;
 }
 
 .dose{
-    height: 100%;
+    height: 250px;
     background-color: white;
     display: flex;
     align-items: center;
@@ -60,7 +59,7 @@ body {
     top: 0;
     bottom: 0;
     position: absolute;
-    box-shadow: 0px 10px 20px rgba(155, 155, 155, 0.5);
+    /*box-shadow: 0px 10px 20px rgba(155, 155, 155, 0.5);*/
     z-index: 1;
 
 }
