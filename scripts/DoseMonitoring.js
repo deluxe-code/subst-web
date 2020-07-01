@@ -43,6 +43,9 @@ function startUp() {
     let isFirstMove;
     loadScheduledItems();
     document.getElementById("bottomSection").style.touchAction = "none";
+    document.getElementById("mainSection").style.overflow = "hidden";
+    document.getElementById("bottomSection").style.overflow = "hidden";
+    document.getElementById("bottomSection").style.touchAction = "none";
     function touchStart(e) {
         isFirstMove = true;
         hasFingerMoved = false;
@@ -64,38 +67,38 @@ function startUp() {
             }
             console.log(thresholdCompensationAmount);
             dragList(fingerPosY - document.getElementById("topSection").offsetHeight - thresholdCompensationAmount, touchOrigin, 0, 0);
-            document.getElementById("mainSection").style.overflow = "hidden";
-            document.getElementById("bottomSection").style.overflow = "hidden";
-            document.getElementById("bottomSection").style.touchAction = "none";
             //Find more efficient way to do this^
         }
 
     }
     function touchEnd(e) {
-
         if (!swiped) {
+
             if ((fingerPosY - touchOrigin) < -swipeTriggerDistance) {
                 dragList(-document.getElementById("topSection").offsetHeight, 0, document.getElementById("topSection").offsetHeight, 0.6);
-                document.getElementById("mainSection").style.overflow = "scroll";
-                document.getElementById("bottomSection").style.overflow = "scroll";
-                document.getElementById("bottomSection").style.touchAction = "auto";
                 swiped = true;
             } else {
-                swiped = false;
                 dragList(0, 0, document.getElementById("topSection").offsetHeight, 0.6);
             }
         } else {
             if (document.getElementById("mainSection").scrollTop == 0) {
                 if ((fingerPosY - touchOrigin) > swipeTriggerDistance) {
                     dragList(0, 0, document.getElementById("topSection").offsetHeight, 0.6);
-                    document.getElementById("mainSection").style.overflow = "hidden";
-                    document.getElementById("bottomSection").style.overflow = "hidden";
-                    document.getElementById("bottomSection").style.touchAction = "none";
                     swiped = false;
                 } else {
                     dragList(-document.getElementById("topSection").offsetHeight, 0, document.getElementById("topSection").offsetHeight, 0.6);
                 }
             }
+        }
+        //second "swiped" if statement in a row. This is because the first one potentially changes the state of swiped.
+        if (!swiped) {
+            document.getElementById("mainSection").style.overflow = "hidden";
+            document.getElementById("bottomSection").style.overflow = "hidden";
+            document.getElementById("bottomSection").style.touchAction = "none";
+        } else {
+            document.getElementById("mainSection").style.overflow = "scroll";
+            document.getElementById("bottomSection").style.overflow = "scroll";
+            document.getElementById("bottomSection").style.touchAction = "auto";
         }
     }
     //unable to properly detect overscroll because scrollTop doesn't go past 0. 0 is the default state, so things conflict. I need to find either a better way of detecting overscroll or something else.
