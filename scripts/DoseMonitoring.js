@@ -26,6 +26,7 @@ class ScheduleItem {
 var scheduledItems = [];
 var swiped = false;
 const swipeTriggerDistance = 150;
+const thresholdConst = 16;
 scheduledItems[0] = new ScheduleItem("Kratom", "8:30PM");
 scheduledItems[1] = new ScheduleItem("Krokodile", "8:30PM");
 for (var i = 2; i < 15; i++) {
@@ -33,7 +34,7 @@ for (var i = 2; i < 15; i++) {
 }
 window.addEventListener('load', (event) => { startUp() });
 function startUp() {
-    dragList(0, 0);// * This is to set the position to the default position.
+    dragList(0, 0, document.getElementById("topSection").offsetHeight, 0);// * This is to set the position to the default position.
     // * For some reason the positioning doesn't work correctly when initialized, even though it looks like it is.
     // * Using this statement as part of initialization fixes the issue.
     let touchOrigin;
@@ -42,19 +43,21 @@ function startUp() {
     loadScheduledItems();
     document.getElementById("bottomSection").style.touchAction = "none";
     function touchStart(e) {
+        hasFingerMoved = false;
         fingerPos = e.targetTouches[0];
         fingerPosY = fingerPos.clientY;
         touchOrigin = fingerPosY + document.getElementById("mainSection").scrollTop;
         document.getElementById("bottomSection").style.transition = "transform 0s";
+        console.log("~~~~~~~~~newstart~~~~~~~~~~~~~~~~");
     }
     function touchMove(e) {
         fingerPos = e.targetTouches[0];
         fingerPosY = fingerPos.clientY;
+        console.log(touchOrigin - fingerPosY);
         if (!swiped) {
-            dragList(fingerPosY, touchOrigin);
+            dragList(fingerPosY, touchOrigin, document.getElementById("topSection").offsetHeight, 0);
         } else if (document.getElementById("mainSection").scrollTop == 0 && (fingerPosY > touchOrigin)) {
-
-            dragList(fingerPosY - document.getElementById("topSection").offsetHeight, touchOrigin);
+            dragList(fingerPosY - document.getElementById("topSection").offsetHeight - thresholdConst, touchOrigin, 0, 0);
             document.getElementById("mainSection").style.overflow = "hidden";
             document.getElementById("bottomSection").style.overflow = "hidden";
             document.getElementById("bottomSection").style.touchAction = "none";
@@ -62,27 +65,25 @@ function startUp() {
         }
     }
     function touchEnd(e) {
+
         if (!swiped) {
             if ((fingerPosY - touchOrigin) < -swipeTriggerDistance) {
-                document.getElementById("bottomSection").style.transition = "transform 0.6s";
-                dragList(-document.getElementById("topSection").offsetHeight, 0);
+                dragList(-document.getElementById("topSection").offsetHeight, 0, document.getElementById("topSection").offsetHeight, 0.6);
                 document.getElementById("mainSection").style.overflow = "scroll";
                 document.getElementById("bottomSection").style.overflow = "scroll";
                 document.getElementById("bottomSection").style.touchAction = "auto";
                 swiped = true;
             } else {
-                document.getElementById("bottomSection").style.transition = "transform 0.6s";
-                dragList(0, 0);
+                swiped = false;
+                dragList(0, 0, document.getElementById("topSection").offsetHeight, 0.6);
             }
         } else {
             if (document.getElementById("mainSection").scrollTop == 0 && (fingerPosY - touchOrigin) > swipeTriggerDistance) {
-                document.getElementById("bottomSection").style.transition = "transform 0.6s";
-                document.getElementById("bottomSection").style.transition = "transform 0.6s";
                 document.getElementById("mainSection").style.overflow = "hidden";
                 document.getElementById("bottomSection").style.overflow = "hidden";
                 document.getElementById("bottomSection").style.touchAction = "none";
                 swiped = false;
-                dragList(0, 0);
+                dragList(0, 0, document.getElementById("topSection").offsetHeight, 0.6);
             }
         }
     }
@@ -97,9 +98,14 @@ function loadScheduledItems() {
     });
     document.getElementById("bottomSection").appendChild
 }
-function dragList(fingerPos, touchOrigin) {
-    relativeFingerPos = fingerPos - document.getElementById("topSection").offsetHeight;
-    fingerPosWithRespectToLocalPos = relativeFingerPos - (touchOrigin - document.getElementById("topSection").offsetHeight);
-    document.getElementById("bottomSection").style.transform = "translate(0px, " + (fingerPosWithRespectToLocalPos) + "px)";
-    console.log(fingerPosWithRespectToLocalPos);
+function smoothTranslateY(element, position, transitionTime) {
+    element.style.transform = "translate(0px, " + (position) + "px)";
+    document.getElementById("bottomSection").style.transition = "transform " + transitionTime + "s";
+}
+function dragList(fingerPos, touchOrigin, heightOfAboveElements, transitionTime) {
+    relativeFingerPos = fingerPos - heightOfAboveElements;
+    fingerPosWithRespectToLocalPos = relativeFingerPos - (touchOrigin - heightOfAboveElements);
+    smoothTranslateY(document.getElementById("bottomSection"), fingerPosWithRespectToLocalPos, transitionTime);
+    //document.getElementById("bottomSection").style.transform = "translate(0px, " + (fingerPosWithRespectToLocalPos) + "px)";
+    //console.log(fingerPosWithRespectToLocalPos);
 }
