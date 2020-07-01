@@ -26,7 +26,6 @@ class ScheduleItem {
 var scheduledItems = [];
 var swiped = false;
 const swipeTriggerDistance = 150;
-const thresholdConst = 16;
 scheduledItems[0] = new ScheduleItem("Kratom", "8:30PM");
 scheduledItems[1] = new ScheduleItem("Krokodile", "8:30PM");
 for (var i = 2; i < 15; i++) {
@@ -40,9 +39,12 @@ function startUp() {
     let touchOrigin;
     let fingerPos;
     let fingerPosY;
+    let thresholdCompensationAmount = 0;
+    let isFirstMove;
     loadScheduledItems();
     document.getElementById("bottomSection").style.touchAction = "none";
     function touchStart(e) {
+        isFirstMove = true;
         hasFingerMoved = false;
         fingerPos = e.targetTouches[0];
         fingerPosY = fingerPos.clientY;
@@ -53,16 +55,21 @@ function startUp() {
     function touchMove(e) {
         fingerPos = e.targetTouches[0];
         fingerPosY = fingerPos.clientY;
-        console.log(touchOrigin - fingerPosY);
         if (!swiped) {
             dragList(fingerPosY, touchOrigin, document.getElementById("topSection").offsetHeight, 0);
         } else if (document.getElementById("mainSection").scrollTop == 0 && (fingerPosY > touchOrigin)) {
-            dragList(fingerPosY - document.getElementById("topSection").offsetHeight - thresholdConst, touchOrigin, 0, 0);
+            if (isFirstMove) {
+                thresholdCompensationAmount = fingerPosY - touchOrigin;
+                isFirstMove = false;
+            }
+            console.log(thresholdCompensationAmount);
+            dragList(fingerPosY - document.getElementById("topSection").offsetHeight - thresholdCompensationAmount, touchOrigin, 0, 0);
             document.getElementById("mainSection").style.overflow = "hidden";
             document.getElementById("bottomSection").style.overflow = "hidden";
             document.getElementById("bottomSection").style.touchAction = "none";
             //Find more efficient way to do this^
         }
+
     }
     function touchEnd(e) {
 
