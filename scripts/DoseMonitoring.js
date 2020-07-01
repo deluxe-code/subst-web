@@ -40,14 +40,14 @@ function startUp() {
     let fingerPos;
     let fingerPosY;
     let thresholdCompensationAmount = 0;
-    let isFirstMove;
+    let isFirstMovementSample;
     loadScheduledItems();
     document.getElementById("bottomSection").style.touchAction = "none";
     document.getElementById("mainSection").style.overflow = "hidden";
     document.getElementById("bottomSection").style.overflow = "hidden";
     document.getElementById("bottomSection").style.touchAction = "none";
     function touchStart(e) {
-        isFirstMove = true;
+        isFirstMovementSample = true;
         hasFingerMoved = false;
         fingerPos = e.targetTouches[0];
         fingerPosY = fingerPos.clientY;
@@ -60,12 +60,12 @@ function startUp() {
         fingerPosY = fingerPos.clientY;
         if (!swiped) {
             dragList(fingerPosY, touchOrigin, document.getElementById("topSection").offsetHeight, 0);
-        } else if (document.getElementById("mainSection").scrollTop == 0 && (fingerPosY > touchOrigin)) {
-            if (isFirstMove) {
+        } else if (document.getElementById("mainSection").scrollTop == 0 && (fingerPosY >= touchOrigin)) {
+            document.getElementById("bottomSection").style.touchAction = "none";
+            if (isFirstMovementSample) {
                 thresholdCompensationAmount = fingerPosY - touchOrigin;
-                isFirstMove = false;
+                isFirstMovementSample = false;
             }
-            console.log(thresholdCompensationAmount);
             dragList(fingerPosY - document.getElementById("topSection").offsetHeight - thresholdCompensationAmount, touchOrigin, 0, 0);
             //Find more efficient way to do this^
         }
@@ -73,7 +73,6 @@ function startUp() {
     }
     function touchEnd(e) {
         if (!swiped) {
-
             if ((fingerPosY - touchOrigin) < -swipeTriggerDistance) {
                 dragList(-document.getElementById("topSection").offsetHeight, 0, document.getElementById("topSection").offsetHeight, 0.6);
                 swiped = true;
