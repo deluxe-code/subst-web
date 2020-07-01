@@ -85,12 +85,16 @@ function startUp() {
                 dragList(0, 0, document.getElementById("topSection").offsetHeight, 0.6);
             }
         } else {
-            if (document.getElementById("mainSection").scrollTop == 0 && (fingerPosY - touchOrigin) > swipeTriggerDistance) {
-                document.getElementById("mainSection").style.overflow = "hidden";
-                document.getElementById("bottomSection").style.overflow = "hidden";
-                document.getElementById("bottomSection").style.touchAction = "none";
-                swiped = false;
-                dragList(0, 0, document.getElementById("topSection").offsetHeight, 0.6);
+            if (document.getElementById("mainSection").scrollTop == 0) {
+                if ((fingerPosY - touchOrigin) > swipeTriggerDistance) {
+                    dragList(0, 0, document.getElementById("topSection").offsetHeight, 0.6);
+                    document.getElementById("mainSection").style.overflow = "hidden";
+                    document.getElementById("bottomSection").style.overflow = "hidden";
+                    document.getElementById("bottomSection").style.touchAction = "none";
+                    swiped = false;
+                } else {
+                    dragList(-document.getElementById("topSection").offsetHeight, 0, document.getElementById("topSection").offsetHeight, 0.6);
+                }
             }
         }
     }
