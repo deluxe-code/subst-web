@@ -1,6 +1,7 @@
 export class Selector {
 
     selectorBox;
+    optionSelectorElement;
     fontSize = 16;
     optionsList = [];
     currentOption = 0;
@@ -12,26 +13,51 @@ export class Selector {
     smoothHeightInterval;
     animator;
     selectorBoxPadding = 5;
+    addButton;
+    optionBoxSize = 1;
 
     constructor(config) {
-        // arr = config[0];
-        // styles = config[1];
-        let [arr, styles = new OptionSelectorConfig()] = config;
+        let [arr, styles = new OptionSelectorConfig(), hasAddButton = false] = config;
         this.styles = styles;
         this.optionsList = arr;
+        this.optionSelectorElement = document.createElement("div");
+        this.selectorBox = document.createElement("div");
+        this.selectorBox.className = "SelectorBox";
+        this.optionSelectorElement.appendChild(this.selectorBox);
         this.createOptionBoxes();
+        if(hasAddButton){
+            this.createAddButton();
+        }
         this.scrollEvents();
         this.animator = new OptionSelectorAnimator(this, this.optionBoxes);
-        this.selectorBox.style.height = "100%";
+        this.optionSelectorElement.style.height = "100%";
         this.selectorBox.style.overflow = "hidden";
         this.selectorBox.style.touchAction = "none";
         this.selectorBox.style.padding = this.selectorBoxPadding;
     }
 
     getOptionBoxHeight() {
-        return (this.selectorBox.offsetHeight / 3);
+        return (this.selectorBox.offsetHeight * this.optionBoxSize / 3);
     }
 
+    createAddButton() {
+        this.selectorBox.style.height = "80%";
+        this.addButton = document.createElement("button");
+        this.addButton.type = "button";
+        this.addButton.style.marginTop = "25px";
+        this.addButton.style.width = "30%";
+        this.addButton.style.height = "10%";
+        this.addButton.style.marginLeft = "auto";
+        this.addButton.style.marginRight = "auto";
+        this.addButton.style.display = "block";
+        this.addButton.style.fontSize = "3em"
+        this.addButton.style.backgroundColor = "Transparent";
+        this.addButton.style.border = "none";
+        this.addButton.style.cursor = "pointer";
+        this.addButton.style.outline = "none";
+        this.addButton.innerHTML = "+";
+        this.optionSelectorElement.appendChild(this.addButton);
+    }
     setStyles() {
 
         this.optionBoxes.forEach(e => {
@@ -46,7 +72,7 @@ export class Selector {
     }
 
     getElement() {
-        return this.selectorBox;
+        return this.optionSelectorElement;
     }
 
     getSelected() {
@@ -54,9 +80,8 @@ export class Selector {
     }
     createOptionBoxes() {
         let {boxShadow, borderRadius, backgroundColor, fontFamily, fontSize} = this.styles;
-        let boxHeight = (100 / 3) + "%";
-        this.selectorBox = document.createElement("div");
-        this.selectorBox.className = "SelectorBox";
+        this.fontSize = fontSize;
+        let boxHeight = (100*this.optionBoxSize / 3) + "%";
         for (let i = 0; i < this.optionsList.length; i++) {
             this.optionBoxes[i] = document.createElement("div");
             this.optionBoxes[i].id = "SelectorOptionBox" + i;
@@ -71,6 +96,7 @@ export class Selector {
             this.optionBoxes[i].style.position = "relative";
             this.optionBoxes[i].style.marginRight = "auto";
             this.optionBoxes[i].style.marginLeft = "auto";
+            this.optionBoxes[i].style.display = "table";
             let child = this.optionBoxes[i].appendChild(document.createElement("p"));
             child.innerHTML = this.optionsList[i];
             child.style.position = "relative";
@@ -80,7 +106,9 @@ export class Selector {
             child.style.marginBottom = "0px";
             child.style.marginLeft = "auto";
             child.style.marginRight = "auto";
-            child.style.padding = "60px";
+            child.style.padding = "0px";
+            child.style.display = "table-cell";
+            child.style.verticalAlign = "middle";
         }
     }
 
@@ -149,12 +177,13 @@ class OptionSelectorAnimator {
     }
 
     growWidth(e, position, i) {
-        e.style.width = function(mySelector, boxGrowthAmount) {
-            let centerPosition = ((mySelector.getElement().offsetHeight/2)-mySelector.getOptionBoxHeight()/2);
+        let elementSize = function(mySelector, boxGrowthAmount) {
+            let centerPosition = ((mySelector.selectorBox.offsetHeight/2)-mySelector.getOptionBoxHeight()/2);
             let boxElementPosition = position + mySelector.getOptionBoxHeight()*i;
             let elementSize = "calc(100% - " + boxGrowthAmount*Math.abs(centerPosition-boxElementPosition) + "px)";
             return elementSize;
         }(this.mySelector, this.boxGrowthAmount);
+        e.style.width = elementSize;
     }
     endTouch(touchOriginY) {
         if (this.fingerVelocity < 0) {
@@ -178,7 +207,7 @@ class OptionSelectorAnimator {
     }
 
     decelerate() {
-        let sensitivity = 8;
+        let sensitivity = 4;
         let thisObject = this;
         let scrollVelocity = this.fingerVelocity;
         let targetPosition = -(this.mySelector.currentOption - 1) * this.mySelector.getOptionBoxHeight();

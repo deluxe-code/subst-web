@@ -5,9 +5,9 @@ let OSConfig = new OptionSelectorConfig({
     backgroundColor: "#EDEDED",
     boxShadow: "5px 5px grey"
 });
+let startDoseSelector = new Selector([doseOptions, OSConfig, true]);
+let endDoseSelector = new Selector([doseOptions, OSConfig, true]);
 let curveTypeSelector = new Selector([curveTypeOptions, OSConfig]);
-let startDoseSelector = new Selector([doseOptions, OSConfig]);
-let endDoseSelector = new Selector([doseOptions, OSConfig]);
 window.addEventListener('load', () => {
     document.getElementById("curveTypeSelector").appendChild(curveTypeSelector.getElement());
     document.getElementById("startDoseSelector").appendChild(startDoseSelector.getElement());
