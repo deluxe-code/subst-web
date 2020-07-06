@@ -6,7 +6,7 @@ function start() {
     for(var i = 0; i < 10; i++){
         arr[i] = "forloop, " + i;
     }
-    mySelector = new OptionSelector.Selector(arr);
+    mySelector = new OptionSelector.Selector([arr, new OptionSelector.OptionSelectorConfig()]);
     document.getElementById("option").appendChild(mySelector.getElement());
 }
 start();

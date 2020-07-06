@@ -59,8 +59,11 @@
   "git.ignoreMissingGitWarning": true,
   "liveServer.settings.donotShowInfoMsg": true,
   "liveServer.settings.CustomBrowser": "chrome",
-  "liveServer.settings.ignoreFiles": [".vscode/**", "**/*.scss", "**/*.sass"],
-  "editor.formatOnSave": true,
+  "liveServer.settings.ignoreFiles": [
+    ".vscode/**",
+    "**/*.scss",
+    "**/*.sass"
+  ],
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -80,8 +83,6 @@
   "zenMode.hideLineNumbers": false,
   "zenMode.hideTabs": false,
   "files.enableTrash": false,
-  "editor.formatOnPaste": true,
-  "editor.formatOnType": true,
   "editor.quickSuggestions": true,
   "workbench.colorTheme": "Cobalt2",
   "editor.lineHeight": 25,
