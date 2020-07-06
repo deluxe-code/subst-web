@@ -4,21 +4,27 @@
     <script src="scripts/create_schedule.js" type="module"></script>
     <link rel="stylesheet" href="styles/create_schedule.css">
     <link rel="stylesheet" href="styles/globalStyles.css">
+    <style>
+        input {
+            font-size: 2.5em;
+        }
+    </style>
 </head>
 
 <body>
-    <form>
+    <form id="scheduleForm">
         <label for="startDate">Start Date: </label><br>
-        <input type="text" id="startDate" name="startDate"><br>
+        <input type="date" id="startDate" name="startDate"><br>
         <label for="endDate">End Date: </label><br>
-        <input type="text" id="endDate" name="endDate"><br>
+        <input type="date" id="endDate" name="endDate"><br>
         <div style="height: 100px"></div>
         <label for="startDose">Start Dose: </label><br>
-        <input type="text" id="startDose" name="startDose"><br>
+        <div id="startDoseSelector" class="optionSelector" style="height: 500px; width: 100%; margin-left: auto; margin-right: auto; margin-bottom: 50px;"></div>
         <label for="endDose">End Dose: </label><br>
-        <input type="text" id="endDose" name="endDose"><br>
+        <div id="endDoseSelector" class="optionSelector" style="height: 500px; width: 100%; margin-left: auto; margin-right: auto; margin-bottom: 50px;"></div>
         <label for="curveType">Curve Type: </label><br>
-        <div id="curveTypeSelector" class="optionSelector" style="height: 500px; width: 100%; margin-left: auto; margin-right: auto; padding:"></div>
+        <div id="curveTypeSelector" class="optionSelector" style="height: 500px; width: 100%; margin-left: auto; margin-right: auto;"></div>
+        <button type="button" style="width: 100%; margin-top: 50px; height: 50px; font-size: 2em; background-color: yellow; color: black;" id="submitButton">Done</button>
     </form>
 </body>
 

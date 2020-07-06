@@ -50,7 +50,7 @@ export class Selector {
     }
 
     getSelected() {
-        return optionsList[this.currentOption];
+        return this.optionsList[this.currentOption];
     }
     createOptionBoxes() {
         let {boxShadow, borderRadius, backgroundColor, fontFamily, fontSize} = this.styles;
@@ -127,7 +127,7 @@ class OptionSelectorAnimator {
     previousTimeStamp = Date.now();
     globalTouchOrigin;
     decelerationInterval;
-    boxGrowthAmount = 0.3;
+    boxGrowthAmount = 1;
     constructor(mySelector, optionBoxes) {
         this.optionBoxes = optionBoxes;
         this.mySelector = mySelector;
@@ -168,7 +168,6 @@ class OptionSelectorAnimator {
             this.mySelector.currentOption = this.mySelector.optionBoxes.length-1;
         }
         this.globalTouchOrigin = touchOriginY;
-        console.log(this.mySelector.currentOption);
         this.decelerate();
     }
 
