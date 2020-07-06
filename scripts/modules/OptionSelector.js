@@ -11,6 +11,7 @@ export class Selector {
     previousScrollPosition;
     smoothHeightInterval;
     animator;
+    selectorBoxPadding = 5;
 
     constructor(config) {
         // arr = config[0];
@@ -24,6 +25,7 @@ export class Selector {
         this.selectorBox.style.height = "100%";
         this.selectorBox.style.overflow = "hidden";
         this.selectorBox.style.touchAction = "none";
+        this.selectorBox.style.padding = this.selectorBoxPadding;
     }
 
     getOptionBoxHeight() {
@@ -51,7 +53,7 @@ export class Selector {
         return optionsList[this.currentOption];
     }
     createOptionBoxes() {
-        let {boxShadow, bgColor, bRadius} = this.styles;
+        let {boxShadow, borderRadius, backgroundColor, fontFamily, fontSize} = this.styles;
         let boxHeight = (100 / 3) + "%";
         this.selectorBox = document.createElement("div");
         this.selectorBox.className = "SelectorBox";
@@ -62,8 +64,10 @@ export class Selector {
             this.optionBoxes[i].style.height = boxHeight;
             this.selectorBox.appendChild(this.optionBoxes[i]);
             this.optionBoxes[i].style.boxShadow = boxShadow;
-            this.optionBoxes[i].style.backgroundColor = bgColor;
-            this.optionBoxes[i].style.borderRadius = bRadius;
+            this.optionBoxes[i].style.backgroundColor = backgroundColor;
+            this.optionBoxes[i].style.borderRadius = borderRadius;
+            this.optionBoxes[i].style.fontFamily = fontFamily;
+            this.optionBoxes[i].style.fontSize = fontSize;
             this.optionBoxes[i].style.position = "relative";
             this.optionBoxes[i].style.marginRight = "auto";
             this.optionBoxes[i].style.marginLeft = "auto";
@@ -91,7 +95,6 @@ export class Selector {
             this.animator.startScroll();
             clearInterval(this.decelerationInterval);
             touchOriginY = ev.touches[0].clientY;
-            console.log(touchOriginY);
             currentScrolls = 0;
         }, { passive: true });
         this.selectorBox.addEventListener("touchmove", ev => {
@@ -150,7 +153,6 @@ class OptionSelectorAnimator {
             let centerPosition = ((mySelector.getElement().offsetHeight/2)-mySelector.getOptionBoxHeight()/2);
             let boxElementPosition = position + mySelector.getOptionBoxHeight()*i;
             let elementSize = "calc(100% - " + boxGrowthAmount*Math.abs(centerPosition-boxElementPosition) + "px)";
-            console.log(centerPosition);
             return elementSize;
         }(this.mySelector, this.boxGrowthAmount);
     }
@@ -160,7 +162,13 @@ class OptionSelectorAnimator {
         } else if (this.fingerVelocity > 0) {
             this.mySelector.currentOption = Math.floor((-this.previousScrollPositionY / this.mySelector.getOptionBoxHeight())) + 1;
         }
+        if(this.mySelector.currentOption < 0) {
+            this.mySelector.currentOption = 0;
+        } else if(this.mySelector.currentOption > this.mySelector.optionBoxes.length-1) {
+            this.mySelector.currentOption = this.mySelector.optionBoxes.length-1;
+        }
         this.globalTouchOrigin = touchOriginY;
+        console.log(this.mySelector.currentOption);
         this.decelerate();
     }
 
@@ -176,10 +184,7 @@ class OptionSelectorAnimator {
         let scrollVelocity = this.fingerVelocity;
         let targetPosition = -(this.mySelector.currentOption - 1) * this.mySelector.getOptionBoxHeight();
         let nextPosition = this.previousScrollPositionY;
-        this.decelerationInterval = setInterval(smoothDeceleration, 1000 / 60);
-        let speed = 3;
-        let decelerationRate = 50;
-        function smoothDeceleration() {
+        this.decelerationInterval = setInterval(smoothDeceleration => {
 
             //clearInterval(decelerationInterval);
             if (thisObject.fingerVelocity < 0) {
@@ -199,7 +204,9 @@ class OptionSelectorAnimator {
                 thisObject.scrollToPagePosition(targetPosition, thisObject.optionBoxes);
                 clearInterval(this.decelerationInterval);
             }
-        }
+        }, 1000 / 60);
+        let speed = 3;
+        let decelerationRate = 50;
     }
 
     startScroll() {
@@ -212,8 +219,10 @@ class OptionSelectorAnimator {
 
     const optionBox_default = {
         boxShadow: "0px 5px 5px rgba(86, 86, 86, 0.25)",
-        bgColor: "white",
-        bRadius: "10px"
+        backgroundColor: "white",
+        borderRadius: "10px",
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
+        fontSize: "2.5em"
     }
 export class OptionSelectorConfig {
     /*
@@ -227,8 +236,10 @@ export class OptionSelectorConfig {
        if (config) {
            return {
                 boxShadow: (config.boxShadow ? config.boxShadow : optionBox_default.boxShadow),
-                bgColor: (config.backgroundColor ? config.backgroundColor : optionBox_default.bgColor),
-                bRadius: (config.bRadius ? config.borderRadius : optionBox_default.bRadius)
+                backgroundColor: (config.backgroundColor ? config.backgroundColor : optionBox_default.backgroundColor),
+                borderRadius: (config.borderRadius ? config.borderRadius : optionBox_default.borderRadius),
+                fontType: (config.fontType ? config.fontType : optionBox_default.fontType),
+                fontSize: (config.fontSize ? config.fontSize : optionBox_default.fontSize)
             }
         } else {
             return optionBox_default
