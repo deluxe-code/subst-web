@@ -1,36 +1,16 @@
-class ScheduleItem {
-    drugTitle;
-    scheduledTime;
-    taken;
-    timeTook;
-    element;
-    constructor(drugTitle, scheduledTime) {
-        this.drugTitle = drugTitle;
-        this.scheduledTime = scheduledTime;
-        this.createElement();
-    }
-
-    createElement() {
-        let mainContainer = document.createElement("div");
-        let drugTitle = document.createElement("h1");
-        let scheduledTime = document.createElement("h2");
-        drugTitle.innerHTML = this.drugTitle;
-        scheduledTime.innerHTML = this.scheduledTime;
-        mainContainer.appendChild(drugTitle);
-        mainContainer.appendChild(scheduledTime);
-        mainContainer.className = "dose";
-        this.element = mainContainer;
-        return mainContainer;
-    }
-}
+import { Schedule, ScheduleElement, scheduleKey } from "./modules/schedule.js";
 var scheduledItems = [];
 var swiped = false;
 const swipeTriggerDistance = 150;
-scheduledItems[0] = new ScheduleItem("Kratom", "8:30PM");
-scheduledItems[1] = new ScheduleItem("Krokodile", "8:30PM");
-for (var i = 2; i < 15; i++) {
-    scheduledItems[i] = new ScheduleItem("Krokodile", "8:30PM");
+for(var i = 0; i < localStorage.length; i++){
+    if(localStorage.key(i).includes(scheduleKey)){
+        //push to localstorage objects to schedule items, and make it so scheduledItems can interpret it
+        console.log();
+        scheduledItems.push(new ScheduleElement(JSON.parse(localStorage.getItem(localStorage.key(i)))));
+    }
 }
+
+console.log(scheduledItems);
 window.addEventListener('load', (event) => { startUp() });
 function startUp() {
     dragList(0, 0, document.getElementById("topSection").offsetHeight, 0);// * This is to set the position to the default position.
@@ -48,12 +28,11 @@ function startUp() {
     document.getElementById("bottomSection").style.touchAction = "none";
     function touchStart(e) {
         isFirstMovementSample = true;
-        hasFingerMoved = false;
+        let hasFingerMoved = false;
         fingerPos = e.targetTouches[0];
         fingerPosY = fingerPos.clientY;
         touchOrigin = fingerPosY + document.getElementById("mainSection").scrollTop;
         document.getElementById("bottomSection").style.transition = "transform 0s";
-        console.log("~~~~~~~~~newstart~~~~~~~~~~~~~~~~");
     }
     function touchMove(e) {
         fingerPos = e.targetTouches[0];
@@ -106,7 +85,7 @@ function startUp() {
     document.getElementById("bottomSection").addEventListener("touchmove", touchMove, { passive: true });
 }
 function loadScheduledItems() {
-    this.scheduledItems.forEach(element => {
+    scheduledItems.forEach(element => {
         document.getElementById("bottomSection").appendChild(element.element);
     });
     document.getElementById("bottomSection").appendChild
@@ -116,8 +95,8 @@ function smoothTranslateY(element, position, transitionTime) {
     document.getElementById("bottomSection").style.transition = "transform " + transitionTime + "s";
 }
 function dragList(fingerPos, touchOrigin, heightOfAboveElements, transitionTime) {
-    relativeFingerPos = fingerPos - heightOfAboveElements;
-    fingerPosWithRespectToLocalPos = relativeFingerPos - (touchOrigin - heightOfAboveElements);
+    let relativeFingerPos = fingerPos - heightOfAboveElements;
+    let fingerPosWithRespectToLocalPos = relativeFingerPos - (touchOrigin - heightOfAboveElements);
     smoothTranslateY(document.getElementById("bottomSection"), fingerPosWithRespectToLocalPos, transitionTime);
     //document.getElementById("bottomSection").style.transform = "translate(0px, " + (fingerPosWithRespectToLocalPos) + "px)";
     //console.log(fingerPosWithRespectToLocalPos);

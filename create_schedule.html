@@ -5,14 +5,14 @@
     <link rel="stylesheet" href="styles/create_schedule.css">
     <link rel="stylesheet" href="styles/globalStyles.css">
     <style>
-        input {
-            font-size: 2.5em;
-        }
+
     </style>
 </head>
 
 <body>
-    <form id="scheduleForm">
+    <form id="scheduleForm" style="overflow-x: hidden;">
+        <label for="drugName">Drug Name: </label><br>
+        <input type="text" id="drugName" name="drugName"><br>
         <label for="startDate">Start Date: </label><br>
         <input type="date" id="startDate" name="startDate"><br>
         <label for="endDate">End Date: </label><br>
@@ -24,6 +24,15 @@
         <div id="endDoseSelector" class="optionSelector" style="height: 500px; width: 100%; margin-left: auto; margin-right: auto; margin-bottom: 50px;"></div>
         <label for="curveType">Curve Type: </label><br>
         <div id="curveTypeSelector" class="optionSelector" style="height: 500px; width: 100%; margin-left: auto; margin-right: auto;"></div>
+        <div id="daysOfTheWeek" style="width: 100%; overflow-x: scroll; margin-top: 100px;">
+            <table style="width: 300%; height: 400px;">
+                <tbody>
+                    <tr>
+                        <th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Sunday</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <button type="button" style="width: 100%; margin-top: 50px; height: 50px; font-size: 2em; background-color: yellow; color: black;" id="submitButton">Done</button>
     </form>
 </body>

@@ -33,6 +33,7 @@ export class Selector {
         this.optionSelectorElement.style.height = "100%";
         this.selectorBox.style.overflow = "hidden";
         this.selectorBox.style.touchAction = "none";
+        this.selectorBox.style.height = "100%";
         this.selectorBox.style.padding = this.selectorBoxPadding;
     }
 
