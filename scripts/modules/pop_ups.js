@@ -10,7 +10,7 @@ export class PopUp {
         this.location = location;
     }
     open(){
-        location.appendChild(card.card);
+        location.appendChild(this.card.getElement());
         console.log("opened");
     }
     close() {

@@ -16,7 +16,7 @@ start();
 let cardElement = document.createElement("div");
 let card = new cards.TextAreaCard({
 	label: "Add description",
-	location: "#cardLocation",
+	location: cardElement,
 	content: {
 		placeholder: "What was your dose like?"
 	}
