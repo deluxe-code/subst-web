@@ -5,9 +5,9 @@ import * as OptionSelector from "./OptionSelector.js";
 import * as inputModules from "./input_modules.js";
 export const cards_config = {
   autoPlace: "false",
-  defaultContainer: document.querySelector("#body"),
+  defaultContainer: document.body,
   setDefaultContainer: function (query) {
-    this.defaultContainer = document.querySelector(query);
+    this.defaultContainer = query;
   },
 };
 function generateCard(config) {
@@ -54,7 +54,7 @@ class Card {
     if ((this._config.location || "default") == "default") {
       cards_config.defaultContainer.appendChild(this.card);
     } else {
-      document.querySelector(this._config.location).appendChild(this.card);
+      this._config.location.appendChild(this.card);
     }
   }
 }
