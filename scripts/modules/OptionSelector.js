@@ -156,7 +156,7 @@ class OptionSelectorAnimator {
     previousTimeStamp = Date.now();
     globalTouchOrigin;
     decelerationInterval;
-    boxGrowthAmount = 1;
+    boxGrowthAmount = 0.2;
     constructor(mySelector, optionBoxes) {
         this.optionBoxes = optionBoxes;
         this.mySelector = mySelector;

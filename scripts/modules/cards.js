@@ -114,15 +114,21 @@ export class OptionSelectorCard extends Card {
     this.card_layout = this.finishLayout();
   }
   buildLayout = () => {
-    let containerTest = document.createElement("div");
-    containerTest.id = "optionSelector-container";
-    containerTest.style.width = "200px";
-    containerTest.style.height = "100px";
-    containerTest.style.margin = "auto";
-    let options_array = this.getContent().options;
-    let mySelector = new OptionSelector.Selector(options_array);
-    containerTest.appendChild(mySelector.getElement());
-    return containerTest;
+    let container = document.createElement("div");
+    let content = this.getContent();
+    let options_array = content.options;
+    let styles = content.styles;
+    let hasAddButton = content.hasAddButton;
+    let mySelector = new OptionSelector.Selector([options_array, styles, hasAddButton]);
+    mySelector.animator.boxGrowthAmount = 0.2;
+    container.id = "optionSelector-container";
+    container.style.width = "100%";
+    container.style.height = "80%";
+    container.style.margin = "auto";
+    container.appendChild(mySelector.getElement());
+    this.card.style.height = "80%";
+    this.card.style.width = "100%";
+    return container;
   };
   getOutput = () => {};
 }
@@ -211,3 +217,33 @@ class Label {
     return this._node;
   }
 }
+/*
+export class PopUpCard extends Card{
+  doneButton;
+  contentCard;
+  constructor(card_config) {
+    super(card_config);
+    this.contentCard = card_config.content.card;
+    this.card_layout = this.finishLayout();
+  }
+  buildLayout = () => {
+    let container = document.createElement("div");
+    container.id = "optionSelector-container";
+    container.style.width = "100px";
+    container.style.height = "500px";
+    container.style.margin = "auto";
+    this.doneButton = document.createElement("button");
+    this.doneButton.type = "button";
+    this.doneButton.innerHTML = "Done";
+    this.doneButton.style.width = "100px";
+    this.doneButton.style.height = "35px";
+    this.doneButton.style.position = "absolute";
+    this.doneButton.style.bottom = "20px";
+    this.doneButton.style.right = "20px";
+    container.appendChild(this.contentCard.card);
+    container.appendChild(this.doneButton);
+    return container;
+  };
+  getOutput = () => {};
+}
+*/

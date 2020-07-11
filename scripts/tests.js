@@ -1,6 +1,7 @@
 import * as OptionSelector from "./modules/OptionSelector.js";
 import * as cards from "./modules/cards.js";
 import {PopUp} from "./modules/pop_ups.js";
+import {ElementDragger} from "./modules/element_dragger.js";
 let mySelector;
 function start() {
 
@@ -14,12 +15,19 @@ function start() {
 }
 start();
 let cardElement = document.createElement("div");
-let card = new cards.TextAreaCard({
-	label: "Add description",
-	location: cardElement,
-	content: {
-		placeholder: "What was your dose like?"
-	}
+let card = new cards.OptionSelectorCard({
+    id: "strainSelector",
+    label: "Pick a strain",
+    content: {
+        options: ["Super Silver Haze", "Girl Scout Cookies", "Fruity Pebbles", "Vibe Juices", "OG Granny"],
+        styles: new OptionSelector.OptionSelectorConfig(),
+        hasAddButton: false
+    }
 });
 let testPopUp = new PopUp(card,null,null, document.getElementById("cardLocation"));
-document.getElementById("popupButton").addEventListener('click', testPopUp.open());
+document.getElementById("popupButton").addEventListener('click', () => {testPopUp.open()});
+let testDrag = new ElementDragger({
+    elementToDrag: document.getElementById("dragTest"),
+    restrictY: true,
+    releaseFunction: function() {console.log()}
+});
