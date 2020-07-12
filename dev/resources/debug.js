@@ -1,6 +1,6 @@
-import { db } from "/scripts/modules/firebase.js";
+import { database } from "/scripts/modules/firebase.js";
 async function createDummyUser() {
-  return await db.collection("users").add({
+  return await database.collection("users").add({
     email: "nikolas@subst.app",
     password: "honeybunchesofoats98"
   }).then((docRef) => {
@@ -9,6 +9,19 @@ async function createDummyUser() {
   });
 }
 
+const pageElements;
+pageElements.input = {
+ email: document.getElementById("input_email"),
+ password: document.getElementById("input_password"),
+ signup: document.getElementById("button_signup")
+}
+
+pageElements.signup.addEventListener("click", function() {
+  console.log("yaoo!!!");
+  const providedEmail = pageElements.input.email.value;
+  const providedPassword = pageElements.input.password.value;
+
+});
 db.collection("users").onSnapshot(doc => {
   console.log(doc.data());
 })

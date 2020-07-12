@@ -12,4 +12,9 @@ const _fbConfig = {
 firebase.initializeApp(_fbConfig);
 firebase.analytics();
 
-export const db = firebase.firestore();
+export const auth = {
+    signup: (credentials) => {
+
+    }
+};
+export const database = firebase.firestore();
