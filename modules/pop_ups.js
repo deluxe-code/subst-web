@@ -1,23 +1,58 @@
+import {ElementDragger} from "./element_dragger.js";
+
+export class StrungPopUps {
+    popUps = [];
+    elementDragger;
+    container;
+    currentPopUp = 0;
+    constructor(container, popUps) {
+        this.container = container;
+        this.popUps = popUps;
+        this.container.style.position = "relative";
+        this.container.style.top = -this.container.offsetTop;
+        this.container.style.display = "none";
+        this.container.style.touchAction = "none";
+        let releaseFunction = () => {
+            let currentPopUp = this.currentPopUp;
+            let popUps = this.popUps;
+            return function () {
+                this.snapOnInterval(25, 0, this.elementToDrag.offsetWidth, "x", 0, popUps.length-1);
+            };
+        }
+        this.elementDragger = new ElementDragger({
+            elementToDrag: this.container,
+            restrictY: true,
+            releaseFunction: releaseFunction()
+        });
+    }
+    open() {
+        this.container.style.display = "flex";
+        this.container.style.display = "row";
+        this.container.style.width = "100%";
+        this.popUps[0].open();
+        this.popUps[1].open();
+        this.popUps[2].open();
+    }
+}
 export class PopUp {
     card;
     popUpElement;
     next;
     previous;
-    location;
+    container;
     doneButton;
-    constructor(card, next, previous, location) {
+    elementDragger;
+    constructor(card, next, previous, container) {
         this.card = card;
         this.next = next;
         this.previous = previous;
-        this.location = location;
+        this.container = container;
         this.createPopUp();
     }
     open(){
         //change this to layout system when Ethan finishes that. I'm thinking of doing the body replacement method since "fixed position is generally bad for mobile"
-        this.location.appendChild(this.popUpElement);
-        this.location.style.position = "absolute";
+        this.container.appendChild(this.popUpElement);
         this.card.card.style.margin = "auto";
-        this.location.style.top = (screen.height/2) - this.location.offsetHeight/2;
         this.doneButton.addEventListener('click', () => {
             this.close();
         });
@@ -26,11 +61,13 @@ export class PopUp {
     createPopUp(){
         this.popUpElement = document.createElement("div");
         this.popUpElement.appendChild(this.card.card);
-        this.popUpElement.id = "optionSelector-container";
+        this.popUpElement.id = "popUpElement";
         this.popUpElement.style.backgroundColor = "white";
-        this.popUpElement.style.width = "100%";
-        this.popUpElement.style.height = "100%";
+        this.popUpElement.style.minHeight = "100%";
+        this.popUpElement.style.minWidth = "100%";
         this.popUpElement.style.margin = "auto";
+        this.popUpElement.style.display = "flexbox";
+        this.popUpElement.style.position = "relative";
         this.doneButton = document.createElement("button");
         this.doneButton.type = "button";
         this.doneButton.innerHTML = "Done";
@@ -42,7 +79,7 @@ export class PopUp {
         this.popUpElement.appendChild(this.doneButton);
     }
     close() {
-        this.location.innerHTML = "";
+        this.container.innerHTML = "";
     }
     next() {
         this.close();

@@ -59,12 +59,6 @@ export class Selector {
         this.addButton.innerHTML = "+";
         this.optionSelectorElement.appendChild(this.addButton);
     }
-    setStyles() {
-
-        this.optionBoxes.forEach(e => {
-            e.style.top = -this.getOptionBoxHeight();
-        }, { passive: true });
-    }
 
     initialize() {
         for(var i = 0; i < this.optionBoxes.length; i++){
@@ -98,11 +92,14 @@ export class Selector {
             this.optionBoxes[i].style.marginRight = "auto";
             this.optionBoxes[i].style.marginLeft = "auto";
             this.optionBoxes[i].style.display = "table";
+            this.optionBoxes[i].style.overflow = "hidden";
             let child = this.optionBoxes[i].appendChild(document.createElement("p"));
             child.innerHTML = this.optionsList[i];
             child.style.position = "relative";
             child.style.textAlign = "center";
-            child.style.width = "50%";
+            child.style.textOverflow = "clip";
+            child.style.whiteSpace = "nowrap";
+            child.style.width = "100%";
             child.style.marginTop = "0px";
             child.style.marginBottom = "0px";
             child.style.marginLeft = "auto";
@@ -178,13 +175,15 @@ class OptionSelectorAnimator {
     }
 
     growWidth(e, position, i) {
-        let elementSize = function(mySelector, boxGrowthAmount) {
+        function calcSize(mySelector, boxGrowthAmount, sizeModifier) {
             let centerPosition = ((mySelector.selectorBox.offsetHeight/2)-mySelector.getOptionBoxHeight()/2);
             let boxElementPosition = position + mySelector.getOptionBoxHeight()*i;
-            let elementSize = "calc(100% - " + boxGrowthAmount*Math.abs(centerPosition-boxElementPosition) + "px)";
+            let elementSize = "calc(100% - " + (boxGrowthAmount*Math.abs(centerPosition-boxElementPosition)+sizeModifier) + "px)";
             return elementSize;
-        }(this.mySelector, this.boxGrowthAmount);
+        };
+        let elementSize = calcSize(this.mySelector, this.boxGrowthAmount, 0);
         e.style.width = elementSize;
+        e.style.fontSize = calcSize(this.mySelector, 0.05, -20);
     }
     endTouch(touchOriginY) {
         if (this.fingerVelocity < 0) {
