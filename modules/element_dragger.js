@@ -3,19 +3,26 @@ export class ElementDragger {
     restrictX;
     restrictY;
     elementToDrag;
-    dragThreshold = 50;
-    previousFingerPosition= {
-        y: 0,
-        x: 0
+    dragThreshold = {
+        x: 20,
+        y: 75
+    }
+    previousFingerPosition = {
+        x: 0,
+        y: 0
     };;
-    currentFingerPosition= {
-        y: 0,
-        x: 0
+    currentFingerPosition = {
+        x: 0,
+        y: 0
     };;
     currentRelativeFingerPosition;
+    distanceMoved = {
+        x: 0,
+        y: 0
+    }
     touchOrigin = {
-        y: 0,
-        x: 0
+        x: 0,
+        y: 0
     };
     initialRelativePositionValues;
     releaseFunction;
@@ -49,20 +56,27 @@ export class ElementDragger {
         this.currentFingerPosition = this.touchOrigin;
     }
     move(e) {
-
         this.currentFingerPosition = {
             y: e.touches[0].clientY,
             x: e.touches[0].clientX
         }
-        if(!this.draggableY && (this.touchDistance().y>this.dragThreshold || this.touchDistance().y<-this.dragThreshold)) {
+        if(!this.draggableY && (this.touchDistance().y>this.dragThreshold.y || this.touchDistance().y<-this.dragThreshold.y)) {
             this.draggableY = true;
         }
-        if(!this.draggableX && (this.touchDistance().x>this.dragThreshold || this.touchDistance().x<-this.dragThreshold)) {
-            this.draggableX = true;
+        if(!this.draggableX && (this.touchDistance().x>this.dragThreshold.x || this.touchDistance().x<-this.dragThreshold.x)) {
+            if(this.restrictY && (this.touchDistance().y<=this.dragThreshold.y && this.touchDistance().y>=-this.dragThreshold.y)){
+                this.draggableX = true;
+            }
         }
         this.currentRelativeFingerPosition = this.getRelativeFingerPosition(this.currentFingerPosition);
-        if(!this.restrictY && this.draggableY)this.elementToDrag.style.top = this.currentRelativeFingerPosition.y;
-        if(!this.restrictX && this.draggableX)this.elementToDrag.style.left = this.currentRelativeFingerPosition.x;
+        if(!this.restrictY && this.draggableY){
+            this.elementToDrag.style.top = this.currentRelativeFingerPosition.y;
+            this.distanceMoved.y = this.currentRelativeFingerPosition.y;
+        }
+        if(!this.restrictX && this.draggableX){
+            this.elementToDrag.style.left = this.currentRelativeFingerPosition.x;
+            this.distanceMoved = this.touchDistance();
+        }
     }
 
     release(e) {
@@ -86,8 +100,6 @@ export class ElementDragger {
 
     }
     touchDistance() {
-        console.log(this.touchOrigin.x);
-        console.log(this.currentFingerPosition.x)
         let currentRelativeFingerPosition = {
             y:  this.currentFingerPosition.y - this.touchOrigin.y,
             x:  this.currentFingerPosition.x - this.touchOrigin.x
@@ -96,13 +108,13 @@ export class ElementDragger {
     }
     snapBetweenPositions(threshold, defaultPosition, newPosition, axis) {
         if(axis=="x"){
-            if(this.touchDistance().x < this.dragThreshold+threshold) {
+            if(this.touchDistance().x < this.dragThreshold.x+threshold) {
                 this.smoothTranslate(this.elementToDrag, {x: defaultPosition, y: 0}, 0.5);
             } else{
                 this.smoothTranslate(this.elementToDrag, {x: newPosition, y: 0}, 0.5);
             }
         } else{
-            if(this.touchDistance().y < this.dragThreshold+threshold) {
+            if(this.touchDistance().y < this.dragThreshold.y+threshold) {
 
             } else{
 
@@ -111,18 +123,19 @@ export class ElementDragger {
     }
     snapOnInterval(threshold = 50, defaultPosition = 0, interval, axis, minReferenceFrame = 0, maxReferenceFrame = 1) {
         if(axis=="x"){
-            if(this.touchDistance().x < -(this.dragThreshold+threshold) && this.currentReferenceFrame.x < maxReferenceFrame){
+            if(this.distanceMoved.x < -(this.dragThreshold.x+threshold) && this.currentReferenceFrame.x < maxReferenceFrame){
                 this.currentReferenceFrame.x++;
-            } else if(this.touchDistance().x > this.dragThreshold+threshold && this.currentReferenceFrame.x > minReferenceFrame){
+            } else if(this.distanceMoved.x > this.dragThreshold.x+threshold && this.currentReferenceFrame.x > minReferenceFrame){
                 this.currentReferenceFrame.x--;
             }
         } else{
-            if(this.touchDistance().y < this.dragThreshold+threshold) {
+            if(this.distanceMoved.y < this.dragThreshold.y+threshold) {
 
             } else{
 
             }
         }
+        console.log(this.currentReferenceFrame.x);
         this.smoothTranslate(this.elementToDrag, {x: interval*-this.currentReferenceFrame.x, y: 0}, 0.5);
     }
     smoothTranslate(element, position, fadeTime) {

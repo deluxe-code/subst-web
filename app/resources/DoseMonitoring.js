@@ -1,4 +1,4 @@
-import { Schedule, ScheduleElement, scheduleKey } from "./modules/schedule.js";
+import { Schedule, ScheduleElement, scheduleKey } from "../../modules/schedule.js";
 var scheduledItems = [];
 var swiped = false;
 const swipeTriggerDistance = 150;

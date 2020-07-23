@@ -29,9 +29,9 @@ export class StrungPopUps {
         this.container.style.display = "flex";
         this.container.style.display = "row";
         this.container.style.width = "100%";
-        this.popUps[0].open();
-        this.popUps[1].open();
-        this.popUps[2].open();
+        for(var i = 0; i < this.popUps.length; i++) {
+            this.popUps[i].open();
+        }
     }
 }
 export class PopUp {
