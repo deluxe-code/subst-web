@@ -3,6 +3,7 @@ export class ElementDragger {
     restrictX;
     restrictY;
     elementToDrag;
+    allowSimultaneousAxesDrag = false;
     dragThreshold = {
         x: 20,
         y: 75
@@ -60,13 +61,16 @@ export class ElementDragger {
             y: e.touches[0].clientY,
             x: e.touches[0].clientX
         }
-        if(!this.draggableY && (this.touchDistance().y>this.dragThreshold.y || this.touchDistance().y<-this.dragThreshold.y)) {
+        if(this.draggableX && !this.allowSimultaneousAxesDrag) {
+            this.draggableY = false;
+        } else if(!this.draggableY && (this.touchDistance().y>this.dragThreshold.y || this.touchDistance().y<-this.dragThreshold.y)) {
             this.draggableY = true;
         }
-        if(!this.draggableX && (this.touchDistance().x>this.dragThreshold.x || this.touchDistance().x<-this.dragThreshold.x)) {
-            if(this.restrictY && (this.touchDistance().y<=this.dragThreshold.y && this.touchDistance().y>=-this.dragThreshold.y)){
-                this.draggableX = true;
-            }
+
+        if(this.draggableY && !this.allowSimultaneousAxesDrag) {
+            this.draggableX = false;
+        } else if(!this.draggableX && (this.touchDistance().x>this.dragThreshold.x || this.touchDistance().x<-this.dragThreshold.x)) {
+            this.draggableX = true;
         }
         this.currentRelativeFingerPosition = this.getRelativeFingerPosition(this.currentFingerPosition);
         if(!this.restrictY && this.draggableY){
