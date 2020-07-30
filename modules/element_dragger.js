@@ -54,6 +54,10 @@ export class ElementDragger {
             y: e.touches[0].clientY,
             x: e.touches[0].clientX
         }
+        this.distanceMoved = {
+            x: 0,
+            y: 0
+        }
         this.currentFingerPosition = this.touchOrigin;
     }
     move(e) {
