@@ -51,6 +51,16 @@ function openPopup() {
             },
           }), document.getElementById("popUpBox"))
     ];
+
+    for(var i = 0; i < popUps.length; i++) {
+      let card = popUps[i].card;
+      card.card.style.backgroundColor = "#313131";
+      if(card.getLabel()) {
+        card.card.childNodes[0].style.color = "white";
+        card.card.childNodes[0].width = "50%";
+        card.card.childNodes[0].height = "50%";
+      }
+    }
     console.log(document.getElementById("popUpBox"));
     let strungPopUps = new StrungPopUps(document.getElementById("popUpBox"), popUps);
     strungPopUps.open();

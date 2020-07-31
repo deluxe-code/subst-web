@@ -111,6 +111,7 @@ textarea {
   padding: 10px 20px 20px 20px;
   box-sizing: border-box;
   border-radius: 10px;
+  grid-template-rows: 40px auto;
 }
 .card_label {
   text-align: center;

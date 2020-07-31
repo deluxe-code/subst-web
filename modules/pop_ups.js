@@ -51,6 +51,10 @@ export class PopUp {
         this.doneButton.addEventListener('click', () => {
             this.close();
         });
+        this.card.card.style.height = "60%";
+        this.card.card.style.marginRight = "auto";
+        this.card.card.style.marginLeft = "auto";
+        this.card.card.style.marginTop = "100px";
         console.log("opened");
     }
     createPopUp(){
