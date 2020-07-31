@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./resources/GLOBAL_STYLES.css">
+    <link rel="stylesheet" href="resources/login.css">
+    <title>Login - Subst</title>
+</head>
+<body>
+    <main>
+        <header>
+            <h1>Welcome</h1>
+            <h1>Back</h1>
+        </header>
+
+        <section id="authSection">
+            <div id="authForm">
+                <div class="authItem">
+                    <label for="email" class="inputLabel">Email</label>
+                    <div class="inputGrid">
+                        <img src="../assets/icons/email.svg" alt="email_icon">
+                        <input type="email" placeholder="name@email.com">
+                    </div>
+                </div>
+                <div class="authItem">
+                    <label for="password" class="inputLabel">Password</label>
+                    <div class="inputGrid">
+                        <img src="../assets/icons/lock.svg" alt="lock_icon">
+                        <input type="password" placeholder="●●●●●●●●">
+                    </div>
+                </div>
+
+                <div id="passwordOptions">
+                    <div id="rememberOption">
+                        <input id="rememberToggle" name="rememberToggle" type="checkbox" >
+                        <label for="rememberToggle">Remember Password?</label>
+                    </div>
+                    <a id="forgotPassword" href="#forgotPassword">Forgot Password?</a>
+                </div>
+
+            </div>
+            <div id="actionContainer">
+                <button id="actionButton">Next</button>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
