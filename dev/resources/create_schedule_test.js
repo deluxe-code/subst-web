@@ -59,15 +59,12 @@ function openPopup() {
                 hasAddButton: false
             }
         }), document.getElementById("popUpBox")),
-        new PopUp(new OptionSelectorCard({
-            id: "strainSelector",
-            label: "Pick a strain",
+        new PopUp(new InputCard({
             content: {
-                options: ["Super Silver Haze", "Girl Scout Cookies", "Fruity Pebbles", "Vibe Juices", "OG Granny"],
-                styles: new OptionSelectorConfig(),
-                hasAddButton: false
-            }
-        }), document.getElementById("popUpBox"))
+              type: "text",
+              placeholder: "custom placeholder"
+            },
+          }), document.getElementById("popUpBox"))
     ];
     console.log(document.getElementById("popUpBox"));
     let strungPopUps = new StrungPopUps(document.getElementById("popUpBox"), popUps);
