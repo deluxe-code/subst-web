@@ -32,7 +32,7 @@ export class ScheduleElement {
     element;
     constructor(obj) {
         this.drugName = obj.drugName;
-        //this.scheduledTime = scheduledTime;
+        this.scheduledTime = obj.scheduledTime;
         this.createElement();
     }
 
