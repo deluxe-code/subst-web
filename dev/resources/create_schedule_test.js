@@ -7,61 +7,46 @@ function openPopup() {
     let popUps = [
         new PopUp(new Cards.OptionSelectorCard({
             id: "strainSelector",
-            label: "Pick a strain",
+            label: "Select a drug",
             content: {
-                options: ["Super Silver Haze", "Girl Scout Cookies", "Fruity Pebbles", "Vibe Juices", "OG Granny"],
-                styles: new Cards.OptionSelectorConfig(),
-                hasAddButton: false
-            }
-        }), document.getElementById("popUpBox")),
-        new PopUp(new Cards.OptionSelectorCard({
-            id: "strainSelector",
-            label: "Pick a strain",
-            content: {
-                options: ["Super Silver Haze", "Girl Scout Cookies", "Fruity Pebbles", "Vibe Juices", "OG Granny"],
-                styles: new Cards.OptionSelectorConfig(),
-                hasAddButton: false
-            }
-        }), document.getElementById("popUpBox")),
-        new PopUp(new Cards.OptionSelectorCard({
-            id: "strainSelector",
-            label: "Pick a strain",
-            content: {
-                options: ["Super Silver Haze", "Girl Scout Cookies", "Fruity Pebbles", "Vibe Juices", "OG Granny"],
-                styles: new Cards.OptionSelectorConfig(),
-                hasAddButton: false
-            }
-        }), document.getElementById("popUpBox")),
-        new PopUp(new Cards.OptionSelectorCard({
-            id: "strainSelector",
-            label: "Pick a strain",
-            content: {
-                options: ["Super Silver Haze", "Girl Scout Cookies", "Fruity Pebbles", "Vibe Juices", "OG Granny"],
-                styles: new Cards.OptionSelectorConfig(),
-                hasAddButton: false
-            }
-        }), document.getElementById("popUpBox")),
-        new PopUp(new Cards.OptionSelectorCard({
-            id: "strainSelector",
-            label: "Pick a strain",
-            content: {
-                options: ["Super Silver Haze", "Girl Scout Cookies", "Fruity Pebbles", "Vibe Juices", "OG Granny"],
-                styles: new Cards.OptionSelectorConfig(),
-                hasAddButton: false
-            }
-        }), document.getElementById("popUpBox")),
-        new PopUp(new Cards.OptionSelectorCard({
-            id: "strainSelector",
-            label: "Pick a strain",
-            content: {
-                options: ["Super Silver Haze", "Girl Scout Cookies", "Fruity Pebbles", "Vibe Juices", "OG Granny"],
-                styles: new Cards.OptionSelectorConfig(),
+                options: ["Weed", "Kratom", "Cocaine", "Heroin", "Lexapro"],
+                styles: new OptionSelectorConfig(),
                 hasAddButton: false
             }
         }), document.getElementById("popUpBox")),
         new PopUp(new Cards.InputCard({
             content: {
-              type: "text",
+              type: "date",
+              placeholder: "custom placeholder"
+            },
+          }), document.getElementById("popUpBox")),
+        new PopUp(new Cards.InputCard({
+            content: {
+              type: "date",
+              placeholder: "custom placeholder"
+            },
+          }), document.getElementById("popUpBox")),
+        new PopUp(new Cards.InputCard({
+            content: {
+              type: "date",
+              placeholder: "custom placeholder"
+            },
+          }), document.getElementById("popUpBox")),
+        new PopUp(new Cards.InputCard({
+            content: {
+              type: "date",
+              placeholder: "custom placeholder"
+            },
+          }), document.getElementById("popUpBox")),
+        new PopUp(new Cards.InputCard({
+            content: {
+              type: "date",
+              placeholder: "custom placeholder"
+            },
+          }), document.getElementById("popUpBox")),
+        new PopUp(new Cards.InputCard({
+            content: {
+              type: "date",
               placeholder: "custom placeholder"
             },
           }), document.getElementById("popUpBox"))

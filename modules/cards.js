@@ -126,21 +126,15 @@ export class OptionSelectorCard extends Card {
     this.card_layout = this.finishLayout();
   }
   buildLayout = () => {
-    let container = document.createElement("div");
     let content = this.getContent();
     let options_array = content.options;
     let styles = content.styles;
     let hasAddButton = content.hasAddButton;
     let mySelector = new OptionSelector.Selector([options_array, styles, hasAddButton]);
     mySelector.animator.boxGrowthAmount = 0.2;
-    container.id = "optionSelector-container";
-    container.style.width = "100%";
-    container.style.height = "80%";
-    container.style.margin = "auto";
-    container.appendChild(mySelector.getElement());
-    this.card.style.height = "80%";
+    this.card.style.height = "100%";
     this.card.style.width = "100%";
-    return container;
+    return mySelector.getElement();
   };
   getOutput = () => {};
 }
