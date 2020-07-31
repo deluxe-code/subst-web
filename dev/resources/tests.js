@@ -41,7 +41,7 @@ let card3 = new cards.OptionSelectorCard({
         hasAddButton: false
     }
 });
-let testPopUp = new PopUp(card,null,null, document.getElementById("cardLocation"));
-let testStrungPopUp = new StrungPopUps(document.getElementById("cardLocation"), [testPopUp, new PopUp(card2,null,null, document.getElementById("cardLocation")), new PopUp(card3,null,null, document.getElementById("cardLocation"))]);
+let testPopUp = new PopUp(card, document.getElementById("cardLocation"));
+let testStrungPopUp = new StrungPopUps(document.getElementById("cardLocation"), [testPopUp, new PopUp(card2, document.getElementById("cardLocation")), new PopUp(card3, document.getElementById("cardLocation"))]);
 
 document.getElementById("popupButton").addEventListener('click', () => {testStrungPopUp.open()});

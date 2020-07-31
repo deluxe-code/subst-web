@@ -1,5 +1,5 @@
-import { Selector, OptionSelectorConfig } from "./modules/OptionSelector.js";
-import { Schedule, scheduleKey } from "./modules/schedule.js";
+import { Selector, OptionSelectorConfig } from "../../modules/OptionSelector.js";
+import { Schedule, scheduleKey } from "../../modules/schedule.js";
 let curveTypeOptions = ["linear", "exponential", "logarithmic"];
 let doseOptions = ["5 Grams", "4 Grams", "9,999+ Grams", "9,999+ Grams", "100+ Grams", "999+ Grams", "2 Grams", "0.0000001 Grams"];
 let OSConfig = new OptionSelectorConfig({

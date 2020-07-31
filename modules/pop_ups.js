@@ -9,7 +9,6 @@ export class StrungPopUps {
         this.container = container;
         this.popUps = popUps;
         this.container.style.position = "relative";
-        this.container.style.top = -this.container.offsetTop;
         this.container.style.display = "none";
         this.container.style.touchAction = "none";
         let releaseFunction = () => {
@@ -27,7 +26,6 @@ export class StrungPopUps {
     }
     open() {
         this.container.style.display = "flex";
-        this.container.style.display = "row";
         this.container.style.width = "100%";
         for(var i = 0; i < this.popUps.length; i++) {
             this.popUps[i].open();
@@ -37,22 +35,19 @@ export class StrungPopUps {
 export class PopUp {
     card;
     popUpElement;
-    next;
-    previous;
     container;
     doneButton;
     elementDragger;
-    constructor(card, next, previous, container) {
+    constructor(card, container) {
         this.card = card;
-        this.next = next;
-        this.previous = previous;
         this.container = container;
         this.createPopUp();
     }
     open(){
         //change this to layout system when Ethan finishes that. I'm thinking of doing the body replacement method since "fixed position is generally bad for mobile"
         this.container.appendChild(this.popUpElement);
-        this.card.card.style.margin = "auto";
+        this.container.style.zIndex = "1";
+        //this.card.card.style.margin = "auto";
         this.doneButton.addEventListener('click', () => {
             this.close();
         });
@@ -65,7 +60,7 @@ export class PopUp {
         this.popUpElement.style.backgroundColor = "white";
         this.popUpElement.style.minHeight = "100%";
         this.popUpElement.style.minWidth = "100%";
-        this.popUpElement.style.margin = "auto";
+        this.popUpElement.style.margin = "none";
         this.popUpElement.style.display = "flexbox";
         this.popUpElement.style.position = "relative";
         this.doneButton = document.createElement("button");
@@ -80,13 +75,6 @@ export class PopUp {
     }
     close() {
         this.container.innerHTML = "";
-    }
-    next() {
-        this.close();
-        this.next.open();
-    }
-    previous() {
-
     }
     done(){
 

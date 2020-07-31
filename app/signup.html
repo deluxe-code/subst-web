@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup - Subst</title>
+    <link rel="stylesheet" href="resources/signup.css">
+    <!-- DEPENDENCIES FOR QR CODE IDEA -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+    <script src="../third-party/jquery.qrcode.js"></script>
+    <script src="../third-party/qrcode.js"></script>
+    <!-- DEPENDENCIES FOR QR CODE IDEA -->
+</head>
+<body>
+    <main>
+        <header>
+            <h1>Create</h1>
+            <h1>Account</h1>
+        </header>
+        <section id="signup_form" class="auth_form">
+            <!-- NAME -->
+            <div class="input_block">
+                <label for="name">Name</label>
+                <div class="custom_input">
+                    <img src="assets/icon/email.svg"/>
+                    <input type="text" placeholder="First and Last Name">
+                </div>
+            </div>
+            <!-- EMAIL -->
+            <div class="input_block">
+                <label for="email">Email</label>
+                <div class="custom_input">
+                    <img src="assets/icon/email.svg"/>
+                    <input type="email" placeholder="Your email">
+                </div>
+            </div>
+            <!-- PASSWORD -->
+            <div class="input_block">
+            <label for="password">Password</label>
+            <div class="custom_input">
+                <img src="assets/icon/password.svg"/>
+                <input type="password" placeholder="Insert strong password">
+            </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
