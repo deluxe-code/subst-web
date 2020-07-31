@@ -2,10 +2,6 @@ import { Schedule, ScheduleElement } from "../../modules/schedule.js";
 import { PopUp, StrungPopUps } from "../../modules/pop_ups.js";
 import { OptionSelectorCard } from "../../modules/cards.js";
 import { OptionSelectorConfig } from "../../modules/OptionSelector.js"
-document.getElementById("openPopup").addEventListener("click", () => {
-    openPopup();
-});
-
 function openPopup() {
 
     let popUps = [
@@ -77,3 +73,4 @@ function openPopup() {
     let strungPopUps = new StrungPopUps(document.getElementById("popUpBox"), popUps);
     strungPopUps.open();
 }
+openPopup();

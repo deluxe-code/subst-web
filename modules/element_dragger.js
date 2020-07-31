@@ -147,7 +147,20 @@ export class ElementDragger {
         this.smoothTranslate(this.elementToDrag, {x: interval*-this.currentReferenceFrame.x, y: 0}, 0.5);
     }
     smoothTranslate(element, position, fadeTime) {
-        element.style.transform = "translate(" + (position.x - element.offsetLeft) +"px, " + (position.y - element.offsetTop) + "px)";
+        let xPos;
+        let yPos;
+        if(this.restrictY) {
+            yPos = 0;
+        } else {
+            yPos = position.y - element.offsetTop;
+        }
+        if(this.restrictX) {
+            xPos = position.x - element.offsetLeft;
+        } else {
+            xPos = position.x - element.offsetLeft;
+        }
+        element.style.transform = "translate(" + (xPos) +"px, " + (yPos) + "px)";
+
         element.style.transition = "transform " + fadeTime + "s";
     }
 }

@@ -9,7 +9,6 @@ export class StrungPopUps {
         this.container = container;
         this.popUps = popUps;
         this.container.style.position = "relative";
-        this.container.style.top = -this.container.offsetTop;
         this.container.style.display = "none";
         this.container.style.touchAction = "none";
         let releaseFunction = () => {
@@ -27,7 +26,6 @@ export class StrungPopUps {
     }
     open() {
         this.container.style.display = "flex";
-        this.container.style.display = "row";
         this.container.style.width = "100%";
         for(var i = 0; i < this.popUps.length; i++) {
             this.popUps[i].open();
@@ -48,10 +46,7 @@ export class PopUp {
     open(){
         //change this to layout system when Ethan finishes that. I'm thinking of doing the body replacement method since "fixed position is generally bad for mobile"
         this.container.appendChild(this.popUpElement);
-        this.container.style.position = "fixed";
         this.container.style.zIndex = "1";
-        this.container.style.width = "100%";
-        this.container.style.height = "100%";
         //this.card.card.style.margin = "auto";
         this.doneButton.addEventListener('click', () => {
             this.close();
