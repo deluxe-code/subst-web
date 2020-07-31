@@ -7,6 +7,18 @@
     <link rel="stylesheet" href="styles/sample_page.css" />
   </head>
   <body>
+    <script type="module">
+      import { InputCard } from "../modules/cards.js";
+      console.log(InputCard);
+      let newInputCard = new InputCard({
+        content: {
+          type: "password",
+          placeholder: "custom placeholder"
+        },
+        
+      });
+    </script>
+
     <section id="page-header">
       <h1>Settings.</h1>
       <p>Change your profile and preferences</p>

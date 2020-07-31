@@ -58,7 +58,19 @@ class Card {
     }
   }
 }
-
+export class InputCard extends Card {
+  constructor(card_config) {
+    super(card_config);
+    this.card_layout = this.finishLayout();
+  }
+  buildLayout() {
+    let content = this.getContent();
+    let inputElement = document.createElement("input");
+    inputElement.type = (content.type ? content.type : "text");
+    inputElement.placeholder = (content.placeholder ? content.placeholder : "default placeholder");
+    return inputElement;
+  }
+}
 export class TextAreaCard extends Card {
   constructor(card_config) {
     card_config.className = "input_card";
