@@ -38,9 +38,17 @@ export class PopUp {
     container;
     doneButton;
     elementDragger;
-    constructor(card, container) {
+    label;
+    body;
+    labelElement;
+    constructor(config) {
+        let card = (config.card || null);
+        let container = config.container;
+        let label = config.label;
         this.card = card;
         this.container = container;
+        this.label = label;
+        this.body = config.body;
         this.createPopUp();
     }
     open(){
@@ -51,22 +59,36 @@ export class PopUp {
         this.doneButton.addEventListener('click', () => {
             this.close();
         });
-        this.card.card.style.height = "60%";
-        this.card.card.style.marginRight = "auto";
-        this.card.card.style.marginLeft = "auto";
-        this.card.card.style.marginTop = "100px";
+
         console.log("opened");
     }
     createPopUp(){
+        if(this.card != null){
+            this.card.card.style.height = "60%";
+            this.card.card.style.marginRight = "auto";
+            this.card.card.style.marginLeft = "auto";
+            this.card.card.style.marginTop = "100px";
+        }
         this.popUpElement = document.createElement("div");
-        this.popUpElement.appendChild(this.card.card);
         this.popUpElement.id = "popUpElement";
-        this.popUpElement.style.backgroundColor = "white";
+        //this.popUpElement.style.backgroundColor = "white";
         this.popUpElement.style.minHeight = "100%";
         this.popUpElement.style.minWidth = "100%";
         this.popUpElement.style.margin = "none";
         this.popUpElement.style.display = "flexbox";
         this.popUpElement.style.position = "relative";
+        this.labelElement = document.createElement("h1");
+        this.labelElement.style.width = "50%";
+        this.labelElement.style.margin = "auto";
+        this.labelElement.innerHTML = this.label;
+        this.labelElement.className = "popupLabel";
+        this.popUpElement.appendChild(this.labelElement);
+        if(this.body != null) {
+            this.popUpElement.appendChild(this.body);
+        }
+        if(this.card != null){
+            this.popUpElement.appendChild(this.card.card);
+        }
         this.doneButton = document.createElement("button");
         this.doneButton.type = "button";
         this.doneButton.innerHTML = "Done";

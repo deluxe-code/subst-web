@@ -15,26 +15,33 @@ export class Selector {
     selectorBoxPadding = 5;
     addButton;
     optionBoxSize = 1;
+    hasAddButton = false;
 
     constructor(config) {
-        let [arr, styles = new OptionSelectorConfig(), hasAddButton = false] = config;
+        let [arr, styles = new OptionSelectorConfig(), hasAddButton] = config;
+        if(hasAddButton != "undefined") {
+            this.hasAddButton = hasAddButton;
+        }
         this.styles = styles;
         this.optionsList = arr;
         this.optionSelectorElement = document.createElement("div");
         this.selectorBox = document.createElement("div");
+        this.optionSelectorElement.className = "Selector";
         this.selectorBox.className = "SelectorBox";
         this.optionSelectorElement.appendChild(this.selectorBox);
         this.createOptionBoxes();
-        if(hasAddButton){
+        if(this.hasAddButton){
             this.createAddButton();
         }
         this.scrollEvents();
         this.animator = new OptionSelectorAnimator(this, this.optionBoxes);
         this.optionSelectorElement.style.height = "100%";
+        this.optionSelectorElement.style.overflow = "hidden";
         this.selectorBox.style.overflow = "hidden";
         this.selectorBox.style.touchAction = "none";
         this.selectorBox.style.height = "100%";
         this.selectorBox.style.padding = this.selectorBoxPadding;
+        console.log(hasAddButton);
     }
 
     getOptionBoxHeight() {
@@ -45,7 +52,7 @@ export class Selector {
         this.selectorBox.style.height = "80%";
         this.addButton = document.createElement("button");
         this.addButton.type = "button";
-        this.addButton.style.marginTop = "25px";
+        this.addButton.style.marginTop = "10px";
         this.addButton.style.width = "30%";
         this.addButton.style.height = "10%";
         this.addButton.style.marginLeft = "auto";
@@ -154,6 +161,7 @@ class OptionSelectorAnimator {
     globalTouchOrigin;
     decelerationInterval;
     boxGrowthAmount = 0.2;
+    fontGrowthAmount = 0.05;
     constructor(mySelector, optionBoxes) {
         this.optionBoxes = optionBoxes;
         this.mySelector = mySelector;
@@ -183,7 +191,7 @@ class OptionSelectorAnimator {
         };
         let elementSize = calcSize(this.mySelector, this.boxGrowthAmount, 0);
         e.style.width = elementSize;
-        e.style.fontSize = calcSize(this.mySelector, 0.05, -20);
+        e.style.fontSize = calcSize(this.mySelector, this.fontGrowthAmount, -20);
     }
     endTouch(touchOriginY) {
         if (this.fingerVelocity < 0) {
