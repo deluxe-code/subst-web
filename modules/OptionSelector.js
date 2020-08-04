@@ -165,6 +165,10 @@ class OptionSelectorAnimator {
     constructor(mySelector, optionBoxes) {
         this.optionBoxes = optionBoxes;
         this.mySelector = mySelector;
+        document.body.addEventListener('load', () => {
+            console.log("foo");
+            this.scrollToPagePosition(0);
+        });
     }
     scroll(currentTouchPosY, touchOriginY) {
         let position = this.newScrollPosition + (currentTouchPosY - touchOriginY);

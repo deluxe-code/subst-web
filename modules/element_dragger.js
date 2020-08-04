@@ -65,31 +65,31 @@ export class ElementDragger {
             y: e.touches[0].clientY,
             x: e.touches[0].clientX
         }
-        if(this.draggableX && !this.allowSimultaneousAxesDrag) {
-            this.draggableY = false;
-        } else if(!this.draggableY && (this.touchDistance().y>this.dragThreshold.y || this.touchDistance().y<-this.dragThreshold.y)) {
-            this.draggableY = true;
+        if(ElementDragger.draggableX && !this.allowSimultaneousAxesDrag) {
+            ElementDragger.draggableY = false;
+        } else if(!ElementDragger.draggableY && (this.touchDistance().y>this.dragThreshold.y || this.touchDistance().y<-this.dragThreshold.y)) {
+            ElementDragger.draggableY = true;
         }
 
-        if(this.draggableY && !this.allowSimultaneousAxesDrag) {
-            this.draggableX = false;
-        } else if(!this.draggableX && (this.touchDistance().x>this.dragThreshold.x || this.touchDistance().x<-this.dragThreshold.x)) {
-            this.draggableX = true;
+        if(ElementDragger.draggableY && !this.allowSimultaneousAxesDrag) {
+            ElementDragger.draggableX = false;
+        } else if(!ElementDragger.draggableX && (this.touchDistance().x>this.dragThreshold.x || this.touchDistance().x<-this.dragThreshold.x)) {
+            ElementDragger.draggableX = true;
         }
         this.currentRelativeFingerPosition = this.getRelativeFingerPosition(this.currentFingerPosition);
-        if(!this.restrictY && this.draggableY){
+        if(!this.restrictY && ElementDragger.draggableY){
             this.elementToDrag.style.top = this.currentRelativeFingerPosition.y;
             this.distanceMoved.y = this.currentRelativeFingerPosition.y;
         }
-        if(!this.restrictX && this.draggableX){
+        if(!this.restrictX && ElementDragger.draggableX){
             this.elementToDrag.style.left = this.currentRelativeFingerPosition.x;
             this.distanceMoved = this.touchDistance();
         }
     }
 
     release(e) {
-        this.draggableX = false;
-        this.draggableY = false;
+        ElementDragger.draggableX = false;
+        ElementDragger.draggableY = false;
         document.documentElement.style.touchAction = this.defaultTouchAction;
         this.releaseFunction(e);
     }

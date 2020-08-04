@@ -1,13 +1,11 @@
 import { Schedule, ScheduleElement } from "../../modules/schedule.js";
+import { ElementDragger } from "../../modules/element_dragger.js";
 import { PopUp, StrungPopUps } from "../../modules/pop_ups.js";
 import * as Cards from "../../modules/cards.js";
 import { OptionSelectorConfig } from "../../modules/OptionSelector.js"
 function openPopup() {
 
-    let graphPageBody = document.createElement("div");
-    let childtest = document.createElement("p");
-    childtest.innerHTML = "fuck";
-    graphPageBody.appendChild(childtest);
+    let graphPageBody = createGraphPage();
     let popUps = [
         new PopUp({
           card: new Cards.OptionSelectorCard({
@@ -89,5 +87,11 @@ function openPopup() {
     console.log(document.getElementById("popUpBox"));
     let strungPopUps = new StrungPopUps(document.getElementById("popUpBox"), popUps);
     strungPopUps.open();
+}
+
+function createGraphPage(){
+  let graphBody = document.createElement("div");
+  let scheduledTimes = document.createElement("div");
+  return graphBody;
 }
 openPopup();
