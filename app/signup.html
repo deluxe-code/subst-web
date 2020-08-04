@@ -3,46 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup - Subst</title>
-    <link rel="stylesheet" href="resources/signup.css">
-    <!-- DEPENDENCIES FOR QR CODE IDEA -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
-    <script src="../third-party/jquery.qrcode.js"></script>
-    <script src="../third-party/qrcode.js"></script>
-    <!-- DEPENDENCIES FOR QR CODE IDEA -->
+    <link rel="stylesheet" href="./resources/GLOBAL_STYLES.css">
+    <link rel="stylesheet" href="./resources/signup.css">
+    <title>Login - Subst</title>
 </head>
 <body>
     <main>
         <header>
-            <h1>Create</h1>
-            <h1>Account</h1>
+            <h1>Empower</h1>
+            <h1>yourself</h1>
         </header>
-        <section id="signup_form" class="auth_form">
-            <!-- NAME -->
-            <div class="input_block">
-                <label for="name">Name</label>
-                <div class="custom_input">
-                    <img src="assets/icon/email.svg"/>
-                    <input type="text" placeholder="First and Last Name">
+
+        <section id="authSection">
+            <div id="authForm">
+                <div class="authItem">
+                    <label for="email" class="inputLabel">Email</label>
+                    <div class="inputGrid">
+                        <img src="../assets/icons/email.svg" alt="email_icon">
+                        <input type="email" placeholder="name@email.com">
+                    </div>
                 </div>
-            </div>
-            <!-- EMAIL -->
-            <div class="input_block">
-                <label for="email">Email</label>
-                <div class="custom_input">
-                    <img src="assets/icon/email.svg"/>
-                    <input type="email" placeholder="Your email">
+                <div class="authItem">
+                    <label for="password" class="inputLabel">Password</label>
+                    <div class="inputGrid">
+                        <img src="../assets/icons/lock.svg" alt="lock_icon">
+                        <input type="password" placeholder="●●●●●●●●">
+                    </div>
                 </div>
+
             </div>
-            <!-- PASSWORD -->
-            <div class="input_block">
-            <label for="password">Password</label>
-            <div class="custom_input">
-                <img src="assets/icon/password.svg"/>
-                <input type="password" placeholder="Insert strong password">
-            </div>
+            <div id="actionContainer">
+                <button id="actionButton">Next</button>
             </div>
         </section>
     </main>
 </body>
 </html>
+
+
+
+    <!-- <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Signup - Subst</title>
+        <link rel="stylesheet" href="resources/signup.css">
+    </head>
+    <body>
+        <main>
+            <header>
+                <h1>Create</h1>
+                <h1>Account</h1>
+            </header>
+            <section id="signup_form" class="auth_form">
+                <div class="input_block">
+                    <label for="name">Name</label>
+                    <div class="custom_input">
+                        <img src="assets/icon/email.svg"/>
+                        <input type="text" placeholder="First and Last Name">
+                    </div>
+                </div>
+                <div class="input_block">
+                    <label for="email">Email</label>
+                    <div class="custom_input">
+                        <img src="assets/icon/email.svg"/>
+                        <input type="email" placeholder="Your email">
+                    </div>
+                </div>
+                <div class="input_block">
+                <label for="password">Password</label>
+                <div class="custom_input">
+                    <img src="assets/icon/password.svg"/>
+                    <input type="password" placeholder="Insert strong password">
+                </div>
+                </div>
+            </section>
+        </main>
+    </body>
+    </html> -->
+
