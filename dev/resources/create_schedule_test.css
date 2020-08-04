@@ -105,7 +105,8 @@ textarea {
 .card_container {
   width: 95%;
   height: min-content;
-  display: grid;
+  display: flex;
+  flex-flow: column;
   background: var(--main-container-color);
   box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.4);
   padding: 10px 20px 20px 20px;
@@ -118,6 +119,13 @@ textarea {
   height: max-content;
   color: black;
   font-weight: 500;
+  flex: 0 1 auto;
+}
+
+.popupLabel {
+  font-size: 1.5em;
+  text-align: center;
+  margin-top: 100px;
 }
 
 .input_card {

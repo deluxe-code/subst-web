@@ -131,7 +131,8 @@ export class OptionSelectorCard extends Card {
     let styles = content.styles;
     let hasAddButton = content.hasAddButton;
     let mySelector = new OptionSelector.Selector([options_array, styles, hasAddButton]);
-    mySelector.animator.boxGrowthAmount = 0.2;
+    mySelector.animator.boxGrowthAmount = 1;
+    mySelector.animator.fontGrowthAmount = 0.25;
     this.card.style.overflow = "hidden";
     return mySelector.getElement();
   };
