@@ -1,3 +1,5 @@
+import { ElementDragger } from "./element_dragger.js";
+
 export class Selector {
 
     selectorBox;
@@ -37,10 +39,11 @@ export class Selector {
         this.animator = new OptionSelectorAnimator(this, this.optionBoxes);
         this.optionSelectorElement.style.height = "100%";
         this.optionSelectorElement.style.overflow = "hidden";
-        this.selectorBox.style.overflow = "hidden";
+        this.selectorBox.style.overflow = "visible";
         this.selectorBox.style.touchAction = "none";
         this.selectorBox.style.height = "100%";
         this.selectorBox.style.padding = this.selectorBoxPadding;
+        this.selectorBox.style.position = "relative";
         console.log(hasAddButton);
     }
 
@@ -68,9 +71,7 @@ export class Selector {
     }
 
     initialize() {
-        for(var i = 0; i < this.optionBoxes.length; i++){
-            this.animator.growWidth(this.optionBoxes[i], 0, i);
-        }
+        this.animator.growWidth(this.optionBoxes[i], 0, 0);
     }
 
     getElement() {
@@ -124,26 +125,7 @@ export class Selector {
         let previousTimeStamp = Date.now();
         let initialOffset;
         let numberOfPreviousOptionBoxesWithinFingerDistance = 0;
-        this.selectorBox.addEventListener("touchstart", ev => {
-            this.animator.startScroll();
-            clearInterval(this.decelerationInterval);
-            touchOriginY = ev.touches[0].clientY;
-            currentScrolls = 0;
-        }, { passive: true });
-        this.selectorBox.addEventListener("touchmove", ev => {
-            let fingerPos = ev.targetTouches[0];
-            let fingerPosY = fingerPos.clientY;
-            this.animator.scroll(fingerPosY, touchOriginY, this.optionBoxes);
-            this.animator.setFingerVelocity(fingerPosY, previousTimeStamp);
-            this.animator.lastFingerPositionY = fingerPosY;
-            previousTimeStamp = Date.now();
-        }, { passive: true });
-        this.selectorBox.addEventListener("touchend", ev => {
-            this.animator.endTouch(touchOriginY);
-        }, { passive: true });
-        this.selectorBox.addEventListener("scroll", ev => {
 
-        });
     }
 
 }
@@ -162,55 +144,54 @@ class OptionSelectorAnimator {
     decelerationInterval;
     boxGrowthAmount = 0.2;
     fontGrowthAmount = 0.05;
+    elementDragger;
+    frameRate = 60;
     constructor(mySelector, optionBoxes) {
         this.optionBoxes = optionBoxes;
         this.mySelector = mySelector;
-        document.body.addEventListener('load', () => {
-            console.log("foo");
-            this.scrollToPagePosition(0);
+        window.addEventListener('load', ()=> {
+            this.growWidth(this.optionBoxes, this.elementDragger.currentRelativeScrollPosition.y, this.elementDragger.fadeTime);
         });
-    }
-    scroll(currentTouchPosY, touchOriginY) {
-        let position = this.newScrollPosition + (currentTouchPosY - touchOriginY);
-        this.scrollToPagePosition(position, this.optionBoxes);
-        this.previousScreenPositionY = currentTouchPosY;
-    }
-
-    scrollToPagePosition(position) {
-        for(var i = 0; i < this.optionBoxes.length; i++) {
-            this.optionBoxes[i].style.top = position + "px";
-            this.growWidth(this.optionBoxes[i], position, i);
-
+        let dragger_config = {
+            elementToDrag: mySelector.selectorBox,
+	        restrictX: true,
+            releaseFunction: () => {
+                let boxHeight = () => {return this.mySelector.getOptionBoxHeight()};
+                //height not defined
+                let optionBoxes = () => {return this.optionBoxes;};
+                this.elementDragger.snapToNearestInterval(0, -1, -boxHeight(), "y", -1, optionBoxes().length-2);
+                this.growWidth(this.optionBoxes, this.elementDragger.currentRelativeScrollPosition.y, this.elementDragger.fadeTime);
+                this.mySelector.currentOption = this.elementDragger.currentReferenceFrame.y+1;
+            },
+            movementFunction: () => {
+                this.growWidth(this.optionBoxes, this.elementDragger.currentRelativeFingerPosition.y, 0);
+                this.previousTimeStamp = Date.now();
+                this.previousScrollPositionY = this.elementDragger.currentFingerPosition.y;
+            }
         }
-        this.previousTimeStamp = Date.now();
-        this.previousScrollPositionY = position;
-    }
-
-    growWidth(e, position, i) {
-        function calcSize(mySelector, boxGrowthAmount, sizeModifier) {
-            let centerPosition = ((mySelector.selectorBox.offsetHeight/2)-mySelector.getOptionBoxHeight()/2);
-            let boxElementPosition = position + mySelector.getOptionBoxHeight()*i;
-            let elementSize = "calc(100% - " + (boxGrowthAmount*Math.abs(centerPosition-boxElementPosition)+sizeModifier) + "px)";
-            return elementSize;
+        this.elementDragger = new ElementDragger(dragger_config);
+        this.elementDragger.dragThreshold = {
+            x: 0,
+            y: 10
         };
-        let elementSize = calcSize(this.mySelector, this.boxGrowthAmount, 0);
-        e.style.width = elementSize;
-        e.style.fontSize = calcSize(this.mySelector, this.fontGrowthAmount, -20);
+
     }
-    endTouch(touchOriginY) {
-        if (this.fingerVelocity < 0) {
-            this.mySelector.currentOption = Math.ceil((-this.previousScrollPositionY / this.mySelector.getOptionBoxHeight())) + 1;
-        } else if (this.fingerVelocity > 0) {
-            this.mySelector.currentOption = Math.floor((-this.previousScrollPositionY / this.mySelector.getOptionBoxHeight())) + 1;
+
+    growWidth(element, position, fadeTime) {
+        for(var i = 0; i < element.length; i++) {
+            function calcSize(mySelector, boxGrowthAmount, sizeModifier) {
+                let centerPosition = ((mySelector.selectorBox.offsetHeight/2)-mySelector.getOptionBoxHeight()/2);
+                let boxElementPosition = position + mySelector.getOptionBoxHeight()*i;
+                let elementSize = "calc(100% - " + (boxGrowthAmount*Math.abs(centerPosition-boxElementPosition)+sizeModifier) + "px)";
+                return elementSize;
+            }
+            let elementSize = calcSize(this.mySelector, this.boxGrowthAmount, 0);
+            element[i].style.width = elementSize;
+            element[i].style.transition = "width " + fadeTime + "s";
+            element[i].style.fontSize = calcSize(this.mySelector, this.fontGrowthAmount, -20);
         }
-        if(this.mySelector.currentOption < 0) {
-            this.mySelector.currentOption = 0;
-        } else if(this.mySelector.currentOption > this.mySelector.optionBoxes.length-1) {
-            this.mySelector.currentOption = this.mySelector.optionBoxes.length-1;
-        }
-        this.globalTouchOrigin = touchOriginY;
-        this.decelerate();
     }
+
 
     setFingerVelocity(fingerPosY, previousTimeStamp) {
         let timeBetweenFingers = Date.now() - previousTimeStamp;
@@ -252,6 +233,9 @@ class OptionSelectorAnimator {
     startScroll() {
         clearInterval(this.decelerationInterval);
         this.newScrollPosition = this.previousScrollPositionY;
+        this.optionBoxes.foreach(box => {
+            box.style.transition = "";
+        });
     }
 }
 

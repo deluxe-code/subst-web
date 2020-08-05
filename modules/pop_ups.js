@@ -23,6 +23,10 @@ export class StrungPopUps {
             restrictY: true,
             releaseFunction: releaseFunction()
         });
+        this.elementDragger.dragThreshold = {
+            x: 30,
+            y: 75
+        };
     }
     open() {
         this.container.style.display = "flex";

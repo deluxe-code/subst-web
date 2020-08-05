@@ -5,33 +5,42 @@ export class ElementDragger {
     elementToDrag;
     allowSimultaneousAxesDrag = false;
     dragThreshold = {
-        x: 20,
-        y: 75
-    }
+        x: 0,
+        y: 0
+    };
     previousFingerPosition = {
         x: 0,
         y: 0
-    };;
+    };
     currentFingerPosition = {
         x: 0,
         y: 0
-    };;
-    currentRelativeFingerPosition;
+    };
+    currentRelativeFingerPosition = {
+        x: 0,
+        y: 0
+    };
+    currentRelativeScrollPosition = {
+        x: 0,
+        y: 0
+    };
     distanceMoved = {
         x: 0,
         y: 0
-    }
+    };
     touchOrigin = {
         x: 0,
         y: 0
     };
     initialRelativePositionValues;
+    movementFunction;
     releaseFunction;
     defaultTouchAction;
     currentReferenceFrame = {
         x: 0,
         y: 0
     }
+    fadeTime = 0.5;
     constructor(dragger_config) {
         this.elementToDrag = dragger_config.elementToDrag;
         this.restrictX = (dragger_config.restrictX || false);
@@ -40,6 +49,7 @@ export class ElementDragger {
         this.elementToDrag.addEventListener("touchmove", e => {this.move(e)}, { passive: true });
         this.elementToDrag.addEventListener("touchend", e => {this.release(e)}, { passive: true });
         this.releaseFunction = dragger_config.releaseFunction || function(){};
+        this.movementFunction = dragger_config.movementFunction || function() {}
     }
 
     initializeTouch(e) {
@@ -59,6 +69,7 @@ export class ElementDragger {
             y: 0
         }
         this.currentFingerPosition = this.touchOrigin;
+        this.elementToDrag.style.transition = "";
     }
     move(e) {
         this.currentFingerPosition = {
@@ -77,13 +88,20 @@ export class ElementDragger {
             ElementDragger.draggableX = true;
         }
         this.currentRelativeFingerPosition = this.getRelativeFingerPosition(this.currentFingerPosition);
-        if(!this.restrictY && ElementDragger.draggableY){
-            this.elementToDrag.style.top = this.currentRelativeFingerPosition.y;
-            this.distanceMoved.y = this.currentRelativeFingerPosition.y;
-        }
-        if(!this.restrictX && ElementDragger.draggableX){
-            this.elementToDrag.style.left = this.currentRelativeFingerPosition.x;
+        if(!this.restrictY && ElementDragger.draggableY || !this.restrictX && ElementDragger.draggableX){
+            let dragPosition = {
+                x: 0,
+                y: 0
+            }
+            if(!this.restrictY && ElementDragger.draggableY){
+                dragPosition.y = this.currentRelativeFingerPosition.y;
+            }
+            if(!this.restrictX && ElementDragger.draggableX){
+                dragPosition.x = this.currentRelativeFingerPosition.x;
+            }
+            this.smoothTranslate(dragPosition, 0);
             this.distanceMoved = this.touchDistance();
+            this.movementFunction();
         }
     }
 
@@ -117,9 +135,9 @@ export class ElementDragger {
     snapBetweenPositions(threshold, defaultPosition, newPosition, axis) {
         if(axis=="x"){
             if(this.touchDistance().x < this.dragThreshold.x+threshold) {
-                this.smoothTranslate(this.elementToDrag, {x: defaultPosition, y: 0}, 0.5);
+                this.smoothTranslate({x: defaultPosition, y: 0}, this.fadeTime);
             } else{
-                this.smoothTranslate(this.elementToDrag, {x: newPosition, y: 0}, 0.5);
+                this.smoothTranslate({x: newPosition, y: 0}, this.fadeTime);
             }
         } else{
             if(this.touchDistance().y < this.dragThreshold.y+threshold) {
@@ -136,31 +154,61 @@ export class ElementDragger {
             } else if(this.distanceMoved.x > this.dragThreshold.x+threshold && this.currentReferenceFrame.x > minReferenceFrame){
                 this.currentReferenceFrame.x--;
             }
+            this.smoothTranslate({x: interval*-this.currentReferenceFrame.x, y: 0}, this.fadeTime);
         } else{
-            if(this.distanceMoved.y < this.dragThreshold.y+threshold) {
-
-            } else{
-
+            if(this.distanceMoved.y < -(this.dragThreshold.y+threshold) && this.currentReferenceFrame.y < maxReferenceFrame) {
+                this.currentReferenceFrame.y++;
+                //this.currentReferenceFrame.y = Math.floor(this.distanceMoved.y/interval);
+                console.log(this.currentReferenceFrame.y);
+            } else if(this.distanceMoved.y > this.dragThreshold.y+threshold && this.currentReferenceFrame.y > minReferenceFrame){
+                //this.currentReferenceFrame.y = Math.floor(this.distanceMoved.y/interval)-1;
+                this.currentReferenceFrame.y--;
             }
+            //this.currentReferenceFrame.y = Math.floor(this.distanceMoved.y/interval);
+            this.smoothTranslate({x: 0, y: interval*this.currentReferenceFrame.y}, this.fadeTime);
         }
-        console.log(this.currentReferenceFrame.x);
-        this.smoothTranslate(this.elementToDrag, {x: interval*-this.currentReferenceFrame.x, y: 0}, 0.5);
+        
     }
-    smoothTranslate(element, position, fadeTime) {
-        let xPos;
-        let yPos;
+
+    snapToNearestInterval(threshold = 50, defaultPosition = 0, interval, axis, minReferenceFrame = 0, maxReferenceFrame = 1) {
+        if(axis=="x"){
+            if(this.distanceMoved.x < -(this.dragThreshold.x+threshold) && this.currentReferenceFrame.x < maxReferenceFrame){
+                this.currentReferenceFrame.x++;
+            } else if(this.distanceMoved.x > this.dragThreshold.x+threshold && this.currentReferenceFrame.x > minReferenceFrame){
+                this.currentReferenceFrame.x--;
+            }
+            this.smoothTranslate({x: interval*-this.currentReferenceFrame.x, y: 0}, this.fadeTime);
+        } else{
+            if(this.distanceMoved.y < -(this.dragThreshold.y+threshold) && this.currentReferenceFrame.y+Math.floor(this.distanceMoved.y/interval) < maxReferenceFrame) {
+                this.currentReferenceFrame.y += Math.ceil(this.distanceMoved.y/interval);
+            } else if(this.distanceMoved.y > this.dragThreshold.y+threshold && this.currentReferenceFrame.y+Math.floor(this.distanceMoved.y/interval)+1 > minReferenceFrame){
+                this.currentReferenceFrame.y += Math.floor(this.distanceMoved.y/interval);
+            } else if(this.currentReferenceFrame.y+Math.floor(this.distanceMoved.y/interval) < maxReferenceFrame){
+                this.currentReferenceFrame.y = minReferenceFrame;
+            } else {
+                this.currentReferenceFrame.y = maxReferenceFrame;
+            }
+            let position = {x: 0, y: interval*this.currentReferenceFrame.y};
+            this.currentRelativeScrollPosition = position;
+            this.smoothTranslate(position, this.fadeTime);
+        }
+        
+    }
+    smoothTranslate(position, fadeTime) {
+        let xPos = 0;
+        let yPos = 0;
         if(this.restrictY) {
             yPos = 0;
         } else {
-            yPos = position.y - element.offsetTop;
+            yPos = position.y;
         }
         if(this.restrictX) {
-            xPos = position.x - element.offsetLeft;
+            xPos = position.x;
         } else {
-            xPos = position.x - element.offsetLeft;
+            xPos = position.x;
         }
-        element.style.transform = "translate(" + (xPos) +"px, " + (yPos) + "px)";
-
-        element.style.transition = "transform " + fadeTime + "s";
+        this.elementToDrag.style.top = yPos;
+        this.elementToDrag.style.left = xPos;
+        this.elementToDrag.style.transition = "top " + fadeTime + "s, " + "left " + fadeTime + "s";
     }
 }
