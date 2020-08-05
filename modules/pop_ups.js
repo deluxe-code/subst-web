@@ -24,7 +24,7 @@ export class StrungPopUps {
             releaseFunction: releaseFunction()
         });
         this.elementDragger.dragThreshold = {
-            x: 30,
+            x: 75,
             y: 75
         };
     }
