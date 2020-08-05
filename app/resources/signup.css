@@ -1,5 +1,143 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: var(--primary-backgroundColor);
+}
+:root {
+    --inputIconSpacing: 60px;
+    --primary-backgroundColor: white;
+    --primary-fontColor: black;
+}
+/* Body is a flex object so that we can send the <main> tag down to the
+    bottom of the entire page. We use flex on the <main> tag to
+    space out the 2 main sections (header & authForm) */
+main {
+    /* Temporary color */
+    background-color: inherit;
+    width: calc(100% - 40px);
+    height: calc(100% - 50px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    box-sizing: border-box;
+}
+header {
+    border-radius: 10px;
+    /* background-color: gray; */
+    padding: 20px;
+    width: 100%;
+    max-width: 375px;
+    line-height: 1.5em;
+    animation: revealHeader .5s ease-in-out;
+}
+@keyframes revealHeader {
+    from {
+        transform: translateX(-400px);
+    }
+    to {
+        transform: translateX(0px);
+    }
+}
+h1 {
+    padding:20px 0px 20px 10px;
+    border-left: 8px solid gray;
+    color: teal;
+    font-weight: 700;
+    font-size: 3.5em;
+}
+
+
+#authSection {
+    border-radius: 40px;
+    width: 100%;
+    max-width: 300px;
+    animation: revealAuthSection .6s ease-in-out;
+}
+@keyframes revealAuthSection {
+    from {
+        transform: translateY(500px);
+    }
+    to {
+        transform: translateY(0px);
+    }
+}
+#authForm {
+    margin-bottom: 50px;
+}
+.authItem {
+    margin-bottom: 15px;
+}
+.authItem label {
+    margin-left: 30px;
+    font-size: 1.05em;
+    font-weight: 500;
+    color: var(--primary-fontColor);
+}
+.authItem .inputGrid {
+    margin-top: 8px;
+    width: 100%;
+    height: 40px;
+    display: grid;
+    grid-template-columns: var(--inputIconSpacing) auto;
+    position: relative;
+}
+.inputGrid img {
+    /* position: absolute; */
+    margin: auto;
+    grid-column: 1;
+    z-index: 1;
+}
+.inputGrid input {
+    position: absolute;
+    width: 100%;
+    height: inherit; /* inherit 30px from .inputGrid */
+    background-color:#bed7eebf;
+    border-radius: 1000px;
+    grid-column: span 2;
+    z-index: 0;
+    font-weight: 500;
+    padding-left: calc(var(--inputIconSpacing)/1.1);
+    box-sizing: border-box;
+    font-size: .9em;
+}
+.inputGrid input:focus::placeholder {
+    color: transparent;
+  }
+#passwordOptions {
+    font-size: .8em;
+}
+#rememberOption {
+    width: max-content;
+    float: left;
+}
+#rememberToggle {
+    transform: scale(1.2);
+}
+#forgotPassword {
+    float: right;
+}
+#actionContainer {
+    padding: 20px 0px 0px 0px;
+}
+#actionContainer #actionButton {
+    background-color: teal;
+    color: #FAFAFA;
+    display: block;
+    margin: 0 auto 0 auto;
+    border-radius: 1000px;
+    padding:  10px 25px 10px 25px;
+    font-size: 1.25em;
+}
+
+
+
 /* @import url("https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"); */
-body, input {
+/* body, input {
     font-family: Jost;
 }
 body, html {
@@ -26,4 +164,4 @@ header h1 {
 }
 .auth_form {
 
-}
+} */

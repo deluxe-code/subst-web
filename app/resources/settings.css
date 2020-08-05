@@ -3,10 +3,16 @@ body {
     font-family: 'Cabin', sans-serif;
     letter-spacing: 0.02em;
 }
+
 #settingsContent {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
+}
+/* Variables */
+:root {
+    --add-profile-picture: 30px;
 }
 /* Header */
 header {
@@ -21,17 +27,28 @@ header img {
 }
 /* Profile */
 #profileBlock {
-    width: 50%;
-    height: 50%;
+    display: grid;
+    grid-template-columns: var(--add-profile-picture) 125px auto;
 }
 #profileBlock #profilePicture {
     border-radius: 1000px;
     width: 125px;
-    margin-left: 20%;
+    
+    grid-column: 2;
 }
-#profileBlock #addProfilePicture {
+#profileBlock #addProfilePictureContainer {
     border-radius: 1000px;
     background-color: #BDBDBD;
+    grid-column: 3;
+    padding: 5px;
+    height: min-content;
+    width: 20px;
+    height: 20px;
+    align-self: flex-end;
+}
+#profileBlock #addProfilePicture {
+    width: 100%;
+    height: 100%;
 }
 /* Settings */
 .categoryBlock {
@@ -61,3 +78,23 @@ a.settingBlock p {
     font-size: 1.25rem;
     font-weight: normal;
 }
+/* Footer */
+footer {
+    /* align-self: flex-end; */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+}
+footer button {
+    align-self: flex-end;
+    border: none;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1.12em;
+    font-weight: 700;
+    color: #0066FF;
+
+}
+

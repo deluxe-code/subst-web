@@ -50,7 +50,7 @@ class Card {
   //     this.card_layout = this.buildLayout();
   //     this.card.appendChild(this.card_layout);
   // }
-  place() {
+  place = () => {
     if ((this._config.location || "default") == "default") {
       cards_config.defaultContainer.appendChild(this.card);
     } else {
