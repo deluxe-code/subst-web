@@ -187,8 +187,11 @@ class OptionSelectorAnimator {
             }
             let elementSize = calcSize(this.mySelector, this.boxGrowthAmount, 0);
             element[i].style.width = elementSize;
-            element[i].style.transition = "width " + fadeTime + "s";
+            
+            element[i].style.transition ="width " + fadeTime + "s" + ", " + "font-size " + fadeTime + "s";
             element[i].style.fontSize = calcSize(this.mySelector, this.fontGrowthAmount, -20);
+         
+            
         }
     }
 

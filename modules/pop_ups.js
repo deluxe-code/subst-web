@@ -98,9 +98,9 @@ export class PopUp {
         this.doneButton.innerHTML = "Done";
         this.doneButton.style.width = "100px";
         this.doneButton.style.height = "35px";
-        this.doneButton.style.position = "absolute";
-        this.doneButton.style.bottom = "20px";
-        this.doneButton.style.right = "20px";
+        this.doneButton.style.float = "right";
+        this.doneButton.style.marginTop = "5%";
+        this.doneButton.style.marginRight = "5%";
         this.popUpElement.appendChild(this.doneButton);
     }
     close() {
