@@ -2,7 +2,8 @@ import { Schedule, ScheduleElement } from "../../modules/schedule.js";
 import { ElementDragger } from "../../modules/element_dragger.js";
 import { PopUp, StrungPopUps } from "../../modules/pop_ups.js";
 import * as Cards from "../../modules/cards.js";
-import { OptionSelectorConfig } from "../../modules/OptionSelector.js"
+import { OptionSelectorConfig } from "../../modules/OptionSelector.js";
+
 function openPopup() {
 
     let graphPageBody = createGraphPage();
