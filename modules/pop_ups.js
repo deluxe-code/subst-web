@@ -24,7 +24,7 @@ export class StrungPopUps {
             releaseFunction: releaseFunction()
         });
         this.elementDragger.dragThreshold = {
-            x: 75,
+            x: 100,
             y: 75
         };
     }
@@ -68,10 +68,10 @@ export class PopUp {
     }
     createPopUp(){
         if(this.card != null){
-            this.card.card.style.height = "60%";
+            this.card.card.style.height = "50%";
             this.card.card.style.marginRight = "auto";
             this.card.card.style.marginLeft = "auto";
-            this.card.card.style.marginTop = "100px";
+            this.card.card.style.marginTop = "50px";
         }
         this.popUpElement = document.createElement("div");
         this.popUpElement.id = "popUpElement";

@@ -106,6 +106,10 @@ export class ElementDragger {
     }
 
     release(e) {
+        let previousDraggableState = {
+            x: ElementDragger.draggableX,
+            y: ElementDragger.draggableY
+        }
         ElementDragger.draggableX = false;
         ElementDragger.draggableY = false;
         document.documentElement.style.touchAction = this.defaultTouchAction;
@@ -171,26 +175,28 @@ export class ElementDragger {
     }
 
     snapToNearestInterval(threshold = 50, defaultPosition = 0, interval, axis, minReferenceFrame = 0, maxReferenceFrame = 1) {
-        if(axis=="x"){
-            if(this.distanceMoved.x < -(this.dragThreshold.x+threshold) && this.currentReferenceFrame.x < maxReferenceFrame){
-                this.currentReferenceFrame.x++;
-            } else if(this.distanceMoved.x > this.dragThreshold.x+threshold && this.currentReferenceFrame.x > minReferenceFrame){
-                this.currentReferenceFrame.x--;
+        if(this.distanceMoved.x !=0 || this.distanceMoved.y !=0){
+            if(axis=="x"){
+                if(this.distanceMoved.x < -(this.dragThreshold.x+threshold) && this.currentReferenceFrame.x < maxReferenceFrame){
+                    this.currentReferenceFrame.x++;
+                } else if(this.distanceMoved.x > this.dragThreshold.x+threshold && this.currentReferenceFrame.x > minReferenceFrame){
+                    this.currentReferenceFrame.x--;
+                }
+                this.smoothTranslate({x: interval*-this.currentReferenceFrame.x, y: 0}, this.fadeTime);
+            } else{
+                if(this.distanceMoved.y < -(this.dragThreshold.y+threshold) && this.currentReferenceFrame.y+Math.floor(this.distanceMoved.y/interval) < maxReferenceFrame) {
+                    this.currentReferenceFrame.y += Math.ceil(this.distanceMoved.y/interval);
+                } else if(this.distanceMoved.y > this.dragThreshold.y+threshold && this.currentReferenceFrame.y+Math.floor(this.distanceMoved.y/interval)+1 > minReferenceFrame){
+                    this.currentReferenceFrame.y += Math.floor(this.distanceMoved.y/interval);
+                } else if(this.currentReferenceFrame.y+Math.floor(this.distanceMoved.y/interval) < maxReferenceFrame){
+                    this.currentReferenceFrame.y = minReferenceFrame;
+                } else {
+                    this.currentReferenceFrame.y = maxReferenceFrame;
+                }
+                let position = {x: 0, y: interval*this.currentReferenceFrame.y};
+                this.currentRelativeScrollPosition = position;
+                this.smoothTranslate(position, this.fadeTime);
             }
-            this.smoothTranslate({x: interval*-this.currentReferenceFrame.x, y: 0}, this.fadeTime);
-        } else{
-            if(this.distanceMoved.y < -(this.dragThreshold.y+threshold) && this.currentReferenceFrame.y+Math.floor(this.distanceMoved.y/interval) < maxReferenceFrame) {
-                this.currentReferenceFrame.y += Math.ceil(this.distanceMoved.y/interval);
-            } else if(this.distanceMoved.y > this.dragThreshold.y+threshold && this.currentReferenceFrame.y+Math.floor(this.distanceMoved.y/interval)+1 > minReferenceFrame){
-                this.currentReferenceFrame.y += Math.floor(this.distanceMoved.y/interval);
-            } else if(this.currentReferenceFrame.y+Math.floor(this.distanceMoved.y/interval) < maxReferenceFrame){
-                this.currentReferenceFrame.y = minReferenceFrame;
-            } else {
-                this.currentReferenceFrame.y = maxReferenceFrame;
-            }
-            let position = {x: 0, y: interval*this.currentReferenceFrame.y};
-            this.currentRelativeScrollPosition = position;
-            this.smoothTranslate(position, this.fadeTime);
         }
         
     }
