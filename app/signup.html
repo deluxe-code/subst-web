@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./resources/GLOBAL_STYLES.css">
     <link rel="stylesheet" href="./resources/signup.css">
-    <title>Login - Subst</title>
+    <title>Signup - Subst</title>
 </head>
 <body>
     <main>
@@ -20,14 +20,14 @@
                     <label for="email" class="inputLabel">Email</label>
                     <div class="inputGrid">
                         <img src="../assets/icons/email.svg" alt="email_icon">
-                        <input type="email" placeholder="name@email.com">
+                        <input id="emailInput" type="email" placeholder="name@email.com">
                     </div>
                 </div>
                 <div class="authItem">
                     <label for="password" class="inputLabel">Password</label>
                     <div class="inputGrid">
                         <img src="../assets/icons/lock.svg" alt="lock_icon">
-                        <input type="password" placeholder="●●●●●●●●">
+                        <input id="passInput" type="password" placeholder="●●●●●●●●">
                     </div>
                 </div>
 
@@ -37,6 +37,25 @@
             </div>
         </section>
     </main>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-firestore.js"></script>
+    <script src="../modules/firebase.js" type="module"></script>
+    <script type="module">
+        document.querySelector("#actionButton").addEventListener("click", () => {
+            let email = document.querySelector("#emailInput");
+            let password = document.querySelector("#passInput");
+            let test = firebase.auth()
+            .createUserWithEmailAndPassword(email.value, password.value)
+            .catch(function(error) {
+                console.log(error.code);
+                console.log(error.message);
+            }).then(function(test) {
+                console.log(test);
+            });
+        });
+    </script>
 </body>
 </html>
 

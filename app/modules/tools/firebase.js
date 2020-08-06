@@ -13,8 +13,13 @@ firebase.initializeApp(_fbConfig);
 firebase.analytics();
 
 export const auth = {
-    signup: (credentials) => {
+    trySignup: async (email, password) => {
+        console.log("YAEKDOIAJDOAI");
 
     }
 };
 export const database = firebase.firestore();
+
+
+
+
