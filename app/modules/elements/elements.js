@@ -1,4 +1,4 @@
-import { EventHandler } from "./event_handler.js";
+import { EventHandler } from "../tools/event_handler.js";
 
 export class CustomElement {
     constructor(config) {

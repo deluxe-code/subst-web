@@ -1,4 +1,4 @@
-import {ElementDragger} from "./element_dragger.js";
+import {ElementDragger} from "../tools/element_dragger.js";
 
 export class StrungPopUps {
     popUps = [];

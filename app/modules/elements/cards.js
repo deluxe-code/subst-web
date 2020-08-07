@@ -1,7 +1,7 @@
 "use strict";
 // import * as OptionSelector from "./OptionSelector.js";
-import { EventHandler } from "./event_handler.js";
-import * as OptionSelector from "./OptionSelector.js";
+import { EventHandler } from "../tools/event_handler.js";
+import * as OptionSelector from "./option_selector.js";
 import * as inputModules from "./input_modules.js";
 export const cards_config = {
   autoPlace: "false",
