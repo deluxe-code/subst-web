@@ -46,10 +46,6 @@ class Card {
     this.card = generateCard(card_config);
     if (cards_config.autoPlace) this.place();
   }
-  // initializeLayout = () => {
-  //     this.card_layout = this.buildLayout();
-  //     this.card.appendChild(this.card_layout);
-  // }
   place = () => {
     if ((this._config.location || "default") == "default") {
       cards_config.defaultContainer.appendChild(this.card);
@@ -58,6 +54,7 @@ class Card {
     }
   }
 }
+
 export class InputCard extends Card {
   constructor(card_config) {
     super(card_config);
@@ -71,6 +68,7 @@ export class InputCard extends Card {
     return inputElement;
   }
 }
+
 export class TextAreaCard extends Card {
   constructor(card_config) {
     card_config.className = "input_card";
@@ -103,6 +101,7 @@ export class TextAreaCard extends Card {
     return this.card.getElementsByTagName("textarea")[0].value;
   };
 }
+
 export class InputModulesCard extends Card {
   constructor(card_config) {
     super(card_config);
@@ -120,6 +119,7 @@ export class InputModulesCard extends Card {
     return settingToggle.node;
   };
 }
+
 export class OptionSelectorCard extends Card {
   constructor(card_config) {
     super(card_config);
