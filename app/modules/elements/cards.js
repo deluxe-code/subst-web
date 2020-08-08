@@ -121,6 +121,7 @@ export class InputModulesCard extends Card {
 }
 
 export class OptionSelectorCard extends Card {
+  optionSelector;
   constructor(card_config) {
     super(card_config);
     this.card_layout = this.finishLayout();
@@ -131,6 +132,7 @@ export class OptionSelectorCard extends Card {
     let styles = content.styles;
     let hasAddButton = content.hasAddButton;
     let mySelector = new OptionSelector.Selector([options_array, styles, hasAddButton]);
+    this.optionSelector = mySelector;
     mySelector.animator.boxGrowthAmount = 1;
     mySelector.animator.fontGrowthAmount = 0.25;
     this.card.style.overflow = "hidden";

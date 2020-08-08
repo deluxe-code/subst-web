@@ -3,8 +3,9 @@ import { ElementDragger } from "../../../app/modules/tools/element_dragger.js";
 import { Styles } from "../../../app/modules/tools/style_manager.js";
 import { PopUp, StrungPopUps } from "../../../app/modules/elements/pop_ups.js";
 import * as Cards from "../../../app/modules/elements/cards.js";
-import { OptionSelectorConfig } from "../../../app/modules/elements/option_selector.js";
-let selectTimeCardStyles = {
+import { OptionSelectorConfig, OptionSelectorNode, timeSelectorList } from "../../../app/modules/elements/option_selector.js";
+let graphPageElements;
+let selectTimeCardElementStyles = {
   height: "50%",
   width: "85%",
   marginRight: "auto",
@@ -58,6 +59,23 @@ let daySelectionCheckmarkStyles = {
 let daySelectionCheckmarkLabelStyles = {
   color: "white"
 }
+let addTimeButtonStyles = {
+  height: "50px",
+  width: "100px",
+  marginLeft: "auto",
+  marginRight: "auto",
+  display: "block"
+}
+let addTimeSectionStyles = {
+  display: "none"
+}
+let submitTimeButtonStyles = {
+  height: "50px",
+  width: "100px",
+  marginLeft: "auto",
+  marginRight: "auto",
+  display: "block"
+}
 function openPopup() {
 
     let popUps = createPopUps();
@@ -79,14 +97,16 @@ function openPopup() {
 }
 
 function createPopUps() {
-  let graphPageBody = createGraphBody();
+  graphPageElements = createGraphBody();
+  let graphPageBody = graphPageElements.element;
+  calculateTimes();
   return [
     new PopUp({
       card: new Cards.OptionSelectorCard({
         id: "strainSelector",
         label: "Select a drug",
         content: {
-            options: ["Weed", "Kratom", "Cocaine", "Heroin", "Lexapro"],
+            options: [new OptionSelectorNode("Weed", "weed"), new OptionSelectorNode("Kratom", "kratom"), new OptionSelectorNode("Cocaine", "cocaine"), new OptionSelectorNode("Heroin", "heroin"), new OptionSelectorNode("Lexapro", "lexapro")],
             styles: new OptionSelectorConfig(),
             hasAddButton: true
         }
@@ -148,30 +168,36 @@ function createPopUps() {
   ];
 }
 
-let scheduledTimes = ["Sunday 6:30 AM - 5 Grams", "Monday 6:30 AM - 5 Grams"];
+let scheduledTimes = [];
 let scheduledTimesDisplay = document.createElement("div");
 
 function createGraphBody(){
-  let openFunction = function(cardElement) {
-    if(cardElement.style.display=="block"){
-      cardElement.style.display = "none";
+  let openFunction = function(elem) {
+    if(elem.style.display=="block"){
+      elem.style.display = "none";
     } else{
-      cardElement.style.display = "block";
+      elem.style.display = "block";
     }
   };
 
   let graphBody = document.createElement("div");
+  let addTimeButton = document.createElement("button");
+  addTimeButton.innerHTML = "Add Time"; 
+  let addTimeSection = document.createElement("div");
   let selectTimeButton = document.createElement("button");
+  selectTimeButton.innerHTML = "Select a time▼"
   let selectTimeCard = new Cards.OptionSelectorCard({
-      id: "timeSelector",
-      label: "Select a Time",
-      content: {
-          options: ["7:00 AM", "8:00 AM", "9AM", "10AM", "11Am"],
-          styles: new OptionSelectorConfig(),
-          hasAddButton: true
-      }
-  }).card;
+    id: "timeSelector",
+    label: "Select a Time",
+    content: {
+        options: timeSelectorList,
+        styles: new OptionSelectorConfig(),
+        hasAddButton: true
+    }
+  });
+  let selectTimeCardElement = selectTimeCard.card;
   let selectDayButton = document.createElement("button");
+  selectDayButton.innerHTML = "Select a day▼"
   let daySelection = function() {
     let myBody = document.createElement("div");
     let formElement = document.createElement("form");
@@ -182,13 +208,14 @@ function createGraphBody(){
     Styles.assign(formStyles, formElement);
     let daySelectionElements = [];
     let labels = [];
-    let dayNames = ["M", "T", "W", "Th", "F", "S", "S"];
+    let dayNames = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
     for(var i = 0; i < dayNames.length; i++) {
       labels[i] = document.createElement("label");
-      labels[i].innerHTML = dayNames[i];
-      Styles.assign(daySelectionCheckmarkLabelStyles, labels[i])
+      labels[i].innerHTML = dayNames[i].substring(0,1).toUpperCase();
+      Styles.assign(daySelectionCheckmarkLabelStyles, labels[i]);
       daySelectionElements[i] = document.createElement("input");
       daySelectionElements[i].type = "checkbox";
+      daySelectionElements[i].name = dayNames[i];
       formElement.appendChild(labels[i]);
       formElement.appendChild(daySelectionElements[i]);
       Styles.assign(daySelectionCheckmarkStyles, daySelectionElements[i]);
@@ -196,22 +223,67 @@ function createGraphBody(){
     myBody.appendChild(formElement);
     return myBody;
   }();
+  let submitTimesButton = document.createElement("button");
+  submitTimesButton.innerHTML = "Submit";
+
+  Styles.assign(addTimeButtonStyles, addTimeButton);
   Styles.assign(selectTimeButtonStyles, selectTimeButton);
-  Styles.assign(selectTimeCardStyles, selectTimeCard);
+  Styles.assign(selectTimeCardElementStyles, selectTimeCardElement);
   Styles.assign(selectDayButtonStyles, selectDayButton);
   Styles.assign(daySelectionStyles, daySelection);
-  selectTimeButton.addEventListener("click", () => {openFunction(selectTimeCard)});
+  Styles.assign(addTimeSectionStyles, addTimeSection);
+  Styles.assign(submitTimeButtonStyles, submitTimesButton);
+  selectTimeButton.addEventListener("click", () => {openFunction(selectTimeCardElement)});
   selectDayButton.addEventListener("click", () => {openFunction(daySelection)});
+  addTimeButton.addEventListener("click", () => {addTimeSection.style.display = "block"; addTimeButton.style.display = "none";});
+  submitTimesButton.addEventListener("click", () => {addTimeSection.style.display = "none"; addTimeButton.style.display = "block"; calculateTimes();});
   updateTimesDisplay();
   graphBody.appendChild(scheduledTimesDisplay);
-  graphBody.appendChild(selectTimeButton);
-  graphBody.appendChild(selectTimeCard);
-  graphBody.appendChild(selectDayButton);
-  graphBody.appendChild(daySelection);
-  return graphBody;
+  graphBody.appendChild(addTimeButton);
+  graphBody.appendChild(addTimeSection);
+  addTimeSection.appendChild(selectTimeButton);
+  addTimeSection.appendChild(selectTimeCardElement);
+  addTimeSection.appendChild(selectDayButton);
+  addTimeSection.appendChild(daySelection);
+  addTimeSection.appendChild(submitTimesButton);
+  return {
+    element: graphBody,
+    timeSelectionCard: selectTimeCard,
+    daySelection: daySelection
+  };
+}
+function calculateTimes() {
+
+  let unformattedTime = graphPageElements.timeSelectionCard.optionSelector.getSelected().content.time;
+  let unformattedDays = function(){
+    let allCheckboxes = Array.from(graphPageElements.daySelection.getElementsByTagName("input"));
+    let checkedBoxes = [];
+    console.log(allCheckboxes.length);
+    allCheckboxes.forEach(element => {
+      if(element.checked){
+        checkedBoxes.push(element);
+      }
+    });
+    console.log(checkedBoxes.length);
+    return checkedBoxes;
+    
+  }();
+  console.log(unformattedDays.length);
+  for(var i = 0; i < unformattedDays.length; i++) {
+    
+    addTimes(unformattedDays[i].name.substring(0,1).toUpperCase() + unformattedDays[i].name.substring(1) + ", " + unformattedTime);
+  }
+
+}
+
+function addTimes(dayTime) {
+  if(!scheduledTimes.includes(dayTime)) {
+    scheduledTimes.push(dayTime);
+  }
+  updateTimesDisplay();
 }
 function updateTimesDisplay() {
-  let scheduledTimeElements = [];
+  scheduledTimesDisplay.innerHTML = "";
   for(var i = 0; i < scheduledTimes.length; i++) {
     let scheduledTimeElement = document.createElement("h2");
     scheduledTimeElement.innerHTML = rearangeDateString(scheduledTimes[i]);

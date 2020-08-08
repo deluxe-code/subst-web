@@ -20,12 +20,21 @@ export class Selector {
     hasAddButton = false;
 
     constructor(config) {
+
         let [arr, styles = new OptionSelectorConfig(), hasAddButton] = config;
         if(hasAddButton != "undefined") {
             this.hasAddButton = hasAddButton;
         }
         this.styles = styles;
-        this.optionsList = arr;
+        let isNode = true;
+        Array.prototype.forEach.call(arr, element => {
+            if(!(element instanceof OptionSelectorNode)){
+                isNode = false;
+            }
+        });
+        if(isNode) {
+            this.optionsList = arr;
+        }
         this.optionSelectorElement = document.createElement("div");
         this.selectorBox = document.createElement("div");
         this.optionSelectorElement.className = "Selector";
@@ -44,7 +53,6 @@ export class Selector {
         this.selectorBox.style.height = "100%";
         this.selectorBox.style.padding = this.selectorBoxPadding;
         this.selectorBox.style.position = "relative";
-        console.log(hasAddButton);
     }
 
     getOptionBoxHeight() {
@@ -102,7 +110,7 @@ export class Selector {
             this.optionBoxes[i].style.display = "table";
             this.optionBoxes[i].style.overflow = "hidden";
             let child = this.optionBoxes[i].appendChild(document.createElement("p"));
-            child.innerHTML = this.optionsList[i];
+            child.innerHTML = this.optionsList[i].text;
             child.style.position = "relative";
             child.style.textAlign = "center";
             child.style.textOverflow = "clip";
@@ -274,3 +282,37 @@ export class OptionSelectorConfig {
     }
 
 }
+
+export class OptionSelectorNode {
+    text;
+    id;
+    content = {};
+    constructor(text, id, content = {}) {
+        this.text = text;
+        this.id = id;
+        this.content = content;
+    }
+}
+
+export const timeSelectorList = function() {
+    let timeSelectorArray = [];
+    timeSelectorArray[0] = new OptionSelectorNode("12:00 AM", 0, {time: "00:00"});
+    for(var i = 1; i < 24; i++){
+
+        if(i < 12) {
+        if(i<10) {
+            timeSelectorArray[i] = new OptionSelectorNode(i + ":00 AM", i, {time: "0" + i+":00"});
+        } else{
+            timeSelectorArray[i] = new OptionSelectorNode(i + ":00 AM", i, {time: i+":00"});
+        }
+
+        } else{
+        if(i != 12){
+            timeSelectorArray[i] = new OptionSelectorNode(i-12 + ":00 PM", i, {time: i+":00"});
+        }
+        }
+        
+    }
+    timeSelectorArray[12] = new OptionSelectorNode("12:00 PM", i, {time: "24:00"});
+    return timeSelectorArray;
+}();
