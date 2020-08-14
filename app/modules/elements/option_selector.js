@@ -313,6 +313,6 @@ export const timeSelectorList = function() {
         }
         
     }
-    timeSelectorArray[12] = new OptionSelectorNode("12:00 PM", i, {time: "24:00"});
+    timeSelectorArray[12] = new OptionSelectorNode("12:00 PM", i, {time: "12:00"});
     return timeSelectorArray;
 }();

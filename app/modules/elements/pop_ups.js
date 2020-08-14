@@ -84,6 +84,7 @@ export class PopUp {
         this.labelElement = document.createElement("h1");
         this.labelElement.style.width = "50%";
         this.labelElement.style.margin = "auto";
+        this.labelElement.style.marginTop = "25px";
         this.labelElement.innerHTML = this.label;
         this.labelElement.className = "popupLabel";
         this.popUpElement.appendChild(this.labelElement);

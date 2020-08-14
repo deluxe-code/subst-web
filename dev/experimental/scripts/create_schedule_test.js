@@ -4,7 +4,7 @@ import { Styles } from "../../../app/modules/tools/style_manager.js";
 import { PopUp, StrungPopUps } from "../../../app/modules/elements/pop_ups.js";
 import * as Cards from "../../../app/modules/elements/cards.js";
 import { OptionSelectorConfig, OptionSelectorNode, timeSelectorList } from "../../../app/modules/elements/option_selector.js";
-let graphPageElements;
+let timesPageElements;
 let selectTimeCardElementStyles = {
   height: "50%",
   width: "85%",
@@ -97,8 +97,9 @@ function openPopup() {
 }
 
 function createPopUps() {
-  graphPageElements = createGraphBody();
-  let graphPageBody = graphPageElements.element;
+  timesPageElements = createTimesPageContent();
+  let timesPageBody = timesPageElements.element;
+  let scheduleGraph = new ScheduleGraph();
   calculateTimes();
   return [
     new PopUp({
@@ -139,7 +140,8 @@ function createPopUps() {
         id: "strainSelector",
         label: "Select a dose",
         content: {
-            options: ["1g", "2g", "3g", "4g", "5g"],
+            options: [new OptionSelectorNode("1g","1gram"), new OptionSelectorNode("2g","2gram"), 
+            new OptionSelectorNode("3g","3gram"), new OptionSelectorNode("4g","4gram"), new OptionSelectorNode("5g","5gram")],
             styles: new OptionSelectorConfig(),
             hasAddButton: true
         }
@@ -152,7 +154,8 @@ function createPopUps() {
         id: "strainSelector",
         label: "Select a dose",
         content: {
-            options: ["1g", "2g", "3g", "4g", "5g"],
+            options: [new OptionSelectorNode("1g","1gram"), new OptionSelectorNode("2g","2gram"), 
+            new OptionSelectorNode("3g","3gram"), new OptionSelectorNode("4g","4gram"), new OptionSelectorNode("5g","5gram")],
             styles: new OptionSelectorConfig(),
             hasAddButton: true
         }
@@ -161,9 +164,14 @@ function createPopUps() {
       label: "END DOSE"
     }),
     new PopUp({
-      body: graphPageBody,
+      body: timesPageBody,
       container: document.getElementById("popUpBox"),
       label: "Time Selection"
+    }),
+    new PopUp({
+      body: scheduleGraph.elements.mainContainer,
+      container: document.getElementById("popUpBox"),
+      label: "Graph"
     })
   ];
 }
@@ -171,7 +179,7 @@ function createPopUps() {
 let scheduledTimes = [];
 let scheduledTimesDisplay = document.createElement("div");
 
-function createGraphBody(){
+function createTimesPageContent(){
   let openFunction = function(elem) {
     if(elem.style.display=="block"){
       elem.style.display = "none";
@@ -180,7 +188,7 @@ function createGraphBody(){
     }
   };
 
-  let graphBody = document.createElement("div");
+  let timesPageContent = document.createElement("div");
   let addTimeButton = document.createElement("button");
   addTimeButton.innerHTML = "Add Time"; 
   let addTimeSection = document.createElement("div");
@@ -225,7 +233,7 @@ function createGraphBody(){
   }();
   let submitTimesButton = document.createElement("button");
   submitTimesButton.innerHTML = "Submit";
-
+OptionSelectorNode
   Styles.assign(addTimeButtonStyles, addTimeButton);
   Styles.assign(selectTimeButtonStyles, selectTimeButton);
   Styles.assign(selectTimeCardElementStyles, selectTimeCardElement);
@@ -238,25 +246,26 @@ function createGraphBody(){
   addTimeButton.addEventListener("click", () => {addTimeSection.style.display = "block"; addTimeButton.style.display = "none";});
   submitTimesButton.addEventListener("click", () => {addTimeSection.style.display = "none"; addTimeButton.style.display = "block"; calculateTimes();});
   updateTimesDisplay();
-  graphBody.appendChild(scheduledTimesDisplay);
-  graphBody.appendChild(addTimeButton);
-  graphBody.appendChild(addTimeSection);
+  timesPageContent.appendChild(scheduledTimesDisplay);
+  timesPageContent.appendChild(addTimeButton);
+  timesPageContent.appendChild(addTimeSection);
   addTimeSection.appendChild(selectTimeButton);
   addTimeSection.appendChild(selectTimeCardElement);
   addTimeSection.appendChild(selectDayButton);
   addTimeSection.appendChild(daySelection);
   addTimeSection.appendChild(submitTimesButton);
   return {
-    element: graphBody,
+    element: timesPageContent,
     timeSelectionCard: selectTimeCard,
     daySelection: daySelection
   };
 }
+
 function calculateTimes() {
 
-  let unformattedTime = graphPageElements.timeSelectionCard.optionSelector.getSelected().content.time;
+  let unformattedTime = timesPageElements.timeSelectionCard.optionSelector.getSelected().content.time;
   let unformattedDays = function(){
-    let allCheckboxes = Array.from(graphPageElements.daySelection.getElementsByTagName("input"));
+    let allCheckboxes = Array.from(timesPageElements.daySelection.getElementsByTagName("input"));
     let checkedBoxes = [];
     console.log(allCheckboxes.length);
     allCheckboxes.forEach(element => {
@@ -294,5 +303,35 @@ function updateTimesDisplay() {
 
 function rearangeDateString(dateString) {
   return dateString;
+}
+
+class ScheduleGraph {
+  mainContainerStyles = {
+    border: "2px solid black",
+    borderRadius: "10px",
+    backgroundColor: "#313131",
+    color: "white",
+    padding: "10px",
+    width: "80%",
+    margin: "auto"
+  }
+  elements = this.createElements();
+  points = [];//should be comprised of objects holding the x, y, and connection function type
+  constructor() {
+  }
+  createElements(){
+    let mainContainer = document.createElement("div");
+    let label = document.createElement("h1");
+    let graph = document.createElement("div");
+    mainContainer.appendChild(label);
+    mainContainer.appendChild(graph);
+    label.innerHTML = "test";
+    Styles.assign(this.mainContainerStyles, mainContainer);
+    return {
+      mainContainer: mainContainer,
+      label: label,
+      graph: graph
+    }
+  }
 }
 openPopup();
