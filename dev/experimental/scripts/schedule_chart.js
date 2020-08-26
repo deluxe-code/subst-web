@@ -39,7 +39,8 @@ export class ScheduleChart {
                 y: ev.touches[0].clientY
             }
             if(this.currentlySelectedPoint!=-1) {
-                this.points[this.currentlySelectedPoint] = -((fingerPos.y-100)/25);
+                this.points[this.currentlySelectedPoint] = -((fingerPos.y-this.canv.offsetHeight)/33);
+                console.log(this.canv.offsetHeight);
             }
             this.updatePoints();
         });
@@ -69,7 +70,8 @@ export class ScheduleChart {
                     label: 'My First dataset',
                     backgroundColor: 'rgb(255, 99, 132)',
                     borderColor: 'rgb(255, 99, 132)',
-                    data: this.points
+                    data: this.points,
+                    pointHitRadius: 15
                 }]
             },
         
