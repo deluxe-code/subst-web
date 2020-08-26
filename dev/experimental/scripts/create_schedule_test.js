@@ -261,7 +261,7 @@ OptionSelectorNode
   };
 }
 
-function calculateTimes() {
+function calculateTimes() {startDateSubstrings[0]
 
   let unformattedTime = timesPageElements.timeSelectionCard.optionSelector.getSelected().content.time;
   let unformattedDays = function(){
