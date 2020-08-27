@@ -50,7 +50,7 @@ export class ScheduleChart {
                 let estimatedLabelSize = (this.canv.offsetHeight/3.85);
                 let graphSize = this.canv.offsetHeight - estimatedLabelSize;
                 let pixelsToGraphRatio = this.findBiggestPoint()/graphSize;
-                let pointValue = ((fingerOrigin.y - fingerPos.y - this.currentPointOrigin) * pixelsToGraphRatio);
+                let pointValue = ((fingerOrigin.y - fingerPos.y + this.currentPointOrigin) * pixelsToGraphRatio);
                 if(this.currentlySelectedPoint != 0 && this.currentlySelectedPoint != this.points.length-1) {
                     if(pointValue>=0) {
                         console.log("point" + pointValue + "big" + this.findBiggestPoint());
