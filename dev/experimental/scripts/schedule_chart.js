@@ -47,8 +47,10 @@ export class ScheduleChart {
                 y: ev.touches[0].clientY - rect.top
             }
             if(this.currentlySelectedPoint!=-1) {
-                let valueCost = 2.5;
-                let pointValue = ((fingerOrigin.y - fingerPos.y - this.currentPointOrigin));
+                let estimatedLabelSize = (this.canv.offsetHeight/3.85);
+                let graphSize = this.canv.offsetHeight - estimatedLabelSize;
+                let pixelsToGraphRatio = this.findBiggestPoint()/graphSize;
+                let pointValue = ((fingerOrigin.y - fingerPos.y - this.currentPointOrigin) * pixelsToGraphRatio);
                 if(this.currentlySelectedPoint != 0 && this.currentlySelectedPoint != this.points.length-1) {
                     if(pointValue>=0) {
                         console.log("point" + pointValue + "big" + this.findBiggestPoint());
@@ -113,11 +115,15 @@ export class ScheduleChart {
                             this.currentPointOrigin = this.points[this.currentlySelectedPoint];
                         }
                     }
+                },
+                legend: {
+                    display: false
                 }
             }
         });
         this.canv.style.overflow = "hidden";
         this.canv.style.scroll = "none";
+        this.canv.style.height = "200px";
 
         return chart;
     }
