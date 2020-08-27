@@ -118,12 +118,13 @@ export class ScheduleChart {
                 },
                 legend: {
                     display: false
-                }
+                },
+                aspectRatio: 1.5,
+                maintainAspectRatio: false
             }
         });
         this.canv.style.overflow = "hidden";
         this.canv.style.scroll = "none";
-        this.canv.style.height = "200px";
 
         return chart;
     }

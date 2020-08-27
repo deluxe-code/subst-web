@@ -314,6 +314,7 @@ class ScheduleGraph {
     color: "white",
     padding: "10px",
     width: "80%",
+    height: "50%",
     margin: "auto"
   }
   elements = this.createElements();
@@ -326,7 +327,6 @@ class ScheduleGraph {
     let graph = new ScheduleChart();
     mainContainer.appendChild(label);
     graph.placeElement(mainContainer);
-    label.innerHTML = "test";
     Styles.assign(this.mainContainerStyles, mainContainer);
     return {
       mainContainer: mainContainer,
