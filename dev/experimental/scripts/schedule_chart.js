@@ -7,13 +7,15 @@ export class ScheduleChart {
         endDate: "2001-07-30"
     }
     doseRange = {
-        startDose: 5,
+        startDose: 150,
         endDose: 2,
         unit: "g"
     }
     allDates = this.calculateDates();
     points = this.calculateDefaultPoints();
     currentlySelectedPoint = -1;
+    currentPointOrigin = 0;
+    moving = false;
     constructor() {
         this.canv.id="scheduleChart";
         this.chart = this.createChart();
@@ -26,29 +28,54 @@ export class ScheduleChart {
         let fingerPos = {};
 
         this.canv.addEventListener("touchstart", (ev) =>{
+            
+            var rect = ev.target.getBoundingClientRect();
+            console.log("con: " + (ev.touches[0].clientX - rect.left));
             fingerPos = {
-                x: ev.touches[0].clientX,
-                y: ev.touches[0].clientY
+                x: ev.touches[0].clientX - rect.left,
+                y: ev.touches[0].clientY - rect.top
             }
             fingerOrigin = fingerPos;
         });
 
         this.canv.addEventListener("touchmove", (ev) =>{
+            this.moving = true;
+            var rect = ev.target.getBoundingClientRect();
+            console.log("con2: " + (ev.touches[0].clientX - rect.left));
             fingerPos = {
-                x: ev.touches[0].clientX,
-                y: ev.touches[0].clientY
+                x: ev.touches[0].clientX - rect.left,
+                y: ev.touches[0].clientY - rect.top
             }
             if(this.currentlySelectedPoint!=-1) {
-                this.points[this.currentlySelectedPoint] = -((fingerPos.y-this.canv.offsetHeight)/33);
-                console.log(this.canv.offsetHeight);
+                let valueCost = 2.5;
+                let pointValue = ((fingerOrigin.y - fingerPos.y - this.currentPointOrigin));
+                if(this.currentlySelectedPoint != 0 && this.currentlySelectedPoint != this.points.length-1) {
+                    if(pointValue>=0) {
+                        console.log("point" + pointValue + "big" + this.findBiggestPoint());
+                        if(pointValue<=this.findBiggestPoint()) {
+                            this.points[this.currentlySelectedPoint] = pointValue;
+                        } else {
+                            this.points[this.currentlySelectedPoint] = this.findBiggestPoint();
+                        }
+                    } else {
+                        this.points[this.currentlySelectedPoint] = 0;
+                    }
+                }
+                console.log(pointValue);
             }
             this.updatePoints();
         });
 
         this.canv.addEventListener("touchend", (ev) =>{
             this.currentlySelectedPoint = -1;
+            this.moving = false;
         });
     }
+
+    noScroll() {
+        window.scrollTo(0, 0);
+    }
+
     getElement() {
         return this.canv;
     }
@@ -71,6 +98,7 @@ export class ScheduleChart {
                     backgroundColor: 'rgb(255, 99, 132)',
                     borderColor: 'rgb(255, 99, 132)',
                     data: this.points,
+                    pointRadius: 5,
                     pointHitRadius: 15
                 }]
             },
@@ -80,13 +108,17 @@ export class ScheduleChart {
                 tooltips: {
                     enabled: false,
                     custom: (tooltip) => {
-                        if(tooltip.dataPoints != null) {
+                        if(tooltip.dataPoints != null && !this.moving) {
                             this.currentlySelectedPoint = tooltip.dataPoints[0].index;
+                            this.currentPointOrigin = this.points[this.currentlySelectedPoint];
                         }
                     }
                 }
             }
         });
+        this.canv.style.overflow = "hidden";
+        this.canv.style.scroll = "none";
+
         return chart;
     }
 
@@ -142,5 +174,15 @@ export class ScheduleChart {
         });
         console.log(this.points);
         this.chart.update();
+    }
+
+    findBiggestPoint() {
+        let biggest = 0;
+        this.points.forEach(element => {
+            if(element > biggest) {
+                biggest = element;this.points[this.points.length-1]
+            }
+        });
+        return biggest;
     }
 }

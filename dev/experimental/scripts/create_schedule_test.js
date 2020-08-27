@@ -1,4 +1,5 @@
 import { Schedule, ScheduleElement, scheduleKey } from "../../../app/modules/elements/schedule.js";
+import { ScheduleChart } from "./schedule_chart.js";
 import { ElementDragger } from "../../../app/modules/tools/element_dragger.js";
 import { Styles } from "../../../app/modules/tools/style_manager.js";
 import { PopUp, StrungPopUps } from "../../../app/modules/elements/pop_ups.js";
@@ -261,7 +262,7 @@ OptionSelectorNode
   };
 }
 
-function calculateTimes() {startDateSubstrings[0]
+function calculateTimes() {
 
   let unformattedTime = timesPageElements.timeSelectionCard.optionSelector.getSelected().content.time;
   let unformattedDays = function(){
@@ -322,9 +323,9 @@ class ScheduleGraph {
   createElements(){
     let mainContainer = document.createElement("div");
     let label = document.createElement("h1");
-    let graph = document.createElement("div");
+    let graph = new ScheduleChart();
     mainContainer.appendChild(label);
-    mainContainer.appendChild(graph);
+    graph.placeElement(mainContainer);
     label.innerHTML = "test";
     Styles.assign(this.mainContainerStyles, mainContainer);
     return {
