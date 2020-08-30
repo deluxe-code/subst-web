@@ -8,7 +8,7 @@ export class ScheduleChart {
     }
     doseRange = {
         startDose: 150,
-        endDose: 2,
+        endDose: 100,
         unit: "g"
     }
     allDates = this.calculateDates();
@@ -16,11 +16,27 @@ export class ScheduleChart {
     currentlySelectedPoint = -1;
     currentPointOrigin = 0;
     moving = false;
+    basicGraphFunctions = {
+        linear: (x) => {
+            let yIntercept = this.doseRange.startDose;
+            let slope = (this.doseRange.endDose-yIntercept)/(this.points.length-1);
+            return slope*x+yIntercept;
+        },
+        exponentialDecay: (x) => {
+            let stretchAmount = Math.log((this.doseRange.endDose + 1)/(this.doseRange.startDose+1))/this.points.length-1;
+            let yIntercept = this.doseRange.startDose;
+            return (yIntercept+1)*Math.pow(1.75, stretchAmount*x) -1;
+        },
+        constant: (x) => {
+            return this.findBiggestPoint();
+        } 
+    }
     constructor() {
         this.canv.id="scheduleChart";
         this.chart = this.createChart();
         //this.chart = new Chart(this.canv, chartConfig);
         this.setupEventListeners();
+        this.followFunction(this.basicGraphFunctions.linear);
     }
 
     setupEventListeners() {
@@ -47,10 +63,10 @@ export class ScheduleChart {
                 y: ev.touches[0].clientY - rect.top
             }
             if(this.currentlySelectedPoint!=-1) {
-                let estimatedLabelSize = (this.canv.offsetHeight/3.85);
+                let estimatedLabelSize = (this.canv.offsetHeight/4.5);
                 let graphSize = this.canv.offsetHeight - estimatedLabelSize;
-                let pixelsToGraphRatio = this.findBiggestPoint()/graphSize;
-                let pointValue = ((fingerOrigin.y - fingerPos.y + this.currentPointOrigin) * pixelsToGraphRatio);
+                let pixelsToGraphRatio = (this.findBiggestPoint()-this.findSmallestPoint())/graphSize;
+                let pointValue = ((fingerOrigin.y - fingerPos.y) * pixelsToGraphRatio) + this.currentPointOrigin;
                 if(this.currentlySelectedPoint != 0 && this.currentlySelectedPoint != this.points.length-1) {
                     if(pointValue>=0) {
                         console.log("point" + pointValue + "big" + this.findBiggestPoint());
@@ -187,9 +203,27 @@ export class ScheduleChart {
         let biggest = 0;
         this.points.forEach(element => {
             if(element > biggest) {
-                biggest = element;this.points[this.points.length-1]
+                biggest = element;
             }
         });
         return biggest;
+    }
+
+    findSmallestPoint() {
+        let smallest = Number.MAX_SAFE_INTEGER;
+        this.points.forEach(element => {
+            if(element < smallest) {
+                smallest = element;
+            }
+        });
+        return smallest;
+    }
+
+    followFunction(myFunction) {
+        //myFunction should be a function with one argument
+        for(var i = 0; i < this.points.length; i++) {
+            this.points[i] = myFunction(i);
+        }
+        this.updatePoints();
     }
 }
