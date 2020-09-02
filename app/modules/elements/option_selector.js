@@ -90,7 +90,7 @@ export class Selector {
         return this.optionsList[this.currentOption];
     }
     createOptionBoxes() {
-        let {boxShadow, borderRadius, backgroundColor, fontFamily, fontSize} = this.styles;
+        let {boxShadow, borderRadius, backgroundColor, fontFamily, fontSize, color} = this.styles;
         this.fontSize = fontSize;
         let boxHeight = (100*this.optionBoxSize / 3) + "%";
         for (let i = 0; i < this.optionsList.length; i++) {
@@ -103,6 +103,7 @@ export class Selector {
             this.optionBoxes[i].style.backgroundColor = backgroundColor;
             this.optionBoxes[i].style.borderRadius = borderRadius;
             this.optionBoxes[i].style.fontFamily = fontFamily;
+            this.optionBoxes[i].style.color = color;
             this.optionBoxes[i].style.fontSize = fontSize;
             this.optionBoxes[i].style.position = "relative";
             this.optionBoxes[i].style.marginRight = "auto";
@@ -257,7 +258,8 @@ class OptionSelectorAnimator {
         backgroundColor: "white",
         borderRadius: "10px",
         fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;",
-        fontSize: "2.5em"
+        fontSize: "2.5em",
+        color: "black"
     }
 export class OptionSelectorConfig {
     /*
@@ -274,7 +276,8 @@ export class OptionSelectorConfig {
                 backgroundColor: (config.backgroundColor ? config.backgroundColor : optionBox_default.backgroundColor),
                 borderRadius: (config.borderRadius ? config.borderRadius : optionBox_default.borderRadius),
                 fontType: (config.fontType ? config.fontType : optionBox_default.fontType),
-                fontSize: (config.fontSize ? config.fontSize : optionBox_default.fontSize)
+                fontSize: (config.fontSize ? config.fontSize : optionBox_default.fontSize),
+                color: (config.color ? config.color : optionBox_default.color)
             }
         } else {
             return optionBox_default

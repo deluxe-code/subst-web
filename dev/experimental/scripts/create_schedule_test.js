@@ -234,7 +234,6 @@ function createTimesPageContent(){
   }();
   let submitTimesButton = document.createElement("button");
   submitTimesButton.innerHTML = "Submit";
-OptionSelectorNode
   Styles.assign(addTimeButtonStyles, addTimeButton);
   Styles.assign(selectTimeButtonStyles, selectTimeButton);
   Styles.assign(selectTimeCardElementStyles, selectTimeCardElement);
@@ -325,13 +324,16 @@ class ScheduleGraph {
     let mainContainer = document.createElement("div");
     let label = document.createElement("h1");
     let graph = new ScheduleChart();
+    let presetSelector = graph.presetSelector.getElement();
     mainContainer.appendChild(label);
     graph.placeElement(mainContainer);
+    mainContainer.appendChild(presetSelector);
     Styles.assign(this.mainContainerStyles, mainContainer);
     return {
       mainContainer: mainContainer,
       label: label,
-      graph: graph
+      graph: graph,
+      presetSelector: presetSelector
     }
   }
 }

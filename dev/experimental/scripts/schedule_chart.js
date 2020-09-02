@@ -1,10 +1,12 @@
+import * as OptionSelector from "../../../app/modules/elements/option_selector.js";
 const daysInAWeek = 7;
 export class ScheduleChart {
     canv = document.createElement("canvas");
     chart;
+    presetSelector;
     dateRange = {
         startDate: "2001-05-22",
-        endDate: "2001-07-30"
+        endDate: "2001-08-07"
     }
     doseRange = {
         startDose: 150,
@@ -34,6 +36,7 @@ export class ScheduleChart {
     constructor() {
         this.canv.id="scheduleChart";
         this.chart = this.createChart();
+        this.presetSelector = this.createPresetSelector();
         //this.chart = new Chart(this.canv, chartConfig);
         this.setupEventListeners();
         this.followFunction(this.basicGraphFunctions.linear);
@@ -102,6 +105,13 @@ export class ScheduleChart {
         destinationElement.appendChild(this.getElement());
     }
 
+    createPresetSelector() {
+        let presets = [new OptionSelector.OptionSelectorNode("Linear", "linear", {myFunction: this.basicGraphFunctions.linear}),
+                       new OptionSelector.OptionSelectorNode("Exponential Decay", "exponentialDecay", {myFunction: this.basicGraphFunctions.exponentialDecay})
+                    ];
+        let optionSelector = new OptionSelector.Selector([presets, new OptionSelector.OptionSelectorConfig()]);
+        return optionSelector;
+    }
     createChart() {
 
         let chart = new Chart(this.canv, {
