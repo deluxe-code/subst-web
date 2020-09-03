@@ -110,6 +110,9 @@ export class ScheduleChart {
                        new OptionSelector.OptionSelectorNode("Exponential Decay", "exponentialDecay", {myFunction: this.basicGraphFunctions.exponentialDecay})
                     ];
         let optionSelector = new OptionSelector.Selector([presets, new OptionSelector.OptionSelectorConfig()]);
+        optionSelector.getElement().addEventListener('selectionChange', () => {
+            this.followFunction(optionSelector.getSelected().content.myFunction);
+        });
         return optionSelector;
     }
     createChart() {

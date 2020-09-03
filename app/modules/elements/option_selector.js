@@ -1,5 +1,7 @@
 import { ElementDragger } from "../tools/element_dragger.js";
 
+const selectionChange = new Event('selectionChange');
+
 export class Selector {
 
     selectorBox;
@@ -34,6 +36,8 @@ export class Selector {
         });
         if(isNode) {
             this.optionsList = arr;
+        } else {
+            console.error("Elements in array must be of type OptionSelectorNode");
         }
         this.optionSelectorElement = document.createElement("div");
         this.selectorBox = document.createElement("div");
@@ -170,7 +174,11 @@ class OptionSelectorAnimator {
                 let optionBoxes = () => {return this.optionBoxes;};
                 this.elementDragger.snapToNearestInterval(0, -1, -boxHeight(), "y", -1, optionBoxes().length-2);
                 this.growWidth(this.optionBoxes, this.elementDragger.currentRelativeScrollPosition.y, this.elementDragger.fadeTime);
-                this.mySelector.currentOption = this.elementDragger.currentReferenceFrame.y+1;
+                if(this.mySelector.currentOption!=this.elementDragger.currentReferenceFrame.y+1) {
+                    this.mySelector.currentOption = this.elementDragger.currentReferenceFrame.y+1;
+                    this.mySelector.getElement().dispatchEvent(selectionChange);
+                }
+                
             },
             movementFunction: () => {
                 this.growWidth(this.optionBoxes, this.elementDragger.currentRelativeFingerPosition.y, 0);
