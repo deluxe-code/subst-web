@@ -31,7 +31,7 @@ export class ScheduleChart {
         },
         constant: (x) => {
             return this.findBiggestPoint();
-        } 
+        }
     }
     constructor() {
         this.canv.id="scheduleChart";
@@ -107,7 +107,8 @@ export class ScheduleChart {
 
     createPresetSelector() {
         let presets = [new OptionSelector.OptionSelectorNode("Linear", "linear", {myFunction: this.basicGraphFunctions.linear}),
-                       new OptionSelector.OptionSelectorNode("Exponential Decay", "exponentialDecay", {myFunction: this.basicGraphFunctions.exponentialDecay})
+                       new OptionSelector.OptionSelectorNode("Exponential Decay", "exponentialDecay", {myFunction: this.basicGraphFunctions.exponentialDecay}),
+                       new OptionSelector.OptionSelectorNode("Constant", "constant", {myFunction: this.basicGraphFunctions.constant})
                     ];
         let optionSelector = new OptionSelector.Selector([presets, new OptionSelector.OptionSelectorConfig()]);
         optionSelector.getElement().addEventListener('selectionChange', () => {

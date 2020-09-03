@@ -325,9 +325,16 @@ class ScheduleGraph {
     let label = document.createElement("h1");
     let graph = new ScheduleChart();
     let presetSelector = graph.presetSelector.getElement();
+    let presetSelectorContainer = document.createElement('div');
+    presetSelectorContainer.appendChild(presetSelector);
+    presetSelectorContainer.style.marginTop = "20px";
+    presetSelectorContainer.style.backgroundColor = "313131";
+    presetSelectorContainer.style.height = "20%";
+    presetSelectorContainer.style.position = "relative";
+    presetSelectorContainer.style.display = "block";
     mainContainer.appendChild(label);
     graph.placeElement(mainContainer);
-    mainContainer.appendChild(presetSelector);
+    mainContainer.appendChild(presetSelectorContainer);
     Styles.assign(this.mainContainerStyles, mainContainer);
     return {
       mainContainer: mainContainer,
