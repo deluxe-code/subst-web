@@ -56,16 +56,17 @@ class Card {
 }
 
 export class InputCard extends Card {
+  inputElement;
   constructor(card_config) {
     super(card_config);
     this.card_layout = this.finishLayout();
   }
   buildLayout() {
     let content = this.getContent();
-    let inputElement = document.createElement("input");
-    inputElement.type = (content.type ? content.type : "text");
-    inputElement.placeholder = (content.placeholder ? content.placeholder : "default placeholder");
-    return inputElement;
+    this.inputElement = document.createElement("input");
+    this.inputElement.type = (content.type ? content.type : "text");
+    this.inputElement.placeholder = (content.placeholder ? content.placeholder : "default placeholder");
+    return this.inputElement;
   }
 }
 

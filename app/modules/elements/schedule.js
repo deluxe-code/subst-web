@@ -1,4 +1,19 @@
 export const scheduleKey = "mySchedule";
+export const ScheduleStorage = {
+    storeLocal: function(schedule) {
+        if(localStorage.schedules = "") {
+            localStorage.schedules = JSON.stringify([]);
+        }
+        let tempStorage = JSON.parse(localStorage.getItem("schedules"));
+        tempStorage.push(schedule);
+        localStorage.schedules = JSON.stringify(tempStorage);
+        console.log(localStorage.schedules);
+    },
+    storeCloud: null,
+    getStoredLocal: function() {},
+    getStoredCloud: null
+
+};
 export class Schedule{
     drugName;
     startDate;
@@ -8,7 +23,7 @@ export class Schedule{
     curveType;
     doseTimes;//doseTimes stores the day of the week and the time for each dose.
     doseDateAndTimes;//doseDateAndTimes stores the exact dates and times of each dose.
-
+    
     constructor(obj) {
         this.drugName = obj.drugName;
         this.startDate = obj.startDate;

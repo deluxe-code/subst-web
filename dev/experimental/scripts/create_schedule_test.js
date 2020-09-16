@@ -1,4 +1,4 @@
-import { Schedule, ScheduleElement, scheduleKey } from "../../../app/modules/elements/schedule.js";
+import { Schedule, ScheduleElement, scheduleKey, ScheduleStorage } from "../../../app/modules/elements/schedule.js";
 import { ScheduleChart } from "./schedule_chart.js";
 import { ElementDragger } from "../../../app/modules/tools/element_dragger.js";
 import { Styles } from "../../../app/modules/tools/style_manager.js";
@@ -77,10 +77,26 @@ let submitTimeButtonStyles = {
   marginRight: "auto",
   display: "block"
 }
+let popUps;
+let scheduleInfo = {
+
+}
+
 function openPopup() {
 
-    let popUps = createPopUps();
+    for(const key in popUps) {
+      let card = popUps[key].card;
+      if(card != null){
+        card.card.style.backgroundColor = "#313131";
+        if(card.getLabel()) {
+          card.card.childNodes[0].style.color = "white";
+          card.card.childNodes[0].width = "50%";
+          card.card.childNodes[0].height = "50%";
+        }
+      }
 
+    }
+/*
     for(var i = 0; i < popUps.length; i++) {
       let card = popUps[i].card;
       if(card != null){
@@ -103,8 +119,8 @@ function createPopUps() {
   let timesPageBody = timesPageElements.element;
   let scheduleGraph = new ScheduleGraph();
   calculateTimes();
-  return [
-    new PopUp({
+  popUps = {
+    drugName: new PopUp({
       card: new Cards.OptionSelectorCard({
         id: "strainSelector",
         label: "Select a drug",
@@ -117,7 +133,7 @@ function createPopUps() {
       container: document.getElementById("popUpBox"),
       label: "DRUG SELECTION"
     }),
-    new PopUp({
+    startDate: new PopUp({
       card: new Cards.InputCard({
               content: {
                 type: "date",
@@ -127,7 +143,7 @@ function createPopUps() {
       container: document.getElementById("popUpBox"), 
       label: "START DATE"
     }),
-    new PopUp({
+    endDate: new PopUp({
       card: new Cards.InputCard({
               content: {
                 type: "date",
@@ -137,7 +153,7 @@ function createPopUps() {
       container: document.getElementById("popUpBox"), 
       label: "END DATE"
     }),
-    new PopUp({
+    startDose: new PopUp({
       card: new Cards.OptionSelectorCard({
         id: "strainSelector",
         label: "Select a dose",
@@ -151,7 +167,7 @@ function createPopUps() {
       container: document.getElementById("popUpBox"),
       label: "START DOSE",
     }),
-    new PopUp({
+    endDose: new PopUp({
       card: new Cards.OptionSelectorCard({
         id: "strainSelector",
         label: "Select a dose",
@@ -165,17 +181,18 @@ function createPopUps() {
       container: document.getElementById("popUpBox"),
       label: "END DOSE"
     }),
-    new PopUp({
+    timeSelection: new PopUp({
       body: timesPageBody,
       container: document.getElementById("popUpBox"),
       label: "Time Selection"
     }),
-    new PopUp({
+    graph: new PopUp({
       body: scheduleGraph.elements.mainContainer,
       container: document.getElementById("popUpBox"),
       label: "Graph"
     })
-  ];
+  };
+
 }
 
 let scheduledTimes = [];
@@ -192,7 +209,7 @@ function createTimesPageContent(){
 
   let timesPageContent = document.createElement("div");
   let addTimeButton = document.createElement("button");
-  addTimeButton.innerHTML = "Add Time"; 
+  addTimeButton.innerHTML = "Add Time";
   let addTimeSection = document.createElement("div");
   let selectTimeButton = document.createElement("button");
   selectTimeButton.innerHTML = "Select a time▼"
@@ -301,7 +318,26 @@ function updateTimesDisplay() {
 
 function rearangeDateString(dateString) {
   return dateString;
+  
 }
+
+function calculateExactDates() {
+  let initDate = new Date(popUps.startDate.card.inputElement.value);
+  initDate.getDay();
+}
+
+function submitSchedule() {
+  let info = {
+    drugName: popUps.drugName.card.optionSelector.getSelected(),
+    startDate: popUps.startDate.card.inputElement.value,
+    endDate: popUps.endDate.card.inputElement.value,
+    startDose: popUps.startDose.card.optionSelector.getSelected(),
+    endDose: popUps.endDose.card.optionSelector.getSelected(),
+    weeklyTimes: scheduledTimes
+  }
+  let schedule = new Schedule(info);
+  ScheduleStorage.storeLocal(schedule);
+};
 
 class ScheduleGraph {
   mainContainerStyles = {
@@ -318,7 +354,7 @@ class ScheduleGraph {
   points = [];//should be comprised of objects holding the x, y, and connection function type
   constructor() {
   }
-  createElements(){
+  createElements() {
     let mainContainer = document.createElement("div");
     let label = document.createElement("h1");
     let graph = new ScheduleChart();
@@ -342,4 +378,7 @@ class ScheduleGraph {
     }
   }
 }
+createPopUps();
 openPopup();
+ScheduleStorage.storeLocal();
+console.log(ScheduleStorage.getStoredLocal());
