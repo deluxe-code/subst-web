@@ -92,8 +92,9 @@ function openPopup() {
         }
       }
     }
+    */
     console.log(document.getElementById("popUpBox"));
-    let strungPopUps = new StrungPopUps(document.getElementById("popUpBox"), popUps);
+    let strungPopUps = new StrungPopUps(document.getElementById("popUpBox"), Object.values(popUps));
     strungPopUps.open();
 }
 
@@ -267,17 +268,14 @@ function calculateTimes() {
   let unformattedDays = function(){
     let allCheckboxes = Array.from(timesPageElements.daySelection.getElementsByTagName("input"));
     let checkedBoxes = [];
-    console.log(allCheckboxes.length);
     allCheckboxes.forEach(element => {
       if(element.checked){
         checkedBoxes.push(element);
       }
     });
-    console.log(checkedBoxes.length);
     return checkedBoxes;
     
   }();
-  console.log(unformattedDays.length);
   for(var i = 0; i < unformattedDays.length; i++) {
     
     addTimes(unformattedDays[i].name.substring(0,1).toUpperCase() + unformattedDays[i].name.substring(1) + ", " + unformattedTime);

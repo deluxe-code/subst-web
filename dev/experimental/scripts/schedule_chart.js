@@ -49,7 +49,6 @@ export class ScheduleChart {
         this.canv.addEventListener("touchstart", (ev) =>{
             
             var rect = ev.target.getBoundingClientRect();
-            console.log("con: " + (ev.touches[0].clientX - rect.left));
             fingerPos = {
                 x: ev.touches[0].clientX - rect.left,
                 y: ev.touches[0].clientY - rect.top
@@ -60,7 +59,6 @@ export class ScheduleChart {
         this.canv.addEventListener("touchmove", (ev) =>{
             this.moving = true;
             var rect = ev.target.getBoundingClientRect();
-            console.log("con2: " + (ev.touches[0].clientX - rect.left));
             fingerPos = {
                 x: ev.touches[0].clientX - rect.left,
                 y: ev.touches[0].clientY - rect.top
@@ -72,7 +70,6 @@ export class ScheduleChart {
                 let pointValue = ((fingerOrigin.y - fingerPos.y) * pixelsToGraphRatio) + this.currentPointOrigin;
                 if(this.currentlySelectedPoint != 0 && this.currentlySelectedPoint != this.points.length-1) {
                     if(pointValue>=0) {
-                        console.log("point" + pointValue + "big" + this.findBiggestPoint());
                         if(pointValue<=this.findBiggestPoint()) {
                             this.points[this.currentlySelectedPoint] = pointValue;
                         } else {
@@ -82,7 +79,6 @@ export class ScheduleChart {
                         this.points[this.currentlySelectedPoint] = 0;
                     }
                 }
-                console.log(pointValue);
             }
             this.updatePoints();
         });
@@ -209,7 +205,6 @@ export class ScheduleChart {
         this.chart.data.datasets.forEach((dataset) => {
             dataset.data = this.points;
         });
-        console.log(this.points);
         this.chart.update();
     }
 
