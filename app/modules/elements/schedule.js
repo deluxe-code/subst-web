@@ -1,17 +1,33 @@
 export const scheduleKey = "mySchedule";
 export const ScheduleStorage = {
     storeLocal: function(schedule) {
-        if(localStorage.schedules = "") {
-            localStorage.schedules = JSON.stringify([]);
+        if(!ScheduleStorage.hasSchedule(schedule)){
+            let tempStorage = JSON.parse(localStorage.getItem("schedules"));
+            tempStorage.push(schedule);
+            localStorage.schedules = JSON.stringify(tempStorage);
+            console.log(localStorage.schedules);
         }
-        let tempStorage = JSON.parse(localStorage.getItem("schedules"));
-        tempStorage.push(schedule);
-        localStorage.schedules = JSON.stringify(tempStorage);
-        console.log(localStorage.schedules);
     },
     storeCloud: null,
-    getStoredLocal: function() {},
-    getStoredCloud: null
+    getSchedulesString: function(){
+        if(localStorage.schedules==null || localStorage.schedules == "") {
+            localStorage.schedules = JSON.stringify([""]);
+        }
+        return localStorage.getItem("schedules");
+    },
+    getStoredLocal: function() {
+        return JSON.parse(ScheduleStorage.getSchedulesString());
+    },
+    getStoredCloud: null,
+    hasSchedule: function(schedule) {
+        schedule = JSON.stringify(schedule);
+        if(ScheduleStorage.getSchedulesString().includes(schedule)){
+            window.alert("This schedule already exists!");
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 };
 export class Schedule{
@@ -39,15 +55,10 @@ export class Schedule{
     }
 }
 
-export class ScheduleElement {
-    drugName;
-    scheduledTime;
-    taken;
-    timeTook;
-    element;
-    constructor(obj) {
-        this.drugName = obj.drugName;
-        this.scheduledTime = obj.scheduledTime;
+export class DoseElement {
+    schedule;
+    constructor(schedule) {
+        this.schedule = schedule;
         this.createElement();
     }
 
@@ -55,12 +66,16 @@ export class ScheduleElement {
         let mainContainer = document.createElement("div");
         let drugNameTitle = document.createElement("h1");
         let scheduledTime = document.createElement("h2");
-        drugNameTitle.innerHTML = this.drugName;
-        scheduledTime.innerHTML = this.scheduledTime;
+        drugNameTitle.innerHTML = this.schedule.drugName;
+        scheduledTime.innerHTML = this.calculateTime();
         mainContainer.appendChild(drugNameTitle);
         mainContainer.appendChild(scheduledTime);
         mainContainer.className = "dose";
         this.element = mainContainer;
         return mainContainer;
+    }
+
+    calculateTime() {
+        this.schedule
     }
 }

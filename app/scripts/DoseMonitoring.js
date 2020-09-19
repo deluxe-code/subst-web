@@ -1,12 +1,11 @@
-import { Schedule, ScheduleElement, scheduleKey } from "../../modules/schedule.js";
+import { Schedule, DoseElement, scheduleKey } from "../modules/elements/schedule.js";
 var scheduledItems = [];
 var swiped = false;
 const swipeTriggerDistance = 150;
 for(var i = 0; i < localStorage.length; i++){
     if(localStorage.key(i).includes(scheduleKey)){
         //push to localstorage objects to schedule items, and make it so scheduledItems can interpret it
-        console.log();
-        scheduledItems.push(new ScheduleElement(JSON.parse(localStorage.getItem(localStorage.key(i)))));
+        scheduledItems.push(new DoseElement());
     }
 }
 

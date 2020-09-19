@@ -1,4 +1,4 @@
-import { Schedule, ScheduleElement, scheduleKey, ScheduleStorage } from "../../../app/modules/elements/schedule.js";
+import { Schedule, DoseElement, scheduleKey, ScheduleStorage } from "../../../app/modules/elements/schedule.js";
 import { ScheduleChart } from "./schedule_chart.js";
 import { ElementDragger } from "../../../app/modules/tools/element_dragger.js";
 import { Styles } from "../../../app/modules/tools/style_manager.js";
@@ -109,7 +109,6 @@ function openPopup() {
       }
     }
     */
-    console.log(document.getElementById("popUpBox"));
     let strungPopUps = new StrungPopUps(document.getElementById("popUpBox"), Object.values(popUps));
     strungPopUps.open();
 }
@@ -339,6 +338,15 @@ function submitSchedule() {
   ScheduleStorage.storeLocal(schedule);
 };
 
+function debuggingTests() {
+  document.addEventListener('keypress', (e)=>{
+    if(e.key == "r"){
+        console.log("rtime");
+        submitSchedule();
+    }
+  })
+}
+
 class ScheduleGraph {
   mainContainerStyles = {
     border: "2px solid black",
@@ -380,5 +388,4 @@ class ScheduleGraph {
 }
 createPopUps();
 openPopup();
-ScheduleStorage.storeLocal();
-console.log(ScheduleStorage.getStoredLocal());
+debuggingTests();
