@@ -1,12 +1,17 @@
-import { Schedule, ScheduleElement, scheduleKey } from "../../modules/schedule.js";
-var scheduledItems = [];
+import { Schedule, scheduleKey, ScheduleStorage } from "../modules/elements/schedule.js";
+let scheduledItems = [];
 var swiped = false;
 const swipeTriggerDistance = 150;
-for(var i = 0; i < localStorage.length; i++){
-    if(localStorage.key(i).includes(scheduleKey)){
+for(var i = 0; i < ScheduleStorage.getStoredLocal().length; i++){
+    if(localStorage.schedules[i]){
         //push to localstorage objects to schedule items, and make it so scheduledItems can interpret it
-        console.log();
-        scheduledItems.push(new ScheduleElement(JSON.parse(localStorage.getItem(localStorage.key(i)))));
+        console.log(ScheduleStorage.getStoredLocal()[i]);
+        let currentSchedule = new Schedule(ScheduleStorage.getStoredLocal()[i]);
+        let currentScheduleCards = currentSchedule.getDailyScheduleCards();
+        console.log(currentScheduleCards);
+        for(var j = 0; j < currentScheduleCards.length; j++) {
+            scheduledItems.push(currentScheduleCards[j]);
+        }
     }
 }
 
@@ -84,9 +89,9 @@ function startUp() {
     document.getElementById("bottomSection").addEventListener("touchstart", touchStart, { passive: true });
     document.getElementById("bottomSection").addEventListener("touchmove", touchMove, { passive: true });
 }
-function loadScheduledItems() {
+function loadScheduledItems() { 
     scheduledItems.forEach(element => {
-        document.getElementById("bottomSection").appendChild(element.element);
+        document.getElementById("bottomSection").appendChild(element);
     });
     document.getElementById("bottomSection").appendChild
 }

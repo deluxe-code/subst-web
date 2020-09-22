@@ -1,4 +1,4 @@
-import { Schedule, ScheduleElement, scheduleKey, ScheduleStorage } from "../../../app/modules/elements/schedule.js";
+import { Schedule, scheduleKey, ScheduleStorage, Schedules } from "../../../app/modules/elements/schedule.js";
 import { ScheduleChart } from "./schedule_chart.js";
 import { ElementDragger } from "../../../app/modules/tools/element_dragger.js";
 import { Styles } from "../../../app/modules/tools/style_manager.js";
@@ -298,7 +298,7 @@ function calculateTimes() {
   console.log(unformattedDays.length);
   for(var i = 0; i < unformattedDays.length; i++) {
     
-    addTimes(unformattedDays[i].name.substring(0,1).toUpperCase() + unformattedDays[i].name.substring(1) + ", " + unformattedTime);
+    addTimes(unformattedTime+"d"+i);//addTimes(unformattedDays[i].name.substring(0,1).toUpperCase() + unformattedDays[i].name.substring(1) + ", " + unformattedTime)
   }
 
 }
@@ -320,7 +320,9 @@ function updateTimesDisplay() {
 }
 
 function rearangeDateString(dateString) {
-  return dateString;
+  Schedules.formatDay(dateString);
+  console.log("test");
+  return Schedules.formatDay(dateString);
   
 }
 
@@ -332,8 +334,8 @@ function calculateExactDates() {
 function submitSchedule() {
   let info = {
     drugName: popUps.drugName.card.optionSelector.getSelected(),
-    startDate: popUps.startDate.card.inputElement.value,
-    endDate: popUps.endDate.card.inputElement.value,
+    startDate: new Date(popUps.startDate.card.inputElement.value),
+    endDate: new Date(popUps.endDate.card.inputElement.value),
     startDose: popUps.startDose.card.optionSelector.getSelected(),
     endDose: popUps.endDose.card.optionSelector.getSelected(),
     weeklyTimes: scheduledTimes
@@ -384,4 +386,4 @@ class ScheduleGraph {
 createPopUps();
 openPopup();
 ScheduleStorage.storeLocal();
-console.log(ScheduleStorage.getStoredLocal());
+document.addEventListener('keypress', (e) => {submitSchedule()});
