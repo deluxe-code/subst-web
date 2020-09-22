@@ -15,7 +15,11 @@ export const ScheduleStorage = {
     },
     storeCloud: null,
     getStoredLocal: function() {
-        return JSON.parse(localStorage.schedules);
+        if(localStorage.schedules!=null) {
+            return JSON.parse(localStorage.schedules);
+        } else {
+            return [];
+        }
     },
     getStoredCloud: null,
     canStore: function() {
