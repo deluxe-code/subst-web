@@ -63,8 +63,6 @@ export class PopUp {
         this.doneButton.addEventListener('click', () => {
             this.close();
         });
-
-        console.log("opened");
     }
     createPopUp(){
         if(this.card != null){
