@@ -250,6 +250,7 @@ function createTimesPageContent(){
 function calculateTimes() {
 
   let unformattedTime = timesPageElements.timeSelector.getSelected().content.time;
+  console.log(timesPageElements.timeSelector.getSelected());
   let unformattedDays = function(){
     let allCheckboxes = Array.from(timesPageElements.daySelection.getElementsByTagName("input"));
     let checkedBoxes = [];
@@ -265,7 +266,6 @@ function calculateTimes() {
   }();
   console.log(unformattedDays.length);
   for(var i = 0; i < unformattedDays.length; i++) {
-    
     addTimes(unformattedTime+"d"+i);//addTimes(unformattedDays[i].name.substring(0,1).toUpperCase() + unformattedDays[i].name.substring(1) + ", " + unformattedTime)
   }
 

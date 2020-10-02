@@ -13,7 +13,10 @@ export class Selector {
             currentOptionElement.value = i + "," + this.options[i].id;
             //^incorperates index and ID into the value
             currentOptionElement.innerHTML = this.options[i].title;
-            this.options[i].content = currentOptionElement;
+            if(this.options[i].content==null) {
+                this.options[i].content = {};
+            }
+            this.options[i].content.element = currentOptionElement;
             this.selector.appendChild(currentOptionElement);
         }
     }
