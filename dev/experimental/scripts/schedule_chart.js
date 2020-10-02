@@ -102,12 +102,12 @@ export class ScheduleChart {
     }
 
     createPresetSelector() {
-        let presets = [new OptionSelector.OptionSelectorNode("Linear", "linear", {myFunction: this.basicGraphFunctions.linear}),
-                       new OptionSelector.OptionSelectorNode("Exponential Decay", "exponentialDecay", {myFunction: this.basicGraphFunctions.exponentialDecay}),
-                       new OptionSelector.OptionSelectorNode("Constant", "constant", {myFunction: this.basicGraphFunctions.constant})
+        let presets = [new OptionSelector.Option("Linear", "linear", {myFunction: this.basicGraphFunctions.linear}),
+                       new OptionSelector.Option("Exponential Decay", "exponentialDecay", {myFunction: this.basicGraphFunctions.exponentialDecay}),
+                       new OptionSelector.Option("Constant", "constant", {myFunction: this.basicGraphFunctions.constant})
                     ];
-        let optionSelector = new OptionSelector.Selector([presets, new OptionSelector.OptionSelectorConfig()]);
-        optionSelector.getElement().addEventListener('selectionChange', () => {
+        let optionSelector = new OptionSelector.Selector(presets);
+        optionSelector.selector.addEventListener('selectionChange', () => {
             this.followFunction(optionSelector.getSelected().content.myFunction);
         });
         return optionSelector;

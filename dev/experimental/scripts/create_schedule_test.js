@@ -4,7 +4,7 @@ import { ElementDragger } from "../../../app/modules/tools/element_dragger.js";
 import { Styles } from "../../../app/modules/tools/style_manager.js";
 import { PopUp, StrungPopUps } from "../../../app/modules/elements/pop_ups.js";
 import * as Cards from "../../../app/modules/elements/cards.js";
-import { OptionSelectorConfig, OptionSelectorNode, timeSelectorList } from "../../../app/modules/elements/option_selector.js";
+import { Selector, Option, timeSelectorList } from "../../../app/modules/elements/option_selector.js";
 let timesPageElements;
 let selectTimeCardElementStyles = {
   height: "50%",
@@ -119,19 +119,13 @@ function createPopUps() {
   let timesPageBody = timesPageElements.element;
   let scheduleGraph = new ScheduleGraph();
   calculateTimes();
+  let drugs = [new Option("weed", "Weed"), new Option("kratom", "Kratom"), new Option("cocaine", "Cocaine"), new Option("heroin", "Heroin"), new Option("lexapro", "Lexapro")];
+  let doseSizes = [new Option("1g","1gram"), new Option("2g","2gram"), new Option("3g","3gram"), new Option("4g","4gram"), new Option("5g","5gram")];
   popUps = {
     drugName: new PopUp({
-      card: new Cards.OptionSelectorCard({
-        id: "strainSelector",
-        label: "Select a drug",
-        content: {
-            options: [new OptionSelectorNode("Weed", "weed"), new OptionSelectorNode("Kratom", "kratom"), new OptionSelectorNode("Cocaine", "cocaine"), new OptionSelectorNode("Heroin", "heroin"), new OptionSelectorNode("Lexapro", "lexapro")],
-            styles: new OptionSelectorConfig(),
-            hasAddButton: true
-        }
-      }), 
+      body: new Selector(drugs).selector,
       container: document.getElementById("popUpBox"),
-      label: "DRUG SELECTION"
+      label: "Graph"
     }),
     startDate: new PopUp({
       card: new Cards.InputCard({
@@ -154,32 +148,14 @@ function createPopUps() {
       label: "END DATE"
     }),
     startDose: new PopUp({
-      card: new Cards.OptionSelectorCard({
-        id: "strainSelector",
-        label: "Select a dose",
-        content: {
-            options: [new OptionSelectorNode("1g","1gram"), new OptionSelectorNode("2g","2gram"), 
-            new OptionSelectorNode("3g","3gram"), new OptionSelectorNode("4g","4gram"), new OptionSelectorNode("5g","5gram")],
-            styles: new OptionSelectorConfig(),
-            hasAddButton: true
-        }
-      }), 
+      body: new Selector(doseSizes).selector,
       container: document.getElementById("popUpBox"),
       label: "START DOSE",
     }),
     endDose: new PopUp({
-      card: new Cards.OptionSelectorCard({
-        id: "strainSelector",
-        label: "Select a dose",
-        content: {
-            options: [new OptionSelectorNode("1g","1gram"), new OptionSelectorNode("2g","2gram"), 
-            new OptionSelectorNode("3g","3gram"), new OptionSelectorNode("4g","4gram"), new OptionSelectorNode("5g","5gram")],
-            styles: new OptionSelectorConfig(),
-            hasAddButton: true
-        }
-      }), 
+      body: new Selector(doseSizes).selector,
       container: document.getElementById("popUpBox"),
-      label: "END DOSE"
+      label: "END DOSE",
     }),
     timeSelection: new PopUp({
       body: timesPageBody,
@@ -213,16 +189,8 @@ function createTimesPageContent(){
   let addTimeSection = document.createElement("div");
   let selectTimeButton = document.createElement("button");
   selectTimeButton.innerHTML = "Select a time▼"
-  let selectTimeCard = new Cards.OptionSelectorCard({
-    id: "timeSelector",
-    label: "Select a Time",
-    content: {
-        options: timeSelectorList,
-        styles: new OptionSelectorConfig(),
-        hasAddButton: true
-    }
-  });
-  let selectTimeCardElement = selectTimeCard.card;
+  let timeSelector = new Selector(timeSelectorList);
+  let timeSelectorElement = timeSelector.selector;
   let selectDayButton = document.createElement("button");
   selectDayButton.innerHTML = "Select a day▼"
   let daySelection = function() {
@@ -254,12 +222,12 @@ function createTimesPageContent(){
   submitTimesButton.innerHTML = "Submit";
   Styles.assign(addTimeButtonStyles, addTimeButton);
   Styles.assign(selectTimeButtonStyles, selectTimeButton);
-  Styles.assign(selectTimeCardElementStyles, selectTimeCardElement);
+  Styles.assign(selectTimeCardElementStyles, timeSelectorElement);
   Styles.assign(selectDayButtonStyles, selectDayButton);
   Styles.assign(daySelectionStyles, daySelection);
   Styles.assign(addTimeSectionStyles, addTimeSection);
   Styles.assign(submitTimeButtonStyles, submitTimesButton);
-  selectTimeButton.addEventListener("click", () => {openFunction(selectTimeCardElement)});
+  selectTimeButton.addEventListener("click", () => {openFunction(timeSelectorElement)});
   selectDayButton.addEventListener("click", () => {openFunction(daySelection)});
   addTimeButton.addEventListener("click", () => {addTimeSection.style.display = "block"; addTimeButton.style.display = "none";});
   submitTimesButton.addEventListener("click", () => {addTimeSection.style.display = "none"; addTimeButton.style.display = "block"; calculateTimes();});
@@ -268,20 +236,20 @@ function createTimesPageContent(){
   timesPageContent.appendChild(addTimeButton);
   timesPageContent.appendChild(addTimeSection);
   addTimeSection.appendChild(selectTimeButton);
-  addTimeSection.appendChild(selectTimeCardElement);
+  addTimeSection.appendChild(timeSelectorElement);
   addTimeSection.appendChild(selectDayButton);
   addTimeSection.appendChild(daySelection);
   addTimeSection.appendChild(submitTimesButton);
   return {
     element: timesPageContent,
-    timeSelectionCard: selectTimeCard,
+    timeSelector: timeSelector,
     daySelection: daySelection
   };
 }
 
 function calculateTimes() {
 
-  let unformattedTime = timesPageElements.timeSelectionCard.optionSelector.getSelected().content.time;
+  let unformattedTime = timesPageElements.timeSelector.getSelected().content.time;
   let unformattedDays = function(){
     let allCheckboxes = Array.from(timesPageElements.daySelection.getElementsByTagName("input"));
     let checkedBoxes = [];
@@ -363,7 +331,7 @@ class ScheduleGraph {
     let mainContainer = document.createElement("div");
     let label = document.createElement("h1");
     let graph = new ScheduleChart();
-    let presetSelector = graph.presetSelector.getElement();
+    let presetSelector = graph.presetSelector.selector;
     let presetSelectorContainer = document.createElement('div');
     presetSelectorContainer.appendChild(presetSelector);
     presetSelectorContainer.style.marginTop = "20px";

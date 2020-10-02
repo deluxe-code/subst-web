@@ -1,47 +1,13 @@
-import * as OptionSelector from "../../modules/OptionSelector.js";
-import * as cards from "../../modules/cards.js";
-import {PopUp, StrungPopUps} from "../../modules/pop_ups.js";
+import {Option, NewSelector} from "../../../app/modules/elements/new_selector.js";
+import * as cards from "../../../app/modules/elements/cards.js";
+import {PopUp, StrungPopUps} from "../../../app/modules/elements/pop_ups.js";
 let mySelector;
+window.addEventListener('load', ()=>{start();})
 function start() {
-
-    let arr = [];
-    for(var i = 0; i < 10; i++){
-        arr[i] = "forloop, " + i;
-    }
-    mySelector = new OptionSelector.Selector([arr, new OptionSelector.OptionSelectorConfig()]);
-    mySelector.animator.boxGrowthAmount = 0.5;
-    document.getElementById("option").appendChild(mySelector.getElement());
+    let myArray = [];
+    myArray.push(new Option("1", "title", "content"));
+    myArray.push(new Option("2", "title", "content"));
+    myArray.push(new Option("3", "title", "content"));
+    mySelector = new NewSelector(myArray);
+    document.body.appendChild(mySelector.selector);
 }
-start();
-let cardElement = document.createElement("div");
-let card = new cards.OptionSelectorCard({
-    id: "strainSelector",
-    label: "Pick a strain",
-    content: {
-        options: ["Super Silver Haze", "Girl Scout Cookies", "Fruity Pebbles", "Vibe Juices", "OG Granny"],
-        styles: new OptionSelector.OptionSelectorConfig(),
-        hasAddButton: false
-    }
-});
-let card2 = new cards.OptionSelectorCard({
-    id: "strainSelector",
-    label: "Pick a strain",
-    content: {
-        options: ["Super Silver Haze", "Girl Scout Cookies", "Fruity Pebbles", "Vibe Juices", "OG Granny"],
-        styles: new OptionSelector.OptionSelectorConfig(),
-        hasAddButton: false
-    }
-});
-let card3 = new cards.OptionSelectorCard({
-    id: "strainSelector",
-    label: "Pick a strain",
-    content: {
-        options: ["Super Silver Haze", "Girl Scout Cookies", "Fruity Pebbles", "Vibe Juices", "OG Granny"],
-        styles: new OptionSelector.OptionSelectorConfig(),
-        hasAddButton: false
-    }
-});
-let testPopUp = new PopUp(card, document.getElementById("cardLocation"));
-let testStrungPopUp = new StrungPopUps(document.getElementById("cardLocation"), [testPopUp, new PopUp(card2, document.getElementById("cardLocation")), new PopUp(card3, document.getElementById("cardLocation"))]);
-
-document.getElementById("popupButton").addEventListener('click', () => {testStrungPopUp.open()});
