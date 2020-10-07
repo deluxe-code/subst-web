@@ -11,11 +11,32 @@ const _fbConfig = {
 // Initialize Firebase
 firebase.initializeApp(_fbConfig);
 firebase.analytics();
-
+// Let's refactor so that the signin and login pages handle post-response behavior from firebase auth.
 export const auth = {
     trySignup: async (email, password) => {
-        console.log("YAEKDOIAJDOAI");
+        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            console.error(errorCode, errorMessage);
+          }).then(function(res) {
+            console.log(res);
+          });
 
+    },
+    tryLogin: async (email,password) => {
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+            // Handle Errors here.
+            console.error("tryLogin() has failed to authenticate");
+            var errorCode = error.code;
+            var errorMessage = error.message;
+          }).then(function(res) {
+              if (res.isNewUser) {
+                  window.location = "#WELCOME";
+              } else {
+                  window.location = "http://localhost:5500/app/home.html"
+              }
+          });
     }
 };
 export const database = firebase.firestore();

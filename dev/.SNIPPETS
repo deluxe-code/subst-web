@@ -1,0 +1,25 @@
+// QuickCreate, a class which lets you quickly create an element with an assigned type and ID.
+// Also, send a recipe function as a third parameter to apply pre-defined logic to your element.
+class QuickCreate {
+    constructor(elementType, id, elementRecipeFn = "none") {
+        let newElement = document.createElement(elementType);
+        newElement.id = id;
+        if (elementRecipeFn != "none") {
+            elementRecipeFn(newElement);
+        }
+        return newElement;
+    }
+}
+
+// Preset behavior to apply to all elements using this recipe
+function actionButtonRecipe(element) {
+    element.style.borderRadius = "15px";
+    element.style.width = "75px";
+    element.style.height = "40px";
+    element.addEventListener("click", function() {
+        console.log("The user has clicked one of our actionButtons!");
+    });
+} 
+
+// Create instance of customized actionButton
+let newActionButton = QuickCreate("button", "myActionButton", actionButtonRecipe);
