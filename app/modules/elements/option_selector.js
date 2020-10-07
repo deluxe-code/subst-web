@@ -44,12 +44,11 @@ export const timeSelectorList = function() {
     for(var i = 1; i < 24; i++){
 
         if(i < 12) {
-        if(i<10) {
-            timeSelectorArray[i] = new Option(i, i + ":00 AM", {time: "0" + i+":00"});
-        } else{
-            timeSelectorArray[i] = new Option(i, i + ":00 AM", {time: i+":00"});
-        }
-
+            if(i<10) {
+                timeSelectorArray[i] = new Option(i, i + ":00 AM", {time: "0" + i+":00"});
+            } else{
+                timeSelectorArray[i] = new Option(i, i + ":00 AM", {time: i+":00"});
+            }
         } else{
         if(i != 12){
             timeSelectorArray[i] = new Option(i, i-12 + ":00 PM", {time: i+":00"});

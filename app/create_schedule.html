@@ -1,40 +1,26 @@
 <html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="styles/create_schedule.css">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+        <script src="scripts/create_schedule.js" type="module"></script>
+    </head>
 
-<head>
-    <script src="resources/create_schedule.js" type="module"></script>
-    <link rel="stylesheet" href="resources/create_schedule.css">
-    <link rel="stylesheet" href="resources/GLOBAL_STYLES.css">
-    <style>
-
-    </style>
-</head>
-
-<body>
-    <form id="scheduleForm" style="overflow-x: hidden;">
-        <label for="drugName">Drug Name: </label><br>
-        <input type="text" id="drugName" name="drugName"><br>
-        <label for="startDate">Start Date: </label><br>
-        <input type="date" id="startDate" name="startDate"><br>
-        <label for="endDate">End Date: </label><br>
-        <input type="date" id="endDate" name="endDate"><br>
-        <div style="height: 100px"></div>
-        <label for="startDose">Start Dose: </label><br>
-        <div id="startDoseSelector" class="optionSelector" style="height: 500px; width: 100%; margin-left: auto; margin-right: auto; margin-bottom: 50px;"></div>
-        <label for="endDose">End Dose: </label><br>
-        <div id="endDoseSelector" class="optionSelector" style="height: 500px; width: 100%; margin-left: auto; margin-right: auto; margin-bottom: 50px;"></div>
-        <label for="curveType">Curve Type: </label><br>
-        <div id="curveTypeSelector" class="optionSelector" style="height: 500px; width: 100%; margin-left: auto; margin-right: auto;"></div>
-        <div id="daysOfTheWeek" style="width: 100%; overflow-x: scroll; margin-top: 100px;">
-            <table style="width: 300%; height: 400px;">
-                <tbody>
-                    <tr>
-                        <th style="overflow-y: scroll;">Monday</br></th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Sunday</th>
-                    </tr>
-                </tbody>
-            </table>
+    <body>
+        <div id="background">
+            <div id="headingSpace">
+                <h1 id="mainHeading">
+                    Create
+                </h1>
+                <h2 id="secondaryHeading">
+                    Schedule.
+                </h2>
+            </div>
+            <img src="../assets/icons/PillIconNewShadedBadlyTwo2.png" id="backgroundIcon">
         </div>
-        <button type="button" style="width: 100%; margin-top: 50px; height: 50px; font-size: 2em; background-color: yellow; color: black;" id="submitButton">Done</button>
-    </form>
-</body>
+        <div id="contentSection">
 
+        </div>
+    </body>
 </html>
