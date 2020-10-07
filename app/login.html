@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/GLOBAL_STYLES.css">
+    <!-- <link rel="stylesheet" href="styles/GLOBAL_STYLES.css"> -->
     <link rel="stylesheet" href="styles/login.css">
     <title>Login - Subst</title>
 </head>
@@ -11,9 +12,9 @@
     <main>
         <header>
             <h1>Welcome</h1>
-            <h1>Back</h1>
+            <h1>back.</h1>
         </header>
-
+        
         <section id="authSection">
             <div id="authForm">
                 <div class="authItem">
@@ -30,7 +31,7 @@
                         <input type="password" placeholder="●●●●●●●●">
                     </div>
                 </div>
-
+                
                 <div id="passwordOptions">
                     <div id="rememberOption">
                         <input id="rememberToggle" name="rememberToggle" type="checkbox" >
@@ -38,12 +39,18 @@
                     </div>
                     <a id="forgotPassword" href="#forgotPassword">Forgot Password?</a>
                 </div>
-
+                
             </div>
             <div id="actionContainer">
                 <button id="actionButton">Next</button>
             </div>
         </section>
     </main>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-firestore.js"></script>
+    <!-- <script src="./modules/tools/firebase.js" type="module"></script> -->
+    <script src="scripts/login.js" type="module"></script>
 </body>
 </html>

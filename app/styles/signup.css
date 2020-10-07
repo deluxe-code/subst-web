@@ -4,6 +4,7 @@ body {
     align-items: center;
     justify-content: flex-end;
     background-color: var(--primary-backgroundColor);
+    font-family: Noto Sans JP;
 }
 :root {
     --inputIconSpacing: 60px;
