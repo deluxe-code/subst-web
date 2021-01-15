@@ -2,6 +2,7 @@ import { Schedule, scheduleKey, ScheduleStorage } from "../modules/elements/sche
 let scheduledItems = [];
 var swiped = false;
 const swipeTriggerDistance = 150;
+
 for(var i = 0; i < ScheduleStorage.getStoredLocal().length; i++){
     if(localStorage.schedules[i]){
         //push to localstorage objects to schedule items, and make it so scheduledItems can interpret it

@@ -1,6 +1,7 @@
 import {ElementDragger} from "../tools/element_dragger.js";
-
-export class StrungPopUps {
+import {PopUp} from "../elements/pop_up.js";
+import {ScheduleStorage} from "../elements/schedule.js";
+export class FormSectionSwiper {
     popUps = [];
     elementDragger;
     container;
@@ -24,9 +25,10 @@ export class StrungPopUps {
             releaseFunction: releaseFunction()
         });
         this.elementDragger.dragThreshold = {
-            x: 100,
-            y: 75
+            x: 15,
+            y: 15
         };
+        this.open();
     }
     open() {
         this.container.style.display = "flex";
@@ -36,22 +38,16 @@ export class StrungPopUps {
         }
     }
 }
-export class PopUp {
-    card;
+export class FormSection {
     popUpElement;
     container;
-    doneButton;
     elementDragger;
     label;
     body;
     labelElement;
     constructor(config) {
-        let card = (config.card || null);
-        let container = config.container;
-        let label = config.label;
-        this.card = card;
-        this.container = container;
-        this.label = label;
+        this.container = config.container;
+        this.label = (config.label || null);
         this.body = config.body;
         this.createPopUp();
     }
@@ -60,17 +56,9 @@ export class PopUp {
         this.container.appendChild(this.popUpElement);
         this.container.style.zIndex = "1";
         //this.card.card.style.margin = "auto";
-        this.doneButton.addEventListener('click', () => {
-            this.close();
-        });
     }
     createPopUp(){
-        if(this.card != null){
-            this.card.card.style.height = "50%";
-            this.card.card.style.marginRight = "auto";
-            this.card.card.style.marginLeft = "auto";
-            this.card.card.style.marginTop = "50px";
-        }
+
         this.popUpElement = document.createElement("div");
         this.popUpElement.id = "popUpElement";
         //this.popUpElement.style.backgroundColor = "white";
@@ -79,33 +67,20 @@ export class PopUp {
         this.popUpElement.style.margin = "none";
         this.popUpElement.style.display = "flexbox";
         this.popUpElement.style.position = "relative";
-        this.labelElement = document.createElement("h1");
-        this.labelElement.style.width = "50%";
-        this.labelElement.style.margin = "auto";
-        this.labelElement.style.marginTop = "25px";
-        this.labelElement.innerHTML = this.label;
-        this.labelElement.className = "popupLabel";
-        this.popUpElement.appendChild(this.labelElement);
+        if(this.label!=null) {
+            this.labelElement = document.createElement("h1");
+            this.labelElement.style.width = "50%";
+            this.labelElement.style.margin = "auto";
+            this.labelElement.style.marginTop = "25px";
+            this.labelElement.innerHTML = this.label;
+            this.labelElement.className = "popupLabel";
+            this.popUpElement.appendChild(this.labelElement);
+        }
         if(this.body != null) {
             this.popUpElement.appendChild(this.body);
         }
-        if(this.card != null){
-            this.popUpElement.appendChild(this.card.card);
-        }
-        this.doneButton = document.createElement("button");
-        this.doneButton.type = "button";
-        this.doneButton.innerHTML = "Done";
-        this.doneButton.style.width = "100px";
-        this.doneButton.style.height = "35px";
-        this.doneButton.style.float = "right";
-        this.doneButton.style.marginTop = "5%";
-        this.doneButton.style.marginRight = "5%";
-        this.popUpElement.appendChild(this.doneButton);
     }
     close() {
         this.container.innerHTML = "";
-    }
-    done(){
-
     }
 }

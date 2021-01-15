@@ -1,7 +1,7 @@
 body {
     padding: 0px;
     margin: 0px;
-    background-color: #4C5669;
+    background-color: #1B4051;
 }
 #background {
     height: 50%;
@@ -13,26 +13,26 @@ body {
     margin: 0px;
     margin-left: 30px;
     float: left;
-    padding-top: 325px;
+    padding-top: 340px;
     font-weight: normal;
     text-align: center;
+    font-family: 'Roboto', sans-serif;
 }
 
 #mainHeading{
     color: white;
     margin: 0px;
     font-size: 3em;
-    font-family: 'Roboto', sans-serif;
 }
 
 #secondaryHeading{
-    color: white;
+    color: #ce4f53;
     margin: 0px;
-    font-size: 2em;
+    font-size: 1.7em;
     text-align: center;
     margin-left: auto;
-    width: 80%;
     margin-right: auto;
+    width: 80%;
 }
 
 #backgroundIcon{
@@ -47,14 +47,31 @@ body {
     
 }
 
-#contentSection {
-    background-color: #EEF0F1;
+#swiperPagesContainer {
     width: 100%;
     height: 50%;
-    border-top-right-radius: 30px;
-    border-top-left-radius: 30px;
 }
 
 ::-webkit-calendar-picker-indicator {
     filter: invert(1);
+}
+
+.schedulePopUp{
+    background-color: #EEF0F1;
+    border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+}
+.formPageElement {
+    background-color: #EEF0F1;
+    border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+    height: calc(100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input, select{
+    background-color: #1B4051;
+    color: white;
 }

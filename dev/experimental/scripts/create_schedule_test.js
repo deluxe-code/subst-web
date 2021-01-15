@@ -2,7 +2,7 @@ import { Schedule, scheduleKey, ScheduleStorage, Schedules } from "../../../app/
 import { ScheduleChart } from "./schedule_chart.js";
 import { ElementDragger } from "../../../app/modules/tools/element_dragger.js";
 import { Styles } from "../../../app/modules/tools/style_manager.js";
-import { PopUp, StrungPopUps } from "../../../app/modules/elements/pop_ups.js";
+import { FormSection, FormSectionSwiper } from "../../../app/modules/elements/form_section_swiper.js";
 import * as Cards from "../../../app/modules/elements/cards.js";
 import { Selector, Option, timeSelectorList } from "../../../app/modules/elements/option_selector.js";
 let timesPageElements;
@@ -122,12 +122,12 @@ function createPopUps() {
   let drugs = [new Option("weed", "Weed"), new Option("kratom", "Kratom"), new Option("cocaine", "Cocaine"), new Option("heroin", "Heroin"), new Option("lexapro", "Lexapro")];
   let doseSizes = [new Option("1g","1gram"), new Option("2g","2gram"), new Option("3g","3gram"), new Option("4g","4gram"), new Option("5g","5gram")];
   popUps = {
-    drugName: new PopUp({
+    drugName: new PageSwiper({
       body: new Selector(drugs).selector,
       container: document.getElementById("popUpBox"),
       label: "Graph"
     }),
-    startDate: new PopUp({
+    startDate: new PageSwiper({
       card: new Cards.InputCard({
               content: {
                 type: "date",
@@ -137,7 +137,7 @@ function createPopUps() {
       container: document.getElementById("popUpBox"), 
       label: "START DATE"
     }),
-    endDate: new PopUp({
+    endDate: new PageSwiper({
       card: new Cards.InputCard({
               content: {
                 type: "date",
@@ -147,22 +147,22 @@ function createPopUps() {
       container: document.getElementById("popUpBox"), 
       label: "END DATE"
     }),
-    startDose: new PopUp({
+    startDose: new PageSwiper({
       body: new Selector(doseSizes).selector,
       container: document.getElementById("popUpBox"),
       label: "START DOSE",
     }),
-    endDose: new PopUp({
+    endDose: new PageSwiper({
       body: new Selector(doseSizes).selector,
       container: document.getElementById("popUpBox"),
       label: "END DOSE",
     }),
-    timeSelection: new PopUp({
+    timeSelection: new PageSwiper({
       body: timesPageBody,
       container: document.getElementById("popUpBox"),
       label: "Time Selection"
     }),
-    graph: new PopUp({
+    graph: new PageSwiper({
       body: scheduleGraph.elements.mainContainer,
       container: document.getElementById("popUpBox"),
       label: "Graph"
@@ -188,7 +188,7 @@ function createTimesPageContent(){
   addTimeButton.innerHTML = "Add Time";
   let addTimeSection = document.createElement("div");
   let selectTimeButton = document.createElement("button");
-  selectTimeButton.innerHTML = "Select a time▼"
+  selectTimeButton.innerHTML = "Select a time▼";
   let timeSelector = new Selector(timeSelectorList);
   let timeSelectorElement = timeSelector.selector;
   let selectDayButton = document.createElement("button");

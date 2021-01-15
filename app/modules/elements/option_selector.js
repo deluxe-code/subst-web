@@ -22,8 +22,22 @@ export class Selector {
     }
 
     getSelected() {
-        let currentIndex = this.selector.options[this.selector.selectedIndex].value.split(",")[0];
-        return this.options[currentIndex];
+        if(this.selector.multiple==false){
+            let currentIndex = this.selector.options[this.selector.selectedIndex].value.split(",")[0];
+            return this.options[currentIndex];
+        } else {
+            let myArray = [];
+            let checkedOptions = Array.from(this.selector.querySelectorAll(":checked"));
+            /*
+            for(var i = 0; i < checkedOptions.length; i++) {
+                myArray.push(this.options[i]);
+            }
+            */
+            checkedOptions.forEach(el => {
+                myArray.push(this.options[el.value.split(",")[0]]);
+            });
+            return myArray;
+        }
     }
 }
 
